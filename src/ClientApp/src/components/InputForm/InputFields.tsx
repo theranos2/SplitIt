@@ -20,6 +20,7 @@ interface InputFieldProps {
 
 const InputField = (props: InputFieldProps) => {
     const { name, label, type, inputs, set, err } = props;
+    console.log(inputs);
 
     return (
         <a>
