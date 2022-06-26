@@ -33,6 +33,7 @@ namespace split_it
         public DateTime Created { get; set; }
 
         public double Total { get; set; }
+        public string Title { get; set; }
 
         public ICollection<Share> Shares { get; set; }
     }
@@ -42,6 +43,8 @@ namespace split_it
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public bool hasPaid { get; set; }
+        public bool hasAccepted { get; set; }
+
         public User Payer { get; set; }
         public double Amount { get; set; }
         public string Description { get; set; }
