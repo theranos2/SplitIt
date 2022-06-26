@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using split_it.Models;
 
 namespace split_it.Controllers
 {
@@ -34,6 +35,51 @@ namespace split_it.Controllers
                 Summary = Summaries[rng.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpGet("hello")]
+        public Bill Test()
+        {
+            using (var db = new DatabaseContext())
+            {
+                var user = new User()
+                {
+                    Email = "hello@example.com",
+                    FirstName = "Jack",
+                    LastName = "Mack"
+                };
+
+                db.Users.Add(user);
+
+                // create a share
+                var share = new Share()
+                {
+                    hasPaid = false,
+                    Payer = user,
+                    Amount = 0,
+                    Description = "BJ Pancake" // butter and jam
+                };
+
+                List<Share> shares = new List<Share>();
+                shares.Add(share);
+
+
+                // create a bill
+                var bill = new Bill()
+                {
+                    Created = DateTime.Now,
+                    Total = shares.Sum(x => x.Amount),
+                    Shares = shares
+                };
+                db.Bills.Add(bill);
+
+
+                // save database
+                db.SaveChanges();
+
+                return bill;
+            }
+            
         }
     }
 }
