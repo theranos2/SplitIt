@@ -1,6 +1,6 @@
 using System;
 
-namespace split_it
+namespace split_it.Models
 {
     public class WeatherForecast
     {
