@@ -15,7 +15,7 @@ import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 
-export interface InputFormProps {
+export interface LoginFormProps {
     title: String,
     inputs: Object,
     set: Function,
@@ -24,7 +24,7 @@ export interface InputFormProps {
     fields: Array<any>
 }
 
-export const InputForm = (props : InputFormProps) => {
+export const LoginForm = (props : LoginFormProps) => {
     const { title, inputs, fields, set, submit, cancel } = props;
     const theme = createTheme();
 
@@ -56,10 +56,10 @@ export const InputForm = (props : InputFormProps) => {
                 </Box>
             </Container>
         </ThemeProvider>
-  );
+    );
 };
 
-InputForm.propTypes = {
+LoginForm.propTypes = {
   title: PropTypes.string,
   inputs: PropTypes.object,
   fields: PropTypes.array,
@@ -68,4 +68,4 @@ InputForm.propTypes = {
   cancel: PropTypes.object,
 };
 
-// based on https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
+// based on: https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
