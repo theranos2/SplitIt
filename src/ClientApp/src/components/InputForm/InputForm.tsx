@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import InputField from './input-fields';
-import DateSelect from './date-select';
+import InputField from './InputFields';
+import DateInput from './DateInput';
 
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,7 +15,7 @@ import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 
-interface PropTypes {
+export interface InputFormProps {
     title: String,
     inputs: Object,
     set: Function,
@@ -24,8 +24,8 @@ interface PropTypes {
     fields: Array<any>
 }
 
-const InputForm = (props : PropTypes) => {
-    const { title, inputs, set, submit, cancel, fields } = props;
+export const InputForm = (props : InputFormProps) => {
+    const { title, inputs, fields, set, submit, cancel } = props;
     const theme = createTheme();
 
     return (
@@ -39,7 +39,7 @@ const InputForm = (props : PropTypes) => {
                         { fields.map((field, idx) => {
                             switch (field.type) {
                                 case 'date':
-                                    return <DateSelect key={`date-${idx}`} dates={field.dates} set={set}/>;
+                                    return <DateInput key={`date-${idx}`} dates={field.dates} set={set}/>;
                                 case 'span':
                                     return <Alert key={`alert-${idx}`} severity="info">{field.content}</Alert>;
                                 default:
@@ -62,12 +62,10 @@ const InputForm = (props : PropTypes) => {
 InputForm.propTypes = {
   title: PropTypes.string,
   inputs: PropTypes.object,
+  fields: PropTypes.array,
   set: PropTypes.func,
   submit: PropTypes.object,
   cancel: PropTypes.object,
-  fields: PropTypes.array
 };
-
-export default InputForm;
 
 // based on https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
