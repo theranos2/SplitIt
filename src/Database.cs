@@ -15,8 +15,8 @@ namespace split_it
         {
             // uncomment when we need to enforce unique email field
             //builder.Entity<User>()
-                //.HasIndex(u => u.Email)
-                //.IsUnique();
+            //.HasIndex(u => u.Email)
+            //.IsUnique();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -29,13 +29,12 @@ namespace split_it
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-
         public DateTime Created { get; set; }
-
+        public User Owner { get; set; }
         public double Total { get; set; }
         public string Title { get; set; }
-
         public ICollection<Share> Shares { get; set; }
+        public bool isSettled { get; set; }
     }
 
     public class Share
