@@ -15,12 +15,18 @@ import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 
+export interface ButtonSubmitProps {
+    func: Function,
+    href: string,
+    msg: string
+}
+
 export interface LoginFormProps {
     title: String,
     inputs: Object,
     set: Function,
-    submit: Object,
-    cancel: Object,
+    submit: ButtonSubmitProps,
+    cancel: ButtonSubmitProps,
     fields: Array<any>
 }
 
