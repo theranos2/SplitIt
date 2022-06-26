@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import InputField from './InputFields';
-import DateInput from './DateInput';
+import { DateSelector } from './DateSelector';
 
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -21,13 +21,13 @@ export interface ButtonSubmitProps {
     msg: string
 }
 
-export interface LoginFormProps {
+interface LoginFormProps {
     title: String,
     inputs: Object,
     set: Function,
     submit: ButtonSubmitProps,
     cancel: ButtonSubmitProps,
-    fields: Array<any>
+    fields: Array<any>      // TODO: should be the actual types
 }
 
 export const LoginForm = (props : LoginFormProps) => {
@@ -45,17 +45,17 @@ export const LoginForm = (props : LoginFormProps) => {
                         { fields.map((field, idx) => {
                             switch (field.type) {
                                 case 'date':
-                                    return <DateInput key={`date-${idx}`} dates={field.dates} set={set}/>;
+                                    return <DateSelector key={`date-${idx}`} start={field.dates.start} end={field.dates.end} set={set}/>;
                                 case 'span':
                                     return <Alert key={`alert-${idx}`} severity="info">{field.content}</Alert>;
                                 default:
                                     return <InputField key={`text-${idx}`} name={field.name} label={field.label} type={field.type} inputs={inputs} set={set} err={field.error}/>;
                             }
                         }) }
-                        <Link id="confirm" to={submit.href} onClick={(event : Event) => submit.func(event)} style={{ textDecoration: 'none' }}>
+                        <Link id={`submit-${title}`} to={submit.href} onClick={(event : Event) => submit.func(event)} style={{ textDecoration: 'none' }}>
                             <Button type="submit" fullWidth variant="contained" sx={{ mt: 2, mb: 2 }}>Confirm</Button>
                         </Link>
-                        <Link id="cancel" to={cancel.href} onClick={(event : Event) => (cancel.func) && cancel.func(event)} style={{ textDecoration: 'none' }}>
+                        <Link id={`cancel-${title}`} to={cancel.href} onClick={(event : Event) => (cancel.func) && cancel.func(event)} style={{ textDecoration: 'none' }}>
                             <Button type="submit" fullWidth variant="contained" sx={{ mt: 0, mb: 2 }}>{cancel.msg}</Button>
                         </Link>
                     </Box>
