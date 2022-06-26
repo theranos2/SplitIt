@@ -4,22 +4,27 @@ import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
 
+interface ErrorType {
+    cond: boolean,
+    msg: string
+}
+
 interface InputFieldProps {
     name: string, 
     label: string,
     type: string, 
     inputs: Object, 
     set: Function, 
-    err: Object
+    err: ErrorType
 }
 
 const InputField = (props: InputFieldProps) => {
     const { name, label, type, inputs, set, err } = props;
-    
+
     return (
         <a>
             <TextField name={name} error={err.cond} label={label} type={type}
-                id={name} value={inputs[name]} onChange={set(name)}                  
+                id={name} value={'TODO: FIX THIS'/*inputs[name]*/} onChange={set(name)}                  
                 margin="normal" required fullWidth autoComplete={name}
                 />
             { err.cond ? <Alert severity="warning">{err.msg}</Alert> : <></> }

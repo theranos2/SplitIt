@@ -21,13 +21,13 @@ export const DateSelector = (props: DateSelectorProps) => {
         <LocalizationProvider dateAdapter={AdapterDateFns}>
             <Stack spacing={3}>
                 <DesktopDatePicker label="Start date" inputFormat="dd/MM/yyyy"
-                value={start} onChange={(new_start : Date) => set('start', new_start)}
-                renderInput={(props : Array<any>) => <TextField {...props} />}
+                    value={start} onChange={(new_start : Date) => set('start', new_start)}
+                    renderInput={(props : Array<any>) => <TextField {...props} />}
                 />
                 { (start < new Date()) ? <Alert severity="warning">The start date must be in the future.</Alert> : <></> }
                 <DesktopDatePicker label="End date" inputFormat="dd/MM/yyyy"
-                value={end} onChange={(new_end : Date) => set('end', new_end)}
-                renderInput={(props : Array<any>) => <TextField {...props} />}
+                    value={end} onChange={(new_end : Date) => set('end', new_end)}
+                    renderInput={(props : any /*TODO: FIX THIS*/) => <TextField {...props} />}
                 />
                 { (end < start) ? <Alert severity="warning">End date must proceed start date.</Alert> : <></> }
             </Stack>
