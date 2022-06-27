@@ -230,3 +230,9 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+
+# SQLite database
+database.db
+
+# Migration folder: temporary
+Migrations/

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace split_it.Controllers
 {
     [ApiController]
-    [Route("/api/bill")]
+    [Route("[controller]")]
     public class BillController : ControllerBase
     {
         [HttpGet]
