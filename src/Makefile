@@ -2,6 +2,8 @@
 init:
 	dotnet restore
 	dotnet tool restore
+	pip install pre-commit
+	pre-commit install
 
 # Reset database
 db-reset:
