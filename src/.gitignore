@@ -233,3 +233,6 @@ _Pvt_Extensions
 
 # SQLite database
 database.db
+
+# Migration folder: temporary
+Migrations/
