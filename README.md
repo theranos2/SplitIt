@@ -3,6 +3,8 @@
 - Run `make init`, it executes:
     - `dotnet restore` to restore all project dependencies
     - `dotnet tool restore` to restore tools used for the project
+- Ensure the latest LTS node version is installed (v16.15.1)
+    - Use [nvm](https://github.com/nvm-sh/nvm) to make your life easier
 
 # Database migrations
 - Currently not in use
