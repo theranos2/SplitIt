@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace split_it
 {
@@ -48,6 +49,7 @@ namespace split_it
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
+            app.UsePathBase(new PathString("/api"));
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>

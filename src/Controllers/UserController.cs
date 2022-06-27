@@ -4,8 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace split_it.Controllers
 {
     [ApiController]
-    [Route("/api/user")]
-
+    [Route("[controller]")]
     public class UserController : ControllerBase
     {
 
