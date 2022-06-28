@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import InputField from '../InputForm/InputFields';
 import { DateSelector } from '../InputForm/DateSelector';
 import { UserSelector } from '../InputForm/UserSelector';
+import { ItemSelector } from '../InputForm/ItemSelector';
 import { PriceDisplay } from './PriceDisplay';
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -17,18 +18,24 @@ import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 
+interface Item {
+    name: string,
+    price: number,
+    user: number        // a user-id
+}
+
+interface InputProps {
+    name: string,
+    users: number[],    // an array of user-ids
+    items: Item[],
+    price: number
+}
+
 export interface ButtonSubmitProps {
     href: string,
     func?: Function,
     msg?: string
 }
-
-interface InputProps {
-    name: string,
-    users: number[],
-    items: number[],
-    price: number
-  }
 
 interface BillFormProps {
     title: String,
@@ -59,6 +66,8 @@ export const BillForm = (props : BillFormProps) => {
                                     return <Alert key={`alert-${idx}`} severity="info">{field.content}</Alert>;
                                 case 'users':
                                     return <UserSelector key={`user-${idx}`} name={field.name} label={field.label} inputs={inputs} set={set} err={field.err}/>;
+                                case 'items':
+                                    return <ItemSelector key={`user-${idx}`} name={field.name} label={field.label} inputs={inputs} set={set} err={field.err}/>;
                                 case 'price':
                                     return <PriceDisplay price={inputs.price}/>;   
                                 default:

@@ -1,24 +1,26 @@
 import React from 'react';
 
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import InputLabel from '@mui/material/InputLabel';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
 import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+
 
 interface ErrorType {
     cond: boolean,
     msg: string
 }
 
-interface UserSelectorProps {
+interface ItemSelectorProps {
     name: string, 
     label: string,
     inputs: Record<string, any>, 
@@ -31,25 +33,17 @@ interface User {
     id: number
 };
 
-export const UserSelector = (props: UserSelectorProps) => {
+export const ItemSelector = (props: ItemSelectorProps) => {
     const { name, label, inputs, set, err } = props;
-    let users : User[] = [
-        { name: 'Adam', id: 1 },
-        { name: 'Ken', id: 2 },
-        { name: 'Razin', id: 3 },
-        { name: 'Lachlan', id: 4 },
-        { name: 'Xibo', id: 5 },
-    ];
 
-    const [NewUsers, SetNewUsers] = React.useState<number[]>([]);
-    const addUser    = (event: any) => SetNewUsers((old) => [...old, event.target.value]);
-    const removeUser = (event: any) => SetNewUsers((old) => old.filter((e) => e !== event.target.value));
+    const [currentItem, setCurrentItem] = React.useState({ name: '', price: 0, user: 0 });
+    const setUser = (event: any) => setCurrentItem((old) => ({ ...old, ['user']: event.target.value }));
     const submit = () => {
-        set(name)(NewUsers);
+        set(name)(currentItem);
         cancel();
     }
     const cancel = () => {
-        SetNewUsers(() => []);
+        setCurrentItem(() => {return {name: '', price: 0, user: 0 }});
         setOpen(false);
     };
 
@@ -70,7 +64,7 @@ export const UserSelector = (props: UserSelectorProps) => {
 
         getUsers();
         // console.log(users);
-    }, [NewUsers]);
+    }, [currentItem]);
 
     return (
         <div>
@@ -81,30 +75,27 @@ export const UserSelector = (props: UserSelectorProps) => {
                 <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
                     <FormControl sx={{ m: 1, minWidth: 120 }}>
                     <InputLabel id={`select-${name}-inputlabel`}>Add {label}</InputLabel>
+                    <TextField
+                        id="outlined-number"
+                        label="Name"
+                        type="text"
+                        InputLabelProps={{shrink: true}}
+                    />
+                    <TextField
+                        id="outlined-number"
+                        label="Price"
+                        type="number"
+                        InputLabelProps={{shrink: true}}
+                    />
                     <Select
                         labelId={`select-${name}-label`}
                         id={`select-${name}-id`}
                         value={inputs[name]}
-                        onChange={addUser}
+                        onChange={setUser}
                         input={<OutlinedInput label={label}/>}
                     >
                     {
-                        users.filter((user) => !inputs[name].includes(user.id) && !NewUsers.includes(user.id)).map((user) =>
-                            <MenuItem value={user.id}>{user.name}</MenuItem>)
-                    }
-                    </Select>
-                    </FormControl>
-                    <FormControl sx={{ m: 1, minWidth: 120 }}>
-                    <InputLabel id={`select-${name}-inputlabel`}>Remove {label}</InputLabel>
-                    <Select
-                        labelId={`select-${name}-label`}
-                        id={`select-${name}-id`}
-                        value={inputs[name]}
-                        onChange={removeUser}
-                        input={<OutlinedInput label={label}/>}
-                    >
-                    {
-                        users.filter((user) => inputs[name].includes(user.id) || NewUsers.includes(user.id)).map((user) =>
+                        inputs['users'].map((user : User) =>
                             <MenuItem value={user.id}>{user.name}</MenuItem>)
                     }
                     </Select>
