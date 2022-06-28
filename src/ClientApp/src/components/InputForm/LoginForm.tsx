@@ -6,7 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import InputField from './InputFields';
 import { DateSelector } from './DateSelector';
 
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -52,10 +52,10 @@ export const LoginForm = (props : LoginFormProps) => {
                                     return <InputField key={`text-${idx}`} name={field.name} label={field.label} type={field.type} inputs={inputs} set={set} err={field.error}/>;
                             }
                         }) }
-                        <Link id={`submit-${title}`} to={submit.href} onClick={(event : Event) => submit.func(event)} style={{ textDecoration: 'none' }}>
+                        <Link id={`submit-${title}`} to={submit.href} onClick={(event : React.MouseEvent) => submit.func(event)} style={{ textDecoration: 'none' }}>
                             <Button type="submit" fullWidth variant="contained" sx={{ mt: 2, mb: 2 }}>Confirm</Button>
                         </Link>
-                        <Link id={`cancel-${title}`} to={cancel.href} onClick={(event : Event) => (cancel.func) && cancel.func(event)} style={{ textDecoration: 'none' }}>
+                        <Link id={`cancel-${title}`} to={cancel.href} onClick={(event : React.MouseEvent) => (cancel.func) && cancel.func(event)} style={{ textDecoration: 'none' }}>
                             <Button type="submit" fullWidth variant="contained" sx={{ mt: 0, mb: 2 }}>{cancel.msg}</Button>
                         </Link>
                     </Box>
