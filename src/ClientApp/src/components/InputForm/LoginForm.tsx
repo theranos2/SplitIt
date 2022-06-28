@@ -34,6 +34,8 @@ export const LoginForm = (props : LoginFormProps) => {
     const { title, inputs, fields, set, submit, cancel } = props;
     const theme = createTheme();
 
+    console.log(inputs);
+
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
@@ -49,7 +51,7 @@ export const LoginForm = (props : LoginFormProps) => {
                                 case 'span':
                                     return <Alert key={`alert-${idx}`} severity="info">{field.content}</Alert>;
                                 default:
-                                    return <InputField key={`text-${idx}`} name={field.name} label={field.label} type={field.type} inputs={inputs} set={set} err={field.error}/>;
+                                    return <InputField key={`text-${idx}`} name={field.name} label={field.label} type={field.type} inputs={inputs} set={set} err={field.err}/>;
                             }
                         }) }
                         <Link id={`submit-${title}`} to={submit.href} onClick={(event : React.MouseEvent) => submit.func && submit.func(event)} style={{ textDecoration: 'none' }}>
