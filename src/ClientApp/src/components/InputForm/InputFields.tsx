@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
-import { ConstructionOutlined } from '@mui/icons-material';
 
 interface ErrorType {
     cond: boolean,
@@ -22,16 +21,14 @@ interface InputFieldProps {
 const InputField = (props: InputFieldProps) => {
     const { name, label, type, inputs, set, err } = props;
 
-    console.log(inputs);
-
     return (
-        <a>
+        <>
             <TextField name={name} error={err.cond} label={label} type={type}
                 id={name} value={inputs[name]} onChange={set(name)}                  
                 margin="normal" required fullWidth autoComplete={name}
                 />
             { err.cond ? <Alert severity="warning">{err.msg}</Alert> : <></> }
-        </a>
+        </>
     );
 };
 

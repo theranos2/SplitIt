@@ -4,7 +4,7 @@ import { LoginForm } from '../InputForm/LoginForm';
 const Login = () => {
     const [inputs, setInputs] = React.useState({ email: '', pass: '' });
 
-    const set = (name : string) => (target : any) => setInputs(old => ({ ...old, [name]: target.value }));
+    const set = (name : string) => (event : any) => setInputs(old => ({ ...old, [name]: event.target.value }));
     
     const submit = (event : any) => {
         event.preventDefault();
@@ -12,14 +12,16 @@ const Login = () => {
         if (inputs.email === '' || inputs.pass === '') {
             return console.log('Inputs cannot be empty.');
         }
+
+        fetch('/api')
     };
 
     return (
         <LoginForm title='Sign In' inputs={inputs} set={set}
             submit={{ href: '/', func: submit }} cancel={{ href: '/register', msg: 'Register an account' }}
             fields={[
-                { name: 'email', label: 'Email Address', type: 'text', err: { cond: (inputs.email.length > 30), msg: 'Email must be shorter than 30 characters.' } },
-                { name: 'pass', label: 'Password', type: 'password', err: { cond: (inputs.pass.length < 10), msg: 'Password must be longer than 10 characters.' } },
+                { name: 'email', label: 'Email Address', type: 'text', err: { cond: (inputs?.email.length > 30), msg: 'Email must be shorter than 30 characters.' } },
+                { name: 'pass', label: 'Password', type: 'password', err: { cond: (inputs?.pass.length < 10), msg: 'Password must be longer than 10 characters.' } },
             ]}
         />
     );
