@@ -13,19 +13,18 @@ interface InputFieldProps {
     name: string, 
     label: string,
     type: string, 
-    inputs: Object, 
+    inputs: Record<string, any>, 
     set: Function, 
     err: ErrorType
 }
 
 const InputField = (props: InputFieldProps) => {
     const { name, label, type, inputs, set, err } = props;
-    console.log(inputs);
 
     return (
         <a>
             <TextField name={name} error={err.cond} label={label} type={type}
-                id={name} value={'TODO: FIX THIS'/*inputs[name]*/} onChange={set(name)}                  
+                id={name} value={inputs[name]} onChange={set(name)}                  
                 margin="normal" required fullWidth autoComplete={name}
                 />
             { err.cond ? <Alert severity="warning">{err.msg}</Alert> : <></> }

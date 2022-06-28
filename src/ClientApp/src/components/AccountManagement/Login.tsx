@@ -3,7 +3,8 @@ import { LoginForm } from '../InputForm/LoginForm';
 
 const Login = () => {
     const [input, setInput] = React.useState({ email: '', pass: '' });
-    // const set = (name : string) => ({ target: { value } }) => setInputs(old => ({ ...old, [name]: value }));
+
+    const set = (name : string) => (target : any) => setInput(old => ({ ...old, [name]: target.value }));
     
     const submit = (event : any) => {
         event.preventDefault();
@@ -14,7 +15,7 @@ const Login = () => {
     };
 
     return (
-        <LoginForm title='Sign In' inputs={input} set={() => {}/*set*/}
+        <LoginForm title='Sign In' inputs={input} set={set}
             submit={{ href: '/', func: submit }} cancel={{ href: '/register', msg: 'Register an account' }}
             fields={[
                 { name: 'email', label: 'Email Address', type: 'text', err: { cond: (input.email.length > 30), msg: 'Email must be shorter than 30 characters.' } },
