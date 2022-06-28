@@ -10,6 +10,14 @@ namespace split_it.Controllers
     [Route("/api/bill")]
     public class BillController : ControllerBase
     {
+        DatabaseContext db;
+
+        public BillController(DatabaseContext _db)
+        {
+           db = _db; 
+        }
+
+
         [HttpGet]
         public Guid OG()
         {
@@ -19,7 +27,6 @@ namespace split_it.Controllers
         [HttpGet("{bill_id:Guid}")]
         public Bill Get(Guid bill_id)
         {
-            DatabaseContext db = new DatabaseContext();
             return db.Bills.Where(x => x.Id == bill_id).FirstOrDefault();
         }
 
@@ -28,13 +35,15 @@ namespace split_it.Controllers
         {
             bill.Created = DateTime.Now;
             bill.Id = Guid.Empty; // make invalid guid, that so database auto gen. also stops attackers from crafting custom guid
-            bill.Owner = GetCurrentUser();
+            bill.Owner = GetCurrentUser(); // get the predefined user
+
             if (bill.Title == null)
                 bill.Title = "";
 
             if(bill.Shares == null)
                 bill.Shares = new List<Share>();
             
+
             bill.Total = 0.0;
             foreach(Share share in bill.Shares)
             {
@@ -47,26 +56,23 @@ namespace split_it.Controllers
                 if(share.Description == null)
                     share.Description = "";
                 
-                using (var database = new DatabaseContext())
+                //share.Payer = TODO. this is dangerous. We need DTO.
+                //share.Payer = db.Users.Where(x => x.Email == share.Payer.Email).FirstOrDefault();
+                share.Payer = db.Users.Where(x=> x.Email == share.Payer.Email).FirstOrDefault();
+
+                share.hasAccepted = false;
+                share.hasPaid = false;
+
+                if(share.Payer == GetCurrentUser())
                 {
-                    //share.Payer = TODO. this is dangerous. We need DTO.
-                    share.Payer = database.Users.Where(x => x.FirstName == "Sack").First();
-
-                    share.hasAccepted = false;
-                    share.hasPaid = false;
-
-                    if(share.Payer == GetCurrentUser())
-                    {
-                        share.hasPaid = true;
-                        share.hasAccepted = true;
-                    }
-                };
+                    share.hasPaid = true;
+                    share.hasAccepted = true;
+                }
 
                 bill.Total += share.Amount;
             }
             
             // persist to the database
-            DatabaseContext db = new DatabaseContext();
             db.Bills.Add(bill);
             db.SaveChanges();
 
@@ -76,7 +82,6 @@ namespace split_it.Controllers
         [HttpGet("/getmany")]
         public IEnumerable<Bill> GetMany(BillFilter filter)
         {
-            DatabaseContext db = new DatabaseContext();
             IQueryable<Bill> query = db.Bills.AsQueryable<Bill>();
 
             if (filter.BillOwner != Guid.Empty)
@@ -98,7 +103,6 @@ namespace split_it.Controllers
         [HttpPost("accept/{bill_id:Guid}")]
         public string Accept(Guid bill_id)
         {
-            DatabaseContext db = new DatabaseContext();
             Bill bill = db.Bills.Where(x => x.Id == bill_id).FirstOrDefault();
 
             if(bill == null)
@@ -122,7 +126,6 @@ namespace split_it.Controllers
         [HttpPost("reject/{bill_id:Guid}")]
         public string Reject(Guid bill_id)
         {
-            DatabaseContext db = new DatabaseContext();
             Bill bill = db.Bills.Where(x => x.Id == bill_id).FirstOrDefault();
 
             if(bill == null)
@@ -153,7 +156,6 @@ namespace split_it.Controllers
         [HttpDelete("{bill_id:Guid}")]
         public string Delete(Guid bill_id)
         {
-            DatabaseContext db = new DatabaseContext();
             Bill bill = db.Bills.Where(x => x.Id == bill_id).FirstOrDefault();
 
             if(bill == null)
@@ -169,7 +171,6 @@ namespace split_it.Controllers
         public Bill Edit(Guid bill_id, Bill bill)
         {
             // TODO EDIT AND POST(Create) SHOULD BE COUSINS else spag code
-            DatabaseContext db = new DatabaseContext();
             Bill myBill = db.Bills.Where(x => x.Id == bill_id).FirstOrDefault();
 
             if(myBill == null)
@@ -188,7 +189,6 @@ namespace split_it.Controllers
         {
             // Stub function to return an existing user for now
             // Will actually return current user when authentication is added
-            DatabaseContext db = new DatabaseContext();
             if(db.Users.Where(x=> x.FirstName == "Jack").FirstOrDefault() == null)
             {
                 db.Users.Add(new User{

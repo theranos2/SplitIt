@@ -23,6 +23,7 @@ namespace split_it
         {
 
             services.AddControllersWithViews();
+            services.AddDbContext<DatabaseContext>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -32,7 +33,7 @@ namespace split_it
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DatabaseContext _db)
         {
             app.UseExceptionHandler(c => c.Run(async ctx =>
             {

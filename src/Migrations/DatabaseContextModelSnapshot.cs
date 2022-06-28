@@ -25,10 +25,21 @@ namespace split_it.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("OwnerId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
+
                     b.Property<double>("Total")
                         .HasColumnType("REAL");
 
+                    b.Property<bool>("isSettled")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Bills");
                 });
@@ -50,6 +61,9 @@ namespace split_it.Migrations
 
                     b.Property<Guid?>("PayerId")
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("hasAccepted")
+                        .HasColumnType("INTEGER");
 
                     b.Property<bool>("hasPaid")
                         .HasColumnType("INTEGER");
@@ -81,6 +95,15 @@ namespace split_it.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("split_it.Bill", b =>
+                {
+                    b.HasOne("split_it.User", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("split_it.Share", b =>

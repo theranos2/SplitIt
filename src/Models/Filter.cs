@@ -7,7 +7,7 @@ namespace split_it.Models
     {
         public int StartTime { get; set; } = 0;
         public int EndTime { get; set; } = int.MaxValue;
-        public Guid BillOwner { get; set; } 
+        public Guid BillOwner { get; set; }
         public Guid[] BillMembers { get; set; } = null;
         public int Limit { get; set; } = 10;
         public int Offset { get; set; } = 0;
