@@ -16,9 +16,9 @@ import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 
 export interface ButtonSubmitProps {
-    func: Function,
     href: string,
-    msg: string
+    func?: Function,
+    msg?: string
 }
 
 interface LoginFormProps {
@@ -41,7 +41,7 @@ export const LoginForm = (props : LoginFormProps) => {
                 <Box sx={{ marginTop: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', }}>
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}><LockOutlinedIcon /></Avatar>
                     <Typography component="h1" variant="h5">{title}</Typography>
-                    <Box component="form" onSubmit={() => submit.func()} noValidate sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={() => submit.func && submit.func()} noValidate sx={{ mt: 1 }}>
                         { fields.map((field, idx) => {
                             switch (field.type) {
                                 case 'date':
@@ -52,7 +52,7 @@ export const LoginForm = (props : LoginFormProps) => {
                                     return <InputField key={`text-${idx}`} name={field.name} label={field.label} type={field.type} inputs={inputs} set={set} err={field.error}/>;
                             }
                         }) }
-                        <Link id={`submit-${title}`} to={submit.href} onClick={(event : React.MouseEvent) => submit.func(event)} style={{ textDecoration: 'none' }}>
+                        <Link id={`submit-${title}`} to={submit.href} onClick={(event : React.MouseEvent) => submit.func && submit.func(event)} style={{ textDecoration: 'none' }}>
                             <Button type="submit" fullWidth variant="contained" sx={{ mt: 2, mb: 2 }}>Confirm</Button>
                         </Link>
                         <Link id={`cancel-${title}`} to={cancel.href} onClick={(event : React.MouseEvent) => (cancel.func) && cancel.func(event)} style={{ textDecoration: 'none' }}>

@@ -4,25 +4,25 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 
-interface state {
-  name: string,
-  items: Array<Number>,
-  users: Array<String>,  
-};
+// interface state {
+//   name: string,
+//   items: Array<Number>,
+//   users: Array<String>,  
+// };
 
 const BillAdvanced = () => {
-    const [state, setState] = React.useState<state>({
-      name: 'asd', items: [], users: [], 
-    });
+    // const [state, setState] = React.useState<state>({
+    //   name: 'asd', items: [], users: [], 
+    // });
 
-    const set = (input : string) => ({ target: { value } : string }) => setState((old : object) => ({
-      ...old, [input]: value
-    }));
+    // const set = (input : string) => ({ target: { value } : string }) => setState((old : object) => ({
+    //   ...old, [input]: value
+    // }));
 
-    const submit = (event) => {
-      event.preventDefault();
+    // const submit = (event : any) => {
+    //   event.preventDefault();
       
-    }
+    // }
 
     return (
       <Box
