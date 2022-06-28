@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 
 namespace split_it.Controllers
@@ -8,19 +9,30 @@ namespace split_it.Controllers
 
     public class UserController : ControllerBase
     {
-
-        [HttpGet("/{user_id:Guid}")]
+        [HttpGet("{user_id:Guid}")]
         public User Get(Guid user_id)
         {
-
-            return new User();
+            var db = new DatabaseContext();
+            return db.Users.Where(u => u.Id.Equals(user_id)).FirstOrDefault();
         }
 
-        [HttpPost("/")]
+        [HttpPost]
         public User Create(User user)
         {
-            return new User();
+            if (
+                    user.Email == null || user.Email.Equals("")
+                    || user.FirstName == null || user.FirstName.Equals("")
+                    || user.LastName == null || user.LastName.Equals("")
+                )
+            {
+                // TODO: write middleware to return {"message": <msg>} + statusCode in header
+                return null;
+            }
+            user.Id = Guid.NewGuid();
+            var db = new DatabaseContext();
+            db.Users.Add(user);
+            db.SaveChanges();
+            return user;
         }
-
     }
 }
