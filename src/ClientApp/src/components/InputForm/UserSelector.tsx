@@ -77,11 +77,15 @@ export const UserSelector = (props: UserSelectorProps) => {
                         onChange={set(name)}
                         input={<OutlinedInput label={label}/>}
                     >
-                    {users.filter((user) => inputs[name].includes(user.id) === false).map((user) =>
-                        <MenuItem value={user.id}>{user.name}</MenuItem>)
+                    {
+                        users.filter((user) => inputs[name].includes(user.id) === false).map((user) =>
+                            <MenuItem value={user.id}>{user.name}</MenuItem>)
                     }
                     </Select>
                     </FormControl>
+                    {
+                        inputs[name].map((user : User) => <a>{user.name}</a>)
+                    }
                 </Box>
                 </DialogContent>
                 <DialogActions>
