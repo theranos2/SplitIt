@@ -15,8 +15,10 @@ const BillAdvanced = () => {
   const set = (name : string) => (input : any) => {
     switch (name) {
       case 'users':
-      case 'items':
         input.forEach((e : number) => inputs[name].push(e));
+        break;
+      case 'items':
+        
         break;
       default:
         setInputs(old => ({ ...old, [name]: input.target.value }));
@@ -39,6 +41,7 @@ const BillAdvanced = () => {
         { name: 'name', label: 'Name', type: 'text', err: { cond: (inputs.name.length > 20), msg: 'Name is too long.' } },
         { name: 'users', label: 'Users', type: 'users', err: { cond: (inputs.users === []), msg: 'You haven\'t added any users.' } },
         { name: 'items', label: 'Items', type: 'users', err: { cond: (inputs.items === []), msg: 'You haven\'t added any items.' } },
+        { name: 'price', label: 'Price', type: 'price' },
       ]}
     />
   );

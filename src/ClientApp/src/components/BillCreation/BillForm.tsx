@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import InputField from '../InputForm/InputFields';
 import { DateSelector } from '../InputForm/DateSelector';
 import { UserSelector } from '../InputForm/UserSelector';
+import { PriceDisplay } from './PriceDisplay';
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -22,9 +23,16 @@ export interface ButtonSubmitProps {
     msg?: string
 }
 
+interface InputProps {
+    name: string,
+    users: number[],
+    items: number[],
+    price: number
+  }
+
 interface BillFormProps {
     title: String,
-    inputs: Object,
+    inputs: InputProps,
     set: Function,
     submit: ButtonSubmitProps,
     cancel: ButtonSubmitProps,
@@ -50,7 +58,9 @@ export const BillForm = (props : BillFormProps) => {
                                 case 'span':
                                     return <Alert key={`alert-${idx}`} severity="info">{field.content}</Alert>;
                                 case 'users':
-                                    return <UserSelector key={`text-${idx}`} name={field.name} label={field.label} inputs={inputs} set={set} err={field.err}/>;
+                                    return <UserSelector key={`user-${idx}`} name={field.name} label={field.label} inputs={inputs} set={set} err={field.err}/>;
+                                case 'price':
+                                    return <PriceDisplay price={inputs.price}/>;   
                                 default:
                                     return <InputField key={`text-${idx}`} name={field.name} label={field.label} type={field.type} inputs={inputs} set={set} err={field.err}/>;
                             }
