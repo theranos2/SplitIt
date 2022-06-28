@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace split_it.Controllers
 {
@@ -25,8 +26,7 @@ namespace split_it.Controllers
                     || user.LastName == null || user.LastName.Equals("")
                 )
             {
-                // TODO: write middleware to return {"message": <msg>} + statusCode in header
-                return null;
+                throw new BadHttpRequestException("Email, FirstName and LastName must not be empty");
             }
             user.Id = Guid.NewGuid();
             var db = new DatabaseContext();
