@@ -35,8 +35,6 @@ export const BillForm = (props : BillFormProps) => {
     const { title, inputs, fields, set, submit, cancel } = props;
     const theme = createTheme();
 
-    console.log(inputs);
-
     return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
@@ -52,7 +50,7 @@ export const BillForm = (props : BillFormProps) => {
                                 case 'span':
                                     return <Alert key={`alert-${idx}`} severity="info">{field.content}</Alert>;
                                 case 'users':
-                                    return <UserSelector/>;
+                                    return <UserSelector key={`text-${idx}`} name={field.name} label={field.label} inputs={inputs} set={set} err={field.err}/>;
                                 default:
                                     return <InputField key={`text-${idx}`} name={field.name} label={field.label} type={field.type} inputs={inputs} set={set} err={field.err}/>;
                             }

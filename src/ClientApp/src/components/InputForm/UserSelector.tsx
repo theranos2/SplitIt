@@ -1,4 +1,5 @@
 import React from 'react';
+
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -9,13 +10,38 @@ import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
+import Alert from '@mui/material/Alert';
 
-export const UserSelector = () => {
+interface ErrorType {
+    cond: boolean,
+    msg: string
+}
+
+interface UserSelectorProps {
+    name: string, 
+    label: string,
+    inputs: Record<string, any>, 
+    set: Function, 
+    err: ErrorType
+}
+
+interface User {
+    name: string,
+    id: number
+};
+
+export const UserSelector = (props: UserSelectorProps) => {
+    const { name, label, inputs, set, err } = props;
+    let users : User[] = [
+        { name: 'Adam', id: 1 },
+        { name: 'Ken', id: 2 },
+        { name: 'Razin', id: 3 },
+        { name: 'Lachlan', id: 4 },
+        { name: 'Xibo', id: 5 },
+    ];
+
     const [open, setOpen] = React.useState(false);
-    const [users, setUsers] = React.useState<Array<String>>([]);
-
-    const set = (event: SelectChangeEvent<typeof users>) => setUsers([]);
 
     const openModal = () => setOpen(true);
 
@@ -23,51 +49,47 @@ export const UserSelector = () => {
         (reason !== 'backdropClick') && setOpen(false);
     };
 
+    React.useEffect(() => {
+        const getUsers = () => {
+            // users = 
+            // await request('/api/users/')
+                // .then((res) => res.users)
+                // .then
+        }
+        
+        getUsers();
+        // console.log(users);
+    });
+
     return (
         <div>
-            <Button onClick={openModal}>Open select dialog</Button>
-            <Dialog disableEscapeKeyDown open={open} onClose={close}>
-                <DialogTitle>Fill the form</DialogTitle>
+            <Button onClick={openModal}>Add/Remove {label}</Button>
+            <Dialog disableEscapeKeyDown open={open} onClose={closeModal}>
+                <DialogTitle>Add {label}</DialogTitle>
                 <DialogContent>
                 <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
                     <FormControl sx={{ m: 1, minWidth: 120 }}>
-                    <InputLabel htmlFor="demo-dialog-native">Age</InputLabel>
+                    <InputLabel id={`select-${name}-inputlabel`}>{label}</InputLabel>
                     <Select
-                        native
-                        value={users}
-                        onChange={set}
-                        input={<OutlinedInput label="Age" id="demo-dialog-native" />}
+                        labelId={`select-${name}-label`}
+                        id={`select-${name}-id`}
+                        value={inputs[name]}
+                        onChange={set(name)}
+                        input={<OutlinedInput label={label}/>}
                     >
-                        <option aria-label="None" value="" />
-                        <option value={10}>Ten</option>
-                        <option value={20}>Twenty</option>
-                        <option value={30}>Thirty</option>
-                    </Select>
-                    </FormControl>
-                    <FormControl sx={{ m: 1, minWidth: 120 }}>
-                    <InputLabel id="demo-dialog-select-label">Age</InputLabel>
-                    <Select
-                        labelId="demo-dialog-select-label"
-                        id="demo-dialog-select"
-                        value={users}
-                        onChange={set}
-                        input={<OutlinedInput label="Age" />}
-                    >
-                        <MenuItem value="">
-                        <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={10}>Ten</MenuItem>
-                        <MenuItem value={20}>Twenty</MenuItem>
-                        <MenuItem value={30}>Thirty</MenuItem>
+                    {users.filter((user) => inputs[name].includes(user.id) === false).map((user) =>
+                        <MenuItem value={user.id}>{user.name}</MenuItem>)
+                    }
                     </Select>
                     </FormControl>
                 </Box>
                 </DialogContent>
                 <DialogActions>
-                <Button onClick={closeModal}>Cancel</Button>
-                <Button onClick={closeModal}>Confirm</Button>
+                <Button onClick={closeModal}>Close</Button>
+                {/* <Button onClick={closeModal}>Confirm</Button> */}
                 </DialogActions>
             </Dialog>
+            { err.cond ? <Alert severity="warning">{err.msg}</Alert> : <></> }
         </div>
     );
 };
