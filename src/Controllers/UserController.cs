@@ -28,7 +28,7 @@ namespace split_it.Controllers
             {
                 throw new BadHttpRequestException("Email, FirstName and LastName must not be empty");
             }
-            user.Id = Guid.NewGuid();
+            user.Id = Guid.Empty;
             var db = new DatabaseContext();
             db.Users.Add(user);
             db.SaveChanges();
