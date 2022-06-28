@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import InputField from './InputFields';
-import { DateSelector } from './DateSelector';
-import { UserSelector } from './UserSelector';
+import InputField from '../InputForm/InputFields';
+import { DateSelector } from '../InputForm/DateSelector';
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -22,7 +21,7 @@ export interface ButtonSubmitProps {
     msg?: string
 }
 
-interface BillFormProps {
+interface LoginFormProps {
     title: String,
     inputs: Object,
     set: Function,
@@ -31,9 +30,11 @@ interface BillFormProps {
     fields: Array<any>      // TODO: should be the actual types
 }
 
-export const BillForm = (props : BillFormProps) => {
+export const LoginForm = (props : LoginFormProps) => {
     const { title, inputs, fields, set, submit, cancel } = props;
     const theme = createTheme();
+
+    console.log(inputs);
 
     return (
         <ThemeProvider theme={theme}>
@@ -49,8 +50,6 @@ export const BillForm = (props : BillFormProps) => {
                                     return <DateSelector key={`date-${idx}`} start={field.dates.start} end={field.dates.end} set={set}/>;
                                 case 'span':
                                     return <Alert key={`alert-${idx}`} severity="info">{field.content}</Alert>;
-                                case 'users':
-                                    return <UserSelector key={`text-${idx}`} name={field.name} label={field.label} inputs={inputs} set={set} err={field.err}/>;
                                 default:
                                     return <InputField key={`text-${idx}`} name={field.name} label={field.label} type={field.type} inputs={inputs} set={set} err={field.err}/>;
                             }
@@ -68,7 +67,7 @@ export const BillForm = (props : BillFormProps) => {
     );
 };
 
-BillForm.propTypes = {
+LoginForm.propTypes = {
   title: PropTypes.string,
   inputs: PropTypes.object,
   fields: PropTypes.array,

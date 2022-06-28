@@ -41,10 +41,20 @@ export const UserSelector = (props: UserSelectorProps) => {
         { name: 'Xibo', id: 5 },
     ];
 
+    const [NewUsers, SetNewUsers] = React.useState<number[]>([]);
+    const addUser    = (event: any) => SetNewUsers((old) => [...old, event.target.value]);
+    const removeUser = (event: any) => SetNewUsers((old) => old.filter((e) => e !== event.target.value));
+    const submit = () => {
+        set(name)(NewUsers);
+        cancel();
+    }
+    const cancel = () => {
+        SetNewUsers(() => []);
+        setOpen(false);
+    };
+
     const [open, setOpen] = React.useState(false);
-
     const openModal = () => setOpen(true);
-
     const closeModal = (event: React.SyntheticEvent<unknown>, reason?: string) => {
         (reason !== 'backdropClick') && setOpen(false);
     };
@@ -59,38 +69,50 @@ export const UserSelector = (props: UserSelectorProps) => {
         
         getUsers();
         // console.log(users);
-    });
+    }, [NewUsers]);
 
     return (
         <div>
             <Button onClick={openModal}>Add/Remove {label}</Button>
             <Dialog disableEscapeKeyDown open={open} onClose={closeModal}>
-                <DialogTitle>Add {label}</DialogTitle>
+                <DialogTitle>Add/Remove {label}</DialogTitle>
                 <DialogContent>
                 <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
                     <FormControl sx={{ m: 1, minWidth: 120 }}>
-                    <InputLabel id={`select-${name}-inputlabel`}>{label}</InputLabel>
+                    <InputLabel id={`select-${name}-inputlabel`}>Add {label}</InputLabel>
                     <Select
                         labelId={`select-${name}-label`}
                         id={`select-${name}-id`}
                         value={inputs[name]}
-                        onChange={set(name)}
+                        onChange={addUser}
                         input={<OutlinedInput label={label}/>}
                     >
                     {
-                        users.filter((user) => inputs[name].includes(user.id) === false).map((user) =>
+                        users.filter((user) => !inputs[name].includes(user.id) && !NewUsers.includes(user.id)).map((user) =>
                             <MenuItem value={user.id}>{user.name}</MenuItem>)
                     }
                     </Select>
                     </FormControl>
+                    <FormControl sx={{ m: 1, minWidth: 120 }}>
+                    <InputLabel id={`select-${name}-inputlabel`}>Remove {label}</InputLabel>
+                    <Select
+                        labelId={`select-${name}-label`}
+                        id={`select-${name}-id`}
+                        value={inputs[name]}
+                        onChange={removeUser}
+                        input={<OutlinedInput label={label}/>}
+                    >
                     {
-                        inputs[name].map((user : User) => <a>{user.name}</a>)
+                        users.filter((user) => inputs[name].includes(user.id) || NewUsers.includes(user.id)).map((user) =>
+                            <MenuItem value={user.id}>{user.name}</MenuItem>)
                     }
+                    </Select>
+                    </FormControl>
                 </Box>
                 </DialogContent>
                 <DialogActions>
-                <Button onClick={closeModal}>Close</Button>
-                {/* <Button onClick={closeModal}>Confirm</Button> */}
+                <Button onClick={cancel}>Close</Button>
+                <Button onClick={submit}>Confirm</Button>
                 </DialogActions>
             </Dialog>
             { err.cond ? <Alert severity="warning">{err.msg}</Alert> : <></> }

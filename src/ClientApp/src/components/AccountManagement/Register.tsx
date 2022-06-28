@@ -1,5 +1,5 @@
 import React from 'react'
-import { LoginForm } from '../InputForm/LoginForm';
+import { LoginForm } from './LoginForm';
 
 const Register = () => {
   const [inputs, setInputs] = React.useState({ email: '', name: '', pass1: '', pass2: '' });
