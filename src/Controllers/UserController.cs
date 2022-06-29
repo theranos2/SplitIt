@@ -1,5 +1,7 @@
-﻿using System;
+using System;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace split_it.Controllers
 {
@@ -7,19 +9,35 @@ namespace split_it.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
+        DatabaseContext db;
+        public UserController(DatabaseContext _db)
+        {
+            db = _db;
+        }
 
-        [HttpGet("/{user_id:Guid}")]
+        [HttpGet("{user_id:Guid}")]
         public User Get(Guid user_id)
         {
-
-            return new User();
+            return db.Users.Where(u => u.Id.Equals(user_id)).FirstOrDefault();
         }
 
-        [HttpPost("/")]
+
+        [HttpPost]
         public User Create(User user)
         {
-            return new User();
-        }
 
+            if (
+                    user.Email == null || user.Email.Equals("")
+                    || user.FirstName == null || user.FirstName.Equals("")
+                    || user.LastName == null || user.LastName.Equals("")
+                )
+            {
+                throw new BadHttpRequestException("Email, FirstName and LastName must not be empty");
+            }
+            user.Id = Guid.Empty;
+            db.Users.Add(user);
+            db.SaveChanges();
+            return user;
+        }
     }
 }

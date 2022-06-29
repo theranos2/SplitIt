@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,7 @@ namespace split_it
         {
 
             services.AddControllersWithViews();
+            services.AddDbContext<DatabaseContext>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -32,18 +34,24 @@ namespace split_it
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DatabaseContext _db)
         {
-            if (env.IsDevelopment())
+            app.UseExceptionHandler(c => c.Run(async ctx =>
             {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+                var exception = ctx.Features.Get<IExceptionHandlerPathFeature>();
+                if (exception?.Error is BadHttpRequestException)
+                {
+                    var httpException = (BadHttpRequestException)exception.Error;
+                    var response = new { message = httpException.Message };
+                    ctx.Response.StatusCode = httpException.StatusCode;
+                    await ctx.Response.WriteAsJsonAsync(response);
+                }
+                else if (env.IsDevelopment())
+                {
+                    // Re-throw this exception
+                    throw (System.Exception)exception;
+                }
+            }));
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
