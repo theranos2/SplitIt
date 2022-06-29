@@ -28,7 +28,7 @@ const BillSimple = () => {
   }
 
   return (
-    <BillForm title='Create a bill' inputs={inputs} submit={{ href: '/', func: submit }} set={set} cancel={{ href: '/', msg: 'Cancel' }}
+    <BillForm title='Create an advanced bill' inputs={inputs} submit={{ href: '/', func: submit }} set={set} cancel={{ href: '/bill/create', msg: 'Cancel' }}
       fields={[
         { name: 'name', label: 'Name', type: 'text', err: { cond: (inputs.name.length > 20), msg: 'Name is too long.' } },
         { name: 'users', label: 'Users', type: 'users', err: { cond: (inputs.users === []), msg: 'You haven\'t added any users.' } },
