@@ -4,9 +4,11 @@ import './App.css';
 
 import Login from './components/AccountManagement/Login';
 import Register from './components/AccountManagement/Register';
+
 import BillCreate from './components/BillCreation/BillCreate';
 import BillSimple from './components/BillCreation/BillSimple';
 import BillAdvanced from './components/BillCreation/BillAdvanced';
+import BillsAll from './components/BillView/BillsAll';
 
 import NotFound from './components/NotFound';
 
@@ -20,6 +22,7 @@ const App = () => {
         <Route path="/bill/create" element={<BillCreate/>}/>
         <Route path="/bill/simple" element={<BillSimple/>}/>
         <Route path="/bill/advanced" element={<BillAdvanced/>}/>
+        <Route path="/bill/view" element={<BillsAll/>}/>
         <Route path="*" element={<NotFound/>}/>
       </Routes>
     </BrowserRouter>
