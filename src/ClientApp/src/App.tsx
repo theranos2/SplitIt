@@ -5,6 +5,7 @@ import './App.css';
 import Login from './components/AccountManagement/Login';
 import Register from './components/AccountManagement/Register';
 import BillAdvanced from './components/BillCreation/BillAdvanced';
+import BillSimple from './components/BillCreation/BillSimple';
 
 const App = () => {
   return (
@@ -12,7 +13,8 @@ const App = () => {
       <Routes>
         <Route path="/login" element={<Login/>}/>
         <Route path="/register" element={<Register/>}/>
-        <Route path="/bill/create" element={<BillAdvanced/>}/>
+        <Route path="/bill/advanced" element={<BillAdvanced/>}/>
+        <Route path="/bill/create" element={<BillSimple/>}/>
       </Routes>
     </BrowserRouter>
   );

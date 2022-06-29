@@ -27,7 +27,7 @@ interface Item {
 interface InputProps {
     name: string,
     users: number[],    // an array of user-ids
-    items: Item[],
+    items?: Item[],
     price: number
 }
 
