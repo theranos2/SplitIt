@@ -37,7 +37,7 @@ export const ItemSelector = (props: ItemSelectorProps) => {
     const { name, label, inputs, set, err } = props;
 
     const [currentItem, setCurrentItem] = React.useState({ name: '', price: 0, user: 0 });
-    const setUser = (event: any) => setCurrentItem((old) => ({ ...old, ['user']: event.target.value }));
+    const setUser = (event: any) => setCurrentItem((old) => ({ ...old, user: event.target.value }));
     const submit = () => {
         set(name)(currentItem);
         cancel();
@@ -54,17 +54,17 @@ export const ItemSelector = (props: ItemSelectorProps) => {
     };
 
     /* TODO: actually fetch the users from the backend, rather than hardcode them */
-    React.useEffect(() => {
-        const getUsers = () => {
-            // users = 
-            // await request('/api/users/')
-                // .then((res) => res.users)
-                // .then
-        }
+    // React.useEffect(() => {
+    //     const getUsers = () => {
+    //         // users = 
+    //         // await request('/api/users/')
+    //             // .then((res) => res.users)
+    //             // .then
+    //     }
 
-        getUsers();
-        // console.log(users);
-    }, [currentItem]);
+    //     getUsers();
+    //     // console.log(users);
+    // }, [currentItem]);
 
     return (
         <div>
@@ -74,7 +74,6 @@ export const ItemSelector = (props: ItemSelectorProps) => {
                 <DialogContent>
                 <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
                     <FormControl sx={{ m: 1, minWidth: 120 }}>
-                    <InputLabel id={`select-${name}-inputlabel`}>Add {label}</InputLabel>
                     <TextField
                         id="outlined-number"
                         label="Name"
@@ -87,10 +86,12 @@ export const ItemSelector = (props: ItemSelectorProps) => {
                         type="number"
                         InputLabelProps={{shrink: true}}
                     />
+                    <InputLabel id={`select-${name}-inputlabel`}>Add {label}</InputLabel>
                     <Select
                         labelId={`select-${name}-label`}
                         id={`select-${name}-id`}
-                        value={inputs[name]}
+                        value={inputs['users']}
+                        label="Choose users"
                         onChange={setUser}
                         input={<OutlinedInput label={label}/>}
                     >

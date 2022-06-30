@@ -5,7 +5,7 @@ import ViewContainer from './ViewContainer';
 const BillsAll = () => {
 
     return (
-        <ViewContainer title='' description='' price={0}/>
+        <ViewContainer title='title' description='desc'/>
     );
 };
 

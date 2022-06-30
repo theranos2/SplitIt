@@ -1,30 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
+// import CardMedia from '@mui/material/CardMedia';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+import BillComplex from './BillComplex';
+import BillSimple from './BillSimple';
 
 interface ViewContainerProps {
   title: string,
   description: string,
-  price: number,
   items?: Array<any>;
 };
 
 const ViewContainer = (props: ViewContainerProps) => {
-  const { title, description, price, items } = props;
+  const { title, description, items } = props;
 
   const theme = createTheme();
-
-  // const display = () => <></>;
 
   return (
     <ThemeProvider theme={theme}>
@@ -32,7 +32,7 @@ const ViewContainer = (props: ViewContainerProps) => {
       <main>
         <Box sx={{ bgcolor: 'background.paper', pt: 8, pb: 0 }}>
           <Container maxWidth='sm'>
-            <Typography component='h1' variant='h2' align='center' color='text.primary' gutterBottom>
+            <Typography component='h1' variant='h2' align='center' color='text.primary'>
               {title}
             </Typography>
             <Typography variant='h5' align='center' color='text.secondary' paragraph>
@@ -53,11 +53,11 @@ const ViewContainer = (props: ViewContainerProps) => {
                       {item.name}
                     </Typography>
                     <Typography>
-                      {item.price}
+                      {(item.type === 'simple') ? <BillSimple item={item}/> : <BillComplex item={item}/>}
                     </Typography>
                   </CardContent>
                   <CardActions>
-                    {/*  */}
+                    {/* Menu to interact with the listing */}
                   </CardActions>
                 </Card>
               </Grid>
@@ -68,9 +68,9 @@ const ViewContainer = (props: ViewContainerProps) => {
       {/* TODO: should stick to the bottom of the page */}
       <Box sx={{ bgcolor: 'background.paper', p: 6 }} component='footer'>
         <Typography variant='h6' align='center' gutterBottom>
-          SplitIt: 
+          SplitIt:&nbsp;
           <Typography display='inline' variant='subtitle1' color='text.secondary' component='p'>
-            Go waste your life savings
+            waste your life savings, and blame your friends
           </Typography>
         </Typography>
       </Box>
@@ -79,7 +79,9 @@ const ViewContainer = (props: ViewContainerProps) => {
 }
 
 ViewContainer.propTypes = {
-
+  title: PropTypes.string,
+  description: PropTypes.string,
+  items: PropTypes.array
 };
 
 export default ViewContainer;

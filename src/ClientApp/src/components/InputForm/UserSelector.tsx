@@ -60,17 +60,17 @@ export const UserSelector = (props: UserSelectorProps) => {
     };
 
     /* TODO: actually fetch the users from the backend, rather than hardcode them */
-    React.useEffect(() => {
-        const getUsers = () => {
-            // users = 
-            // await request('/api/users/')
-                // .then((res) => res.users)
-                // .then
-        }
+    // React.useEffect(() => {
+    //     const getUsers = () => {
+    //         // users = 
+    //         // await request('/api/users/')
+    //             // .then((res) => res.users)
+    //             // .then
+    //     }
 
-        getUsers();
-        // console.log(users);
-    }, [NewUsers]);
+    //     getUsers();
+    //     // console.log(users);
+    // }, [NewUsers]);
 
     return (
         <div>
