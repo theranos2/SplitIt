@@ -3,6 +3,8 @@ using split_it.Models;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
+using split_it.Exceptions.Http;
 
 namespace split_it.Controllers
 {
@@ -209,5 +211,24 @@ namespace split_it.Controllers
 
             return db.Users.Where(x=> x.FirstName == "Jack").FirstOrDefault();
         }
+
+        [HttpGet("/badrequest")]
+        public string BadRequest()
+        {
+            throw new HttpBadRequest("In Africa! That is SOOO BAAAAD!");
+        }
+
+        [HttpGet("/internalserver")]
+        public string InternelServer()
+        {
+            throw new HttpInternalServer("It's it's it's it's it's it's it's it's it's it's");
+        }
+
+        [HttpGet("/notfound")]
+        public string NotFound()
+        {
+            throw new HttpInternalServer("Confusion of the Highest Orda!");
+        }
     }
+
 }
