@@ -42,6 +42,13 @@ namespace split_it
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DatabaseContext _db)
         {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Version 1.0"));
+            }
+
             app.UseExceptionHandler(c => c.Run(async ctx =>
             {
                 var exception = ctx.Features.Get<IExceptionHandlerPathFeature>();
@@ -58,27 +65,16 @@ namespace split_it
                     throw (System.Exception)exception;
                 }
             }));
-
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Version 1.0"));
-            }
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-
             app.UseRouting();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
             });
-
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
