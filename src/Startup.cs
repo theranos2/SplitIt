@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Http;
+using split_it.Middlewares;
+using Microsoft.AspNetCore.Mvc;
+using split_it.Exceptions;
 
 namespace split_it
 {
@@ -23,8 +25,20 @@ namespace split_it
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllersWithViews();
-            services.AddDbContext<DatabaseContext>();
+            services.AddControllersWithViews(options => options.Filters.Add(typeof (ValidationResponse))); // Use our custom validation response
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true; // Disable the default validation response
+            });
+
+            services.AddDbContext<DatabaseContext>(); // Inject in our database to be used in every controller
+            // Add swagger documentation
+            services.AddSwaggerGen(c => 
+            {
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Split-It!", Version = "v1" });
+            }); 
+
+            services.AddTransient<ExceptionMiddleware>(); // Required to allow middleware to function. Because it inherists IMiddleWare 
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -36,37 +50,24 @@ namespace split_it
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DatabaseContext _db)
         {
-            app.UseExceptionHandler(c => c.Run(async ctx =>
-            {
-                var exception = ctx.Features.Get<IExceptionHandlerPathFeature>();
-                if (exception?.Error is BadHttpRequestException)
-                {
-                    var httpException = (BadHttpRequestException)exception.Error;
-                    var response = new { message = httpException.Message };
-                    ctx.Response.StatusCode = httpException.StatusCode;
-                    await ctx.Response.WriteAsJsonAsync(response);
-                }
-                else if (env.IsDevelopment())
-                {
-                    // Re-throw this exception
-                    throw (System.Exception)exception;
-                }
-            }));
+            app.UseMiddleware<ExceptionMiddleware>();
 
+            if (env.IsDevelopment())
+            {
+                //app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Version 1.0"));
+            }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-
-            app.UsePathBase(new PathString("/api"));
             app.UseRouting();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
             });
-
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
