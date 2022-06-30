@@ -185,6 +185,7 @@ namespace split_it.Controllers
             return myBill;
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public User GetCurrentUser()
         {
             // Stub function to return an existing user for now
