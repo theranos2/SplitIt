@@ -9,12 +9,12 @@ import MoreIcon from '@mui/icons-material/MoreVert';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import MailIcon from '@mui/icons-material/Mail';
-import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import AppBar from '@mui/material/AppBar';
 import Badge from '@mui/material/Badge';
-import Menu from '@mui/material/Menu';
 import Box from '@mui/material/Box';
+
+import DropDownMenu from './DropDownMenu';
 
 const links = [
 	{ href: '/bill/create', icon: <AddBusinessRoundedIcon/> },
@@ -24,6 +24,7 @@ const links = [
 ];
 
 const TopNavigation = () => {
+
 	return (
 		<Box sx={{ flexGrow: 1 }}>
 		<AppBar position="static">
@@ -35,23 +36,24 @@ const TopNavigation = () => {
 			>
 				SplitIt
 			</Typography>
-			<Box sx={{ flexGrow: 1 }} />
-				<Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-					{links.map((link) => (
-						<IconButton size="large" color="inherit">
-							<Link to={link.href} style={{ textDecoration: 'none', color: 'white' }}>
-								{ link.icon }
-							</Link>
-						</IconButton>
-					))}
-
+			<Box sx={{ flexGrow: 1 }}/>
+			<Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+				{links.map((link) => (
 					<IconButton size="large" color="inherit">
-						<Badge badgeContent={10} color="error" overlap="circular">
-							<NotificationsIcon/>
-						</Badge>
+						<Link to={link.href} style={{ textDecoration: 'none', color: 'white' }}>
+							{ link.icon }
+						</Link>
 					</IconButton>
-				</Box>
-				<Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+				))}
+
+				<IconButton size="large" color="inherit">
+					<Badge badgeContent={10} color="error" overlap="circular">
+						<NotificationsIcon/>
+					</Badge>
+				</IconButton>
+				<DropDownMenu/>
+			</Box>
+			<Box sx={{ display: { xs: 'flex', md: 'none' } }}>
 				<IconButton size="large" color="inherit">
 					<MoreIcon/>
 				</IconButton>
@@ -60,6 +62,6 @@ const TopNavigation = () => {
 		</AppBar>
 		</Box>
 	);
-}
+};
 
 export default TopNavigation;
