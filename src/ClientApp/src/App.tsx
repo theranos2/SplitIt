@@ -13,9 +13,12 @@ import BillsAll from './components/BillView/BillsAll';
 import NotFound from './components/NotFound';
 import HomePage from './components/HomePage';
 
+import TopNavigation from './components/TopNavigation';
+
 const App = () => {
   return (
     <BrowserRouter>
+      <TopNavigation/>
       <Routes>
         <Route path="/" element={<HomePage/>}/> { /* should be exact, but it doesn't work */ }
         <Route path="/login" element={<Login/>}/>
