@@ -5,8 +5,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 
-const BillCreate = () => {
-
+const HomePage = () => {
     return (
         <Grid
             container
@@ -18,13 +17,12 @@ const BillCreate = () => {
         >
             <Grid item xs={3}>
                 <ButtonGroup orientation="vertical" aria-label="vertical outlined button group">
-                    <Button key="one"><Link to="/bill/simple">Create a simple bill</Link></Button>
-                    <Button key="one"><Link to="/bill/advanced">Create an advanced bill</Link></Button>
-                    <Button key="one"><Link to="/">Back</Link></Button>
+                    <Button key="one"><Link to="/bill/create">Create a bill</Link></Button>
+                    <Button key="one"><Link to="/bill/view">View bills</Link></Button>
                 </ButtonGroup>
             </Grid>
         </Grid> 
     );
 };
 
-export default BillCreate;
+export default HomePage;
