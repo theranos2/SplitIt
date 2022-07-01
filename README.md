@@ -25,8 +25,5 @@ using split_it.Exceptions.Http;
 throw new HttpBadRequest("Reason");
 throw new HttpInternalServer("Reason");
 throw new HttpNotFound("Reason");
-
-// Custom Http Exception
-throw new CustomHttpException("Reason");
 ```
 - Refer code to see all possible overloads
