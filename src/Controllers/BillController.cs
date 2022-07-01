@@ -3,8 +3,6 @@ using split_it.Models;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
-using split_it.Exceptions.Http;
 
 namespace split_it.Controllers
 {
@@ -16,14 +14,14 @@ namespace split_it.Controllers
 
         public BillController(DatabaseContext _db)
         {
-           db = _db; 
+            db = _db;
         }
 
 
         [HttpGet]
         public Guid OG()
         {
-			return new Guid();
+            return new Guid();
         }
 
         [HttpGet("{bill_id:Guid}")]
@@ -42,30 +40,30 @@ namespace split_it.Controllers
             if (bill.Title == null)
                 bill.Title = "";
 
-            if(bill.Shares == null)
+            if (bill.Shares == null)
                 bill.Shares = new List<Share>();
-            
+
 
             bill.Total = 0.0;
-            foreach(Share share in bill.Shares)
+            foreach (Share share in bill.Shares)
             {
                 // share input validation
-                if(share.Amount < 0.05)
+                if (share.Amount < 0.05)
                     // we need to handle exception in sprint 2 or later
                     // currently no exception handler hence no strings return
                     throw new Exception("Error");
 
-                if(share.Description == null)
+                if (share.Description == null)
                     share.Description = "";
-                
+
                 //share.Payer = TODO. this is dangerous. We need DTO.
                 //share.Payer = db.Users.Where(x => x.Email == share.Payer.Email).FirstOrDefault();
-                share.Payer = db.Users.Where(x=> x.Email == share.Payer.Email).FirstOrDefault();
+                share.Payer = db.Users.Where(x => x.Email == share.Payer.Email).FirstOrDefault();
 
                 share.hasAccepted = false;
                 share.hasPaid = false;
 
-                if(share.Payer == GetCurrentUser())
+                if (share.Payer == GetCurrentUser())
                 {
                     share.hasPaid = true;
                     share.hasAccepted = true;
@@ -73,7 +71,7 @@ namespace split_it.Controllers
 
                 bill.Total += share.Amount;
             }
-            
+
             // persist to the database
             db.Bills.Add(bill);
             db.SaveChanges();
@@ -93,7 +91,7 @@ namespace split_it.Controllers
                 query = query.Where(x => x.Shares.Any(x => filter.BillMembers.Contains(x.Id)));
 
 
-            return query.Where( x => 
+            return query.Where(x =>
                     new DateTimeOffset(x.Created).ToUnixTimeSeconds() <= filter.EndTime &&
                     new DateTimeOffset(x.Created).ToUnixTimeSeconds() >= filter.StartTime &&
                     x.Total <= filter.EndAmount &&
@@ -107,18 +105,18 @@ namespace split_it.Controllers
         {
             Bill bill = db.Bills.Where(x => x.Id == bill_id).FirstOrDefault();
 
-            if(bill == null)
+            if (bill == null)
                 return "Failed: Cannot find";
-            
+
             // determine who user is 
             // problem because we havent got auth working
             User curUser = GetCurrentUser();
 
             bool accepted = false;
-            foreach(Share share in bill.Shares)
+            foreach (Share share in bill.Shares)
                 if (share.Payer == curUser)
                     share.hasAccepted = true;
-                
+
             if (!accepted)
                 return "Failed: Cannot find";
 
@@ -130,23 +128,23 @@ namespace split_it.Controllers
         {
             Bill bill = db.Bills.Where(x => x.Id == bill_id).FirstOrDefault();
 
-            if(bill == null)
+            if (bill == null)
                 return "Failed: Cannot find";
-            
+
             // determine who user is 
             // problem because we havent got auth working
             User curUser = GetCurrentUser();
 
             bool rejected = false;
-            foreach(Share share in bill.Shares)
+            foreach (Share share in bill.Shares)
                 if (share.Payer == curUser)
                 {
-                    if(share.hasAccepted)
+                    if (share.hasAccepted)
                         return "Failed: Cannot reject when you have accepted already";
                     else
                         // redundant
                         share.hasAccepted = false;
-                        // TODO notifcation goes here
+                    // TODO notifcation goes here
                 }
 
             if (!rejected)
@@ -160,7 +158,7 @@ namespace split_it.Controllers
         {
             Bill bill = db.Bills.Where(x => x.Id == bill_id).FirstOrDefault();
 
-            if(bill == null)
+            if (bill == null)
                 return "Failed: Cannot find";
 
             db.Bills.Remove(bill);
@@ -175,14 +173,14 @@ namespace split_it.Controllers
             // TODO EDIT AND POST(Create) SHOULD BE COUSINS else spag code
             Bill myBill = db.Bills.Where(x => x.Id == bill_id).FirstOrDefault();
 
-            if(myBill == null)
+            if (myBill == null)
                 return null;
 
             myBill.isSettled = bill.isSettled;
             myBill.Shares = bill.Shares; // TODO get pwned son! CVE: 10
             myBill.Title = bill.Title;
             myBill.Total = bill.Total;
-            
+
             db.SaveChanges();
             return myBill;
         }
@@ -192,15 +190,17 @@ namespace split_it.Controllers
         {
             // Stub function to return an existing user for now
             // Will actually return current user when authentication is added
-            if(db.Users.Where(x=> x.FirstName == "Jack").FirstOrDefault() == null)
+            if (db.Users.Where(x => x.FirstName == "Jack").FirstOrDefault() == null)
             {
-                db.Users.Add(new User{
+                db.Users.Add(new User
+                {
                     Email = "hello@example.com",
                     FirstName = "Jack",
                     LastName = "Sack"
                 });
 
-                db.Users.Add(new User{
+                db.Users.Add(new User
+                {
                     Email = "hello2@example.com",
                     FirstName = "Sack",
                     LastName = "Jack"
@@ -209,26 +209,7 @@ namespace split_it.Controllers
                 db.SaveChanges();
             }
 
-            return db.Users.Where(x=> x.FirstName == "Jack").FirstOrDefault();
-        }
-
-        [HttpGet("/badrequest")]
-        public string BadRequest()
-        {
-            throw new HttpBadRequest("In Africa! That is SOOO BAAAAD!");
-        }
-
-        [HttpGet("/internalserver")]
-        public string InternelServer()
-        {
-            throw new HttpInternalServer("It's it's it's it's it's it's it's it's it's it's");
-        }
-
-        [HttpGet("/notfound")]
-        public string NotFound()
-        {
-            throw new HttpInternalServer("Confusion of the Highest Orda!");
+            return db.Users.Where(x => x.FirstName == "Jack").FirstOrDefault();
         }
     }
-
 }
