@@ -2,7 +2,7 @@ using System;
 using System.Net;
 using System.Runtime.Serialization;
 
-namespace split_it.Exceptions
+namespace split_it.Exceptions.Http
 {
     [Serializable]
     public class CustomHttpException : Exception
