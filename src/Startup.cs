@@ -25,7 +25,7 @@ namespace split_it
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllersWithViews(options => options.Filters.Add(typeof (ValidationResponse))); // Use our custom validation response
+            services.AddControllersWithViews(options => options.Filters.Add(typeof(ValidationResponse))); // Use our custom validation response
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true; // Disable the default validation response
@@ -33,10 +33,10 @@ namespace split_it
 
             services.AddDbContext<DatabaseContext>(); // Inject in our database to be used in every controller
             // Add swagger documentation
-            services.AddSwaggerGen(c => 
+            services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Split-It!", Version = "v1" });
-            }); 
+            });
 
             services.AddTransient<ExceptionMiddleware>(); // Required to allow middleware to function. Because it inherists IMiddleWare 
 

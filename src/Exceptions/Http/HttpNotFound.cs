@@ -1,7 +1,6 @@
 using System;
 using System.Net;
 using System.Runtime.Serialization;
-using split_it.Exceptions;
 
 namespace split_it.Exceptions.Http
 {
@@ -25,6 +24,5 @@ namespace split_it.Exceptions.Http
         protected HttpNotFound(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-
     }
 }
