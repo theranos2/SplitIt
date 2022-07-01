@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
+using split_it.Exceptions.Http;
 
 namespace split_it.Controllers
 {
@@ -32,7 +32,7 @@ namespace split_it.Controllers
                     || user.LastName == null || user.LastName.Equals("")
                 )
             {
-                throw new BadHttpRequestException("Email, FirstName and LastName must not be empty");
+                throw new HttpBadRequest("Email, FirstName and LastName must not be empty");
             }
             user.Id = Guid.Empty;
             db.Users.Add(user);
