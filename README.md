@@ -16,3 +16,13 @@ rm -f database.db
 dotnet ef migrations add "Initial" && dotnet ef database update 
 ```
 - Or just run `make db-reset`
+
+# Using Http Exceptions
+```c#
+using split_it.Exceptions.Http;
+
+// On error
+throw new HttpBadRequest("Reason");
+throw new HttpInternalServer("Reason");
+throw new HttpNotFound("Reason");
+```
