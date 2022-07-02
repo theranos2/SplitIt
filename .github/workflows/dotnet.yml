@@ -15,11 +15,12 @@ jobs:
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 5.0.x
-      - name: Restore tools
-        working-directory: ./src
-        run: dotnet tool restore
+      - name: Install dotnet-format
+        run: dotnet tool install -g dotnet-format
       - name: Check formatting
         working-directory: ./src
+        run: dotnet format --check
+      - working-directory: ./tests
         run: dotnet format --check
   build:
     needs: format
@@ -33,9 +34,12 @@ jobs:
       - name: Restore dependencies
         working-directory: ./src
         run: dotnet restore
+      - working-directory: ./tests
+        run: dotnet restore
       - name: Build
         working-directory: ./src
         run: dotnet build --no-restore
-      # TODO: enable when we have tests
-      # - name: Test
-      #   run: dotnet test --no-build --verbosity normal
+      - working-directory: ./tests
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal
