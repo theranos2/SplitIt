@@ -1,8 +1,8 @@
 ﻿using System;
-using split_it.Models;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using split_it.Models;
 
 namespace split_it.Controllers
 {

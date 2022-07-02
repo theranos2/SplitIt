@@ -1,11 +1,11 @@
 using System;
 using System.Data.Common;
-using Xunit;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using split_it;
 using split_it.Controllers;
 using split_it.Exceptions.Http;
+using Xunit;
 
 namespace tests
 {
