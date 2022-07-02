@@ -1,11 +1,11 @@
 using System;
 using System.Data.Common;
-using Xunit;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using split_it;
 using split_it.Controllers;
 using split_it.Exceptions.Http;
+using Xunit;
 
 namespace tests
 {
@@ -13,6 +13,7 @@ namespace tests
     {
         private readonly DbConnection _conn;
         private readonly DbContextOptions<DatabaseContext> _ctxOpts;
+        private readonly UserController userController;
 
         public UserControllerTest()
         {
@@ -25,6 +26,7 @@ namespace tests
                 .Options;
             using var ctx = new DatabaseContext(_ctxOpts);
             ctx.Database.EnsureCreated();
+            userController = new UserController(new DatabaseContext(_ctxOpts));
         }
 
         private DatabaseContext CreateDbContext() => new DatabaseContext(_ctxOpts);
@@ -33,18 +35,12 @@ namespace tests
         [Fact]
         public void CreateUserInvalid()
         {
-            using var ctx = CreateDbContext();
-            var userController = new UserController(ctx);
-
             Assert.Throws<HttpBadRequest>(() => userController.Create(new User { }));
         }
 
         [Fact]
         public void CreateUser()
         {
-            using var ctx = CreateDbContext();
-            var userController = new UserController(ctx);
-
             var user = new User
             {
                 FirstName = "Bob",
@@ -59,9 +55,6 @@ namespace tests
         [Fact]
         public void FindUserNotFound()
         {
-            using var ctx = CreateDbContext();
-            var userController = new UserController(ctx);
-
             Assert.Throws<HttpNotFound>(() => userController.Get(Guid.Empty));
             Assert.Throws<HttpNotFound>(() => userController.Get(Guid.NewGuid()));
         }
