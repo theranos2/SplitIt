@@ -1,9 +1,15 @@
 repos:
     - repo: local
       hooks: #Use dotnet format already installed on your machine
-      - id: dotnet-format
+      - id: dotnet-format-src
         name: dotnet-format
         language: system
         entry: dotnet format ./src/split-it.csproj --include
         files: ^src\/.*\.cs
+        types: ["c#"]
+      - id: dotnet-format-tests
+        name: dotnet-format
+        language: system
+        entry: dotnet format ./tests/tests.csproj --include
+        files: ^tests\/.*\.cs
         types: ["c#"]
