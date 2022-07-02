@@ -5,4 +5,5 @@ repos:
         name: dotnet-format
         language: system
         entry: dotnet format ./src/split-it.csproj --include
+        files: ^src\/.*\.cs
         types: ["c#"]
