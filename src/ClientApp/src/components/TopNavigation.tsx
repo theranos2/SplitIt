@@ -32,7 +32,8 @@ const TopNavigation = () => {
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}>
+            sx={{ display: { xs: 'none', sm: 'block' } }}
+          >
             SplitIt
           </Typography>
           <Box sx={{ flexGrow: 1 }} />

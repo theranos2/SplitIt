@@ -59,7 +59,14 @@ export const LoginForm = (props: LoginFormProps) => {
             {fields.map((field, idx) => {
               switch (field.type) {
                 case 'date':
-                  return ( <DateSelector key={`date-${idx}`} start={field.dates.start} end={field.dates.end} set={set} /> );
+                  return (
+                    <DateSelector
+                      key={`date-${idx}`}
+                      start={field.dates.start}
+                      end={field.dates.end}
+                      set={set}
+                    />
+                  );
                 case 'span':
                   return (
                     <Alert key={`alert-${idx}`} severity="info">
@@ -84,7 +91,8 @@ export const LoginForm = (props: LoginFormProps) => {
               id={`submit-${title}`}
               to={submit.href}
               onClick={submit?.func}
-              style={{ textDecoration: 'none' }}>
+              style={{ textDecoration: 'none' }}
+            >
               <Button type="submit" fullWidth variant="contained" sx={{ mt: 2, mb: 2 }}>
                 Confirm
               </Button>
