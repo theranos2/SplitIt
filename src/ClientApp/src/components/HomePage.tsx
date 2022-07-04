@@ -6,23 +6,26 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 
 const HomePage = () => {
-    return (
-        <Grid
-            container
-            spacing={0}
-            direction="column"
-            alignItems="center"
-            justifyContent="center"
-            style={{ minHeight: '100vh' }}
-        >
-            <Grid item xs={3}>
-                <ButtonGroup orientation="vertical" aria-label="vertical outlined button group">
-                    <Button key="one"><Link to="/bill/create">Create a bill</Link></Button>
-                    <Button key="one"><Link to="/bill/view">View bills</Link></Button>
-                </ButtonGroup>
-            </Grid>
-        </Grid> 
-    );
+  return (
+    <Grid
+      container
+      spacing={0}
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+      style={{ minHeight: '100vh' }}>
+      <Grid item xs={3}>
+        <ButtonGroup orientation="vertical" aria-label="vertical outlined button group">
+          <Button key="one">
+            <Link to="/bill/create">Create a bill</Link>
+          </Button>
+          <Button key="one">
+            <Link to="/bill/view">View bills</Link>
+          </Button>
+        </ButtonGroup>
+      </Grid>
+    </Grid>
+  );
 };
 
 export default HomePage;

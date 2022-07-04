@@ -1,0 +1,48 @@
+name: .NET
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  format:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 5.0.x
+      - name: Restore tools
+        working-directory: ./src
+        run: dotnet tool restore
+      - working-directory: ./tests
+        run: dotnet tool restore
+      - name: Check formatting
+        working-directory: ./src
+        run: dotnet format --check
+      - working-directory: ./tests
+        run: dotnet format --check
+  build:
+    needs: format
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 5.0.x
+      - name: Restore dependencies
+        working-directory: ./src
+        run: dotnet restore
+      - working-directory: ./tests
+        run: dotnet restore
+      - name: Build
+        working-directory: ./src
+        run: dotnet build --no-restore
+      - working-directory: ./tests
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-build --verbosity normal

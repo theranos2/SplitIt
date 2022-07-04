@@ -18,23 +18,23 @@ import TopNavigation from './components/TopNavigation';
 const App = () => {
   return (
     <BrowserRouter>
-      <TopNavigation/>
+      <TopNavigation />
       <Routes>
-        <Route path="/" element={<HomePage/>}/> { /* should be exact, but it doesn't work */ }
-        <Route path="/login" element={<Login/>}/>
-        <Route path="/register" element={<Register/>}/>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-        <Route path="/bill/view" element={<BillsAll/>}/>
-        <Route path="/bill/view:bill_id" element={<BillsAll/>}/>
-        <Route path="/bill/create" element={<BillCreate/>}/>
-        <Route path="/bill/simple" element={<BillSimple/>}/>
-        <Route path="/bill/advanced" element={<BillAdvanced/>}/>
-        
+        <Route path="/bill/view" element={<BillsAll />} />
+        <Route path="/bill/view:bill_id" element={<BillsAll />} />
+        <Route path="/bill/create" element={<BillCreate />} />
+        <Route path="/bill/simple" element={<BillSimple />} />
+        <Route path="/bill/advanced" element={<BillAdvanced />} />
+
         {/* 404 - Not Found route */}
-        <Route path="*" element={<NotFound/>}/>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
-}
+};
 
 export default App;

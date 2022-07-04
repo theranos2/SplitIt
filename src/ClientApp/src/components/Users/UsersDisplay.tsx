@@ -1,9 +1,7 @@
 import React from 'react';
 
 const UsersDisplay = () => {
-    return (
-        <></>
-    );
+  return <></>;
 };
 
 // To be used in bill creation (simple/advanced), and view

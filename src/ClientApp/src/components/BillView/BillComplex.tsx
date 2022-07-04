@@ -1,15 +1,13 @@
-import React from 'react'
+import React from 'react';
 
 interface BillComplexProps {
-    item: any
+  item: any;
 }
 
 const BillComplex = (props: BillComplexProps) => {
-    const { item } = props;
+  const { item } = props;
 
-    return (
-        <></>
-    );
-}
+  return <></>;
+};
 
-export default BillComplex
+export default BillComplex;

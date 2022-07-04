@@ -5,40 +5,49 @@ import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
 
 interface ErrorType {
-    cond: boolean,
-    msg: string
+  cond: boolean;
+  msg: string;
 }
 
 interface InputFieldProps {
-    name: string, 
-    label: string,
-    type: string, 
-    inputs: Record<string, any>, 
-    set: Function, 
-    err: ErrorType
+  name: string;
+  label: string;
+  type: string;
+  inputs: Record<string, any>;
+  set: Function;
+  err: ErrorType;
 }
 
 const InputField = (props: InputFieldProps) => {
-    const { name, label, type, inputs, set, err } = props;
+  const { name, label, type, inputs, set, err } = props;
 
-    return (
-        <>
-            <TextField name={name} error={err.cond} label={label} type={type}
-                id={name} value={inputs[name]} onChange={set(name)}                  
-                margin="normal" required fullWidth autoComplete={name}
-                />
-            { err.cond ? <Alert severity="warning">{err.msg}</Alert> : <></> }
-        </>
-    );
+  return (
+    <>
+      <TextField
+        name={name}
+        error={err.cond}
+        label={label}
+        type={type}
+        id={name}
+        value={inputs[name]}
+        onChange={set(name)}
+        margin="normal"
+        required
+        fullWidth
+        autoComplete={name}
+      />
+      {err.cond ? <Alert severity="warning">{err.msg}</Alert> : <></>}
+    </>
+  );
 };
 
 InputField.propTypes = {
-    name: PropTypes.string,
-    type: PropTypes.string,
-    label: PropTypes.string,
-    inputs: PropTypes.object,
-    err: PropTypes.object,
-    set: PropTypes.func
+  name: PropTypes.string,
+  type: PropTypes.string,
+  label: PropTypes.string,
+  inputs: PropTypes.object,
+  err: PropTypes.object,
+  set: PropTypes.func
 };
 
 export default InputField;

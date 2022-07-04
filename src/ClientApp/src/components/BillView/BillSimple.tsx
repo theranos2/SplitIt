@@ -1,15 +1,13 @@
-import React from 'react'
+import React from 'react';
 
 interface BillSimpleProps {
-    item: any
+  item: any;
 }
 
 const BillSimple = (props: BillSimpleProps) => {
-    const { item } = props;
-    
-    return (
-        <></>
-    );
-}
+  const { item } = props;
 
-export default BillSimple
+  return <></>;
+};
+
+export default BillSimple;
