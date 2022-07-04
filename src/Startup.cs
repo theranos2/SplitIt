@@ -9,6 +9,8 @@ using Microsoft.Extensions.Hosting;
 using split_it.Middlewares;
 using Microsoft.AspNetCore.Mvc;
 using split_it.Exceptions;
+using Microsoft.AspNetCore.Authentication;
+using split_it.Authentication;
 
 namespace split_it
 {
@@ -32,6 +34,9 @@ namespace split_it
             });
 
             services.AddDbContext<DatabaseContext>(); // Inject in our database to be used in every controller
+
+            services.AddAuthentication("TokenAuth").AddScheme<AuthenticationSchemeOptions, AuthHandler>("TokenAuth", null); // Assigning an auth handler to every request that has authorization
+
             // Add swagger documentation
             services.AddSwaggerGen(c =>
             {
@@ -62,21 +67,23 @@ namespace split_it
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
             });
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "ClientApp";
+            //app.UseSpa(spa =>
+            //{
+                //spa.Options.SourcePath = "ClientApp";
 
-                if (env.IsDevelopment())
-                {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
-                }
-            });
+                //if (env.IsDevelopment())
+                //{
+                    //spa.UseReactDevelopmentServer(npmScript: "start");
+                //}
+            //});
         }
     }
 }
