@@ -83,14 +83,18 @@ namespace split_it
             }
             var userObj = (User)obj;
 
-            return userObj.Id.Equals(Id) && userObj.Email.Equals(Email) &&
-                userObj.FirstName.Equals(FirstName) &&
-                userObj.LastName.Equals(LastName);
+            return
+                userObj.Id.Equals(Id)
+                && userObj.Email.Equals(Email)
+                && userObj.FirstName.Equals(FirstName)
+                && userObj.LastName.Equals(LastName)
+                && userObj.Password.Equals(Password)
+                && userObj.MfaEnabled.Equals(MfaEnabled);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, Email, FirstName, LastName);
+            return HashCode.Combine(Id, Email, FirstName, LastName, Password, MfaEnabled);
         }
     }
 }
