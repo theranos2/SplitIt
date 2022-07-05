@@ -31,16 +31,22 @@ namespace split_it.Controllers
             };
         }
 
-        [HttpGet("{user_id:Guid}")]
-        public UserDto Get(Guid user_id)
+        /// <summary>Show user given the ID</summary>
+        /// <response code="404">User with given ID does not exists</response>
+        [HttpGet("{userId:Guid}")]
+        public UserDto Get(Guid userId)
         {
-            var res = db.Users.Where(u => u.Id.Equals(user_id))
+            var res = db.Users.Where(u => u.Id.Equals(userId))
                 .Select(UserToDto)
                 .FirstOrDefault();
-            if (res == null) throw new HttpNotFound($"User with ID: {user_id} not found");
+            if (res == null) throw new HttpNotFound($"User with ID: {userId} not found");
             return res;
         }
 
+        /// <summary>Show all users</summary>
+        /// <param name="take">Maximum users to return</param>
+        /// <param name="skip">Skip number of users</param>
+        /// <response code="400">Negative take, skip values</response>
         [HttpGet]
         public List<UserDto> GetMany(
             [FromQuery(Name = "take")] int take = 10,
