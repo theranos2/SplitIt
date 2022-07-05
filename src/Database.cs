@@ -72,6 +72,8 @@ namespace split_it
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Password { get; set; }
+        public bool MfaEnabled { get; set; } = false;
 
         public override bool Equals(object obj)
         {
