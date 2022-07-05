@@ -86,6 +86,26 @@ namespace tests
         }
 
         [Fact]
+        public void LoginWrongPassword()
+        {
+            var email = "yeet@yeet.com";
+            var password = "supersecretpassword";
+            accountController.Register(new RegisterDto
+            {
+                Email = email,
+                Password = password,
+                FirstName = "ASAP",
+                LastName = "Rocky",
+            });
+            Assert.Throws<HttpBadRequest>(() =>
+            accountController.Login(new LoginDto
+            {
+                Email = email,
+                Password = password + "oh no",
+            }));
+        }
+
+        [Fact]
         public void LoginNonExistentUser()
         {
             var input = new LoginDto
