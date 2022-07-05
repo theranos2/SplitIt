@@ -66,7 +66,7 @@ namespace split_it.Controllers
             var user = db.Users.Where(x => login.Email == x.Email).FirstOrDefault();
             if (user == null)
             {
-                Console.WriteLine("Invalid Email");
+                Console.WriteLine("Email not found");
                 throw new HttpBadRequest("Email or password is incorrect");
             }
 

@@ -33,26 +33,6 @@ namespace tests
         private void Dispose() => _conn.Dispose();
 
         [Fact]
-        public void CreateUserInvalid()
-        {
-            Assert.Throws<HttpBadRequest>(() => userController.Create(new User { }));
-        }
-
-        [Fact]
-        public void CreateUser()
-        {
-            var user = new User
-            {
-                FirstName = "Bob",
-                LastName = "Dylan",
-                Email = "bob@dylan.com",
-            };
-            var createdUser = userController.Create(user);
-            user.Id = Guid.Parse(createdUser.Id.ToString());
-            Assert.Equal(user, createdUser);
-        }
-
-        [Fact]
         public void FindUserNotFound()
         {
             Assert.Throws<HttpNotFound>(() => userController.Get(Guid.Empty));
