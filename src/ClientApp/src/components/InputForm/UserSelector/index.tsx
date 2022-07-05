@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { UserSelectorProps, User } from './props';
+import { UserSelectorProps } from './props';
+import { User } from '../InputFormProps';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -71,7 +72,8 @@ export const UserSelector = (props: UserSelectorProps) => {
                 id={`select-${name}-id`}
                 value={inputs[name]}
                 onChange={addUser}
-                input={<OutlinedInput label={label} />}>
+                input={<OutlinedInput label={label} />}
+              >
                 {users
                   .filter((user) => !inputs[name].includes(user.id) && !NewUsers.includes(user.id))
                   .map((user, idx) => (
@@ -88,7 +90,8 @@ export const UserSelector = (props: UserSelectorProps) => {
                 id={`select-${name}-id`}
                 value={inputs[name]}
                 onChange={removeUser}
-                input={<OutlinedInput label={label} />}>
+                input={<OutlinedInput label={label} />}
+              >
                 {users
                   .filter((user) => inputs[name].includes(user.id) || NewUsers.includes(user.id))
                   .map((user, idx) => (

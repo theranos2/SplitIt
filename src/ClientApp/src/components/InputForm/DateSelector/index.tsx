@@ -20,9 +20,7 @@ export const DateSelector = (props: DateSelectorProps) => {
           label="Start date"
           inputFormat="dd/MM/yyyy"
           value={start}
-          onChange={(new_start: Date | null, keyboardInputValue?: string | undefined) =>
-            set('start')(new_start)
-          }
+          onChange={(new_start: Date | null) => set('start')(new_start)}
           renderInput={(props: any) => <TextField {...props} />}
         />
         {start < new Date() ? (
@@ -34,7 +32,7 @@ export const DateSelector = (props: DateSelectorProps) => {
           label="End date"
           inputFormat="dd/MM/yyyy"
           value={end}
-          onChange={(new_end: Date | null, keyboardInputValue?: string | undefined) => set('end', new_end)}
+          onChange={(new_end: Date | null) => set('end')(new_end)}
           renderInput={(props: any /*TODO: FIX THIS*/) => <TextField {...props} />}
         />
         {end < start ? <Alert severity="warning">End date must proceed start date.</Alert> : <></>}

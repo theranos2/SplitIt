@@ -1,19 +1,8 @@
 import * as React from 'react';
 
 import { BillForm } from '../BillForm';
-
-interface Item {
-  name: string;
-  price: number;
-  user: number; // a user-id
-}
-
-interface InputProps {
-  name: string;
-  users: number[]; // an array of user-ids
-  items: Item[];
-  price: number;
-}
+import InputProps from './props';
+import { Item } from '../BillCreationProps';
 
 const BillAdvanced = () => {
   const [inputs, setInputs] = React.useState<InputProps>({
@@ -24,6 +13,7 @@ const BillAdvanced = () => {
   });
 
   const set = (name: string) => (input: any) => {
+    // should be event<???> | Array<number> | Array<Item>
     switch (name) {
       case 'users':
         input.forEach((e: number) => inputs['users'].push(e));
@@ -32,7 +22,7 @@ const BillAdvanced = () => {
         input.forEach((e: Item) => inputs['items'].push(e));
         break;
       default:
-        setInputs((old) => ({ ...old, [name]: input.target.value }));
+        setInputs((old: InputProps) => ({ ...old, [name]: input.target.value }));
     }
   };
 

@@ -1,33 +1,4 @@
-interface ButtonEventHandler {
-  (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void;
-}
-
-interface ButtonSubmission {
-  (event: string): ButtonEventHandler;
-}
-
-interface SubmitProps {
-  href: string;
-  func: ButtonEventHandler;
-}
-
-interface CancelProps {
-  href: string;
-  msg: string;
-}
-
-interface Item {
-  name: string;
-  price: number;
-  user: number; // a user-id
-}
-
-interface InputProps {
-  name: string;
-  users: number[]; // an array of user-ids
-  items?: Item[];
-  price: number;
-}
+import { InputProps, ButtonSubmission, SubmitProps, CancelProps } from '../BillCreationProps';
 
 export default interface BillFormProps {
   title: string;

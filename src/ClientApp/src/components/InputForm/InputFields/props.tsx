@@ -1,15 +1,4 @@
-interface ButtonEventHandler {
-  (event: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>): void;
-}
-
-interface ButtonSubmission {
-  (event: string): ButtonEventHandler;
-}
-
-interface ErrorType {
-  cond: boolean;
-  msg: string;
-}
+import { ButtonSubmission, ErrorType } from '../InputFormProps';
 
 export default interface InputFieldProps {
   name: string;

@@ -1,10 +1,4 @@
-interface ButtonEventHandler {
-  (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void;
-}
-
-interface ButtonSubmission {
-  (event: string): ButtonEventHandler;
-}
+import { ButtonSubmission } from '../InputFormProps';
 
 export default interface DateSelectorProps {
   start: Date;

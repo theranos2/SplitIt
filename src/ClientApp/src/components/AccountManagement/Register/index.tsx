@@ -7,7 +7,7 @@ const Register = () => {
   const set = (name: string) => (event: any) =>
     setInputs((old) => ({ ...old, [name]: event.target.value }));
 
-  const submit = async (event: React.SyntheticEvent<unknown>) => {
+  const submit = async (event: any) => {
     event.preventDefault();
 
     if (inputs.email === '' || inputs.name === '' || inputs.pass1 === '' || inputs.pass2 === '') {

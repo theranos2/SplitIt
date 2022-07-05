@@ -1,11 +1,11 @@
 import React from 'react';
 
 interface ButtonEventHandler {
-  (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void;
+  (event: any): void;
 }
 
 interface ButtonSubmission {
-  (event: string): ButtonEventHandler;
+  (name: string): ButtonEventHandler;
 }
 
 interface SubmitProps {

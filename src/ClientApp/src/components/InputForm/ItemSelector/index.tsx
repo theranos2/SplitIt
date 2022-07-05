@@ -14,7 +14,8 @@ import Dialog from '@mui/material/Dialog';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 
-import { ItemSelectorProps, Item } from './props';
+import { ItemSelectorProps } from './props';
+import { Item, User } from '../InputFormProps';
 
 export const ItemSelector = (props: ItemSelectorProps) => {
   const { name, label, inputs, set, err } = props;
@@ -31,13 +32,18 @@ export const ItemSelector = (props: ItemSelectorProps) => {
 
   const submit = (event: any) => {
     event.preventDefault();
-    set(name)([...inputs['users'], currentItem]);
+
+    set(name)((old: Record<string, any>) => ({
+      ...old,
+      inputs: [...inputs['users'], currentItem]
+    }));
+
     cancel();
   };
 
   const cancel = () => {
     setCurrentItem(() => {
-      return { name: '', price: 0, user: 0 };
+      return { name: '', id: 0, price: 0, user: 0 };
     });
     setOpen(false);
   };
@@ -87,10 +93,13 @@ export const ItemSelector = (props: ItemSelectorProps) => {
                 id={`select-${name}-id`}
                 value={inputs['users']}
                 label="Choose users"
-                onChange={setUser}
-                input={<OutlinedInput label={label} />}>
-                {inputs['users'].map((user: User) => (
-                  <MenuItem value={user.id}>{user.name}</MenuItem>
+                onChange={setItem(name)}
+                input={<OutlinedInput label={label} />}
+              >
+                {inputs['users'].map((user: User, idx: number) => (
+                  <MenuItem key={`menuitem-user-${idx}`} value={user.id}>
+                    {user.name}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>

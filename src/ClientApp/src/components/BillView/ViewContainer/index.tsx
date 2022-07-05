@@ -15,11 +15,7 @@ import Box from '@mui/material/Box';
 import BillComplex from '../BillComplex';
 import BillSimple from '../BillSimple';
 
-interface ViewContainerProps {
-  title: string;
-  description: string;
-  items?: Array<any>;
-}
+import ViewContainerProps from './props';
 
 const ViewContainer = (props: ViewContainerProps) => {
   const { title, description, items } = props;

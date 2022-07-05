@@ -1,22 +1,4 @@
-import React from 'react';
-
-interface ButtonEventHandler {
-  (event: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement> | number[]): void;
-}
-
-interface ButtonSubmission {
-  (event: string): ButtonEventHandler;
-}
-
-interface ErrorType {
-  cond: boolean;
-  msg: string;
-}
-
-export interface User {
-  name: string;
-  id: number;
-}
+import { ButtonSubmission, ErrorType } from '../InputFormProps';
 
 export interface UserSelectorProps {
   name: string;

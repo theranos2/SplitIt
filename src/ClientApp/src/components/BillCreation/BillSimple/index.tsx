@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { BillForm } from '../BillForm';
-import InputProps from './props';
+import { InputProps } from '../BillCreationProps';
 
 const BillSimple = () => {
   const [inputs, setInputs] = React.useState<InputProps>({ name: '', users: [], price: 0 });

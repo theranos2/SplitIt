@@ -13,7 +13,8 @@ const BillCreate = () => {
       direction="column"
       alignItems="center"
       justifyContent="center"
-      style={{ minHeight: '100vh' }}>
+      style={{ minHeight: '100vh' }}
+    >
       <Grid item xs={3}>
         <ButtonGroup orientation="vertical" aria-label="vertical outlined button group">
           <Button key="one">

@@ -7,7 +7,7 @@ const Login = () => {
   const set = (name: string) => (event: any) =>
     setInputs((old) => ({ ...old, [name]: event.target.value }));
 
-  const submit = (event: React.SyntheticEvent<unknown>) => {
+  const submit = (event: any) => {
     event.preventDefault();
 
     if (inputs.email === '' || inputs.pass === '') {

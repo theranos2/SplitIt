@@ -95,7 +95,8 @@ export const BillForm = (props: BillFormProps) => {
               id={`submit-${title}`}
               to={submit.href}
               onClick={submit?.func}
-              style={{ textDecoration: 'none' }}>
+              style={{ textDecoration: 'none' }}
+            >
               <Button type="submit" fullWidth variant="contained" sx={{ mt: 2, mb: 2 }}>
                 Confirm
               </Button>
@@ -104,7 +105,8 @@ export const BillForm = (props: BillFormProps) => {
               id={`cancel-${title}`}
               to={cancel.href}
               // onClick={(event: React.MouseEvent) => cancel?.func(event)}
-              style={{ textDecoration: 'none' }}>
+              style={{ textDecoration: 'none' }}
+            >
               <Button type="submit" fullWidth variant="contained" sx={{ mt: 0, mb: 2 }}>
                 {cancel.msg}
               </Button>
