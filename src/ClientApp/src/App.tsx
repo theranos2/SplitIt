@@ -1,25 +1,40 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import './App.css';
 
-function App() {
+import Login from './components/AccountManagement/Login';
+import Register from './components/AccountManagement/Register';
+
+import BillCreate from './components/BillCreation/BillCreate';
+import BillSimple from './components/BillCreation/BillSimple';
+import BillAdvanced from './components/BillCreation/BillAdvanced';
+import BillsAll from './components/BillView/BillsAll';
+
+import NotFound from './components/NotFound';
+import HomePage from './components/HomePage';
+
+import TopNavigation from './components/TopNavigation';
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer">
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <TopNavigation />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        <Route path="/bill/view" element={<BillsAll />} />
+        <Route path="/bill/view:bill_id" element={<BillsAll />} />
+        <Route path="/bill/create" element={<BillCreate />} />
+        <Route path="/bill/simple" element={<BillSimple />} />
+        <Route path="/bill/advanced" element={<BillAdvanced />} />
+
+        {/* 404 - Not Found route */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
