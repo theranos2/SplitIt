@@ -1,18 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import DateSelectorProps from './props';
+
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
-
-export interface DateSelectorProps {
-  start: Date;
-  end: Date;
-  set: Function;
-}
 
 export const DateSelector = (props: DateSelectorProps) => {
   const { start, end, set } = props;
@@ -25,7 +21,7 @@ export const DateSelector = (props: DateSelectorProps) => {
           inputFormat="dd/MM/yyyy"
           value={start}
           onChange={(new_start: Date | null, keyboardInputValue?: string | undefined) =>
-            set('start', new_start)
+            set('start')(new_start)
           }
           renderInput={(props: any) => <TextField {...props} />}
         />
@@ -38,9 +34,7 @@ export const DateSelector = (props: DateSelectorProps) => {
           label="End date"
           inputFormat="dd/MM/yyyy"
           value={end}
-          onChange={(new_end: Date | null, keyboardInputValue?: string | undefined) =>
-            set('end', new_end)
-          }
+          onChange={(new_end: Date | null, keyboardInputValue?: string | undefined) => set('end', new_end)}
           renderInput={(props: any /*TODO: FIX THIS*/) => <TextField {...props} />}
         />
         {end < start ? <Alert severity="warning">End date must proceed start date.</Alert> : <></>}

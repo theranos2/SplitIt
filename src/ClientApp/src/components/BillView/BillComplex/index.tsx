@@ -6,6 +6,7 @@ interface BillComplexProps {
 
 const BillComplex = (props: BillComplexProps) => {
   const { item } = props;
+  console.log(item);
 
   return <></>;
 };

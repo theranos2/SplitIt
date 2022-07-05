@@ -1,12 +1,7 @@
 import * as React from 'react';
 
-import { BillForm } from './BillForm';
-
-interface InputProps {
-  name: string;
-  users: number[]; // an array of user-ids
-  price: number;
-}
+import { BillForm } from '../BillForm';
+import InputProps from './props';
 
 const BillSimple = () => {
   const [inputs, setInputs] = React.useState<InputProps>({ name: '', users: [], price: 0 });
@@ -14,7 +9,7 @@ const BillSimple = () => {
   const set = (name: string) => (input: any) => {
     name === 'users'
       ? input.forEach((e: number) => inputs['users'].push(e))
-      : setInputs((old) => ({ ...old, [name]: input.target.value }));
+      : setInputs((old: InputProps) => ({ ...old, [name]: input.target.value }));
   };
 
   const submit = async (event: any) => {

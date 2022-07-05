@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { BillForm } from './BillForm';
+import { BillForm } from '../BillForm';
 
 interface Item {
   name: string;

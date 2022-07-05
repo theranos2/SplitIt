@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { UserSelectorProps, User } from './props';
+
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -12,24 +14,6 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Alert from '@mui/material/Alert';
-
-interface ErrorType {
-  cond: boolean;
-  msg: string;
-}
-
-interface UserSelectorProps {
-  name: string;
-  label: string;
-  inputs: Record<string, any>;
-  set: Function;
-  err: ErrorType;
-}
-
-interface User {
-  name: string;
-  id: number;
-}
 
 export const UserSelector = (props: UserSelectorProps) => {
   const { name, label, inputs, set, err } = props;
@@ -87,12 +71,13 @@ export const UserSelector = (props: UserSelectorProps) => {
                 id={`select-${name}-id`}
                 value={inputs[name]}
                 onChange={addUser}
-                input={<OutlinedInput label={label} />}
-              >
+                input={<OutlinedInput label={label} />}>
                 {users
                   .filter((user) => !inputs[name].includes(user.id) && !NewUsers.includes(user.id))
-                  .map((user) => (
-                    <MenuItem value={user.id}>{user.name}</MenuItem>
+                  .map((user, idx) => (
+                    <MenuItem key={`menuitem-add-usr-${idx}`} value={user.id}>
+                      {user.name}
+                    </MenuItem>
                   ))}
               </Select>
             </FormControl>
@@ -103,12 +88,13 @@ export const UserSelector = (props: UserSelectorProps) => {
                 id={`select-${name}-id`}
                 value={inputs[name]}
                 onChange={removeUser}
-                input={<OutlinedInput label={label} />}
-              >
+                input={<OutlinedInput label={label} />}>
                 {users
                   .filter((user) => inputs[name].includes(user.id) || NewUsers.includes(user.id))
-                  .map((user) => (
-                    <MenuItem value={user.id}>{user.name}</MenuItem>
+                  .map((user, idx) => (
+                    <MenuItem key={`menuitem-remove-usr-${idx}`} value={user.id}>
+                      {user.name}
+                    </MenuItem>
                   ))}
               </Select>
             </FormControl>

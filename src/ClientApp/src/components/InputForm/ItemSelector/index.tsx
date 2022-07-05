@@ -14,33 +14,27 @@ import Dialog from '@mui/material/Dialog';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 
-interface ErrorType {
-  cond: boolean;
-  msg: string;
-}
-
-interface ItemSelectorProps {
-  name: string;
-  label: string;
-  inputs: Record<string, any>;
-  set: Function;
-  err: ErrorType;
-}
-
-interface User {
-  name: string;
-  id: number;
-}
+import { ItemSelectorProps, Item } from './props';
 
 export const ItemSelector = (props: ItemSelectorProps) => {
   const { name, label, inputs, set, err } = props;
 
-  const [currentItem, setCurrentItem] = React.useState({ name: '', price: 0, user: 0 });
-  const setUser = (event: any) => setCurrentItem((old) => ({ ...old, user: event.target.value }));
-  const submit = () => {
-    set(name)(currentItem);
+  const [currentItem, setCurrentItem] = React.useState<Item>({
+    name: '',
+    id: 0,
+    price: 0,
+    user: 0
+  });
+
+  const setItem = (name: string) => (event: any) =>
+    setCurrentItem((old) => ({ ...old, [name]: event.target.value }));
+
+  const submit = (event: any) => {
+    event.preventDefault();
+    set(name)([...inputs['users'], currentItem]);
     cancel();
   };
+
   const cancel = () => {
     setCurrentItem(() => {
       return { name: '', price: 0, user: 0 };
@@ -94,8 +88,7 @@ export const ItemSelector = (props: ItemSelectorProps) => {
                 value={inputs['users']}
                 label="Choose users"
                 onChange={setUser}
-                input={<OutlinedInput label={label} />}
-              >
+                input={<OutlinedInput label={label} />}>
                 {inputs['users'].map((user: User) => (
                   <MenuItem value={user.id}>{user.name}</MenuItem>
                 ))}

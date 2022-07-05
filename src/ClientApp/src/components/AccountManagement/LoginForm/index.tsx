@@ -3,11 +3,9 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import InputField from '../InputForm/InputFields';
-import { DateSelector } from '../InputForm/DateSelector';
-import { UserSelector } from '../InputForm/UserSelector';
-import { ItemSelector } from '../InputForm/ItemSelector';
-import { PriceDisplay } from './PriceDisplay';
+import InputField from '../../InputForm/InputFields';
+import { DateSelector } from '../../InputForm/DateSelector';
+import LoginFormProps from './props';
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -18,35 +16,7 @@ import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 
-interface Item {
-  name: string;
-  price: number;
-  user: number; // a user-id
-}
-
-interface InputProps {
-  name: string;
-  users: number[]; // an array of user-ids
-  items?: Item[];
-  price: number;
-}
-
-export interface ButtonSubmitProps {
-  href: string;
-  func?: Function;
-  msg?: string;
-}
-
-interface BillFormProps {
-  title: string;
-  inputs: InputProps;
-  set: Function;
-  submit: ButtonSubmitProps;
-  cancel: ButtonSubmitProps;
-  fields: Array<any>; // TODO: should be the actual types
-}
-
-export const BillForm = (props: BillFormProps) => {
+export const LoginForm = (props: LoginFormProps) => {
   const { title, inputs, fields, set, submit, cancel } = props;
   const theme = createTheme();
 
@@ -61,12 +31,8 @@ export const BillForm = (props: BillFormProps) => {
           <Typography component="h1" variant="h5">
             {title}
           </Typography>
-          <Box
-            component="form"
-            onSubmit={() => submit.func && submit.func()}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <Box component="form" noValidate sx={{ mt: 1 }}>
+            {/*onSubmit={submit.func}*/}
             {fields.map((field, idx) => {
               switch (field.type) {
                 case 'date':
@@ -84,30 +50,6 @@ export const BillForm = (props: BillFormProps) => {
                       {field.content}
                     </Alert>
                   );
-                case 'users':
-                  return (
-                    <UserSelector
-                      key={`user-${idx}`}
-                      name={field.name}
-                      label={field.label}
-                      inputs={inputs}
-                      set={set}
-                      err={field.err}
-                    />
-                  );
-                case 'items':
-                  return (
-                    <ItemSelector
-                      key={`user-${idx}`}
-                      name={field.name}
-                      label={field.label}
-                      inputs={inputs}
-                      set={set}
-                      err={field.err}
-                    />
-                  );
-                case 'price':
-                  return <PriceDisplay price={inputs.price} />;
                 default:
                   return (
                     <InputField
@@ -125,19 +67,13 @@ export const BillForm = (props: BillFormProps) => {
             <Link
               id={`submit-${title}`}
               to={submit.href}
-              onClick={(event: React.MouseEvent) => submit.func && submit.func(event)}
-              style={{ textDecoration: 'none' }}
-            >
+              onClick={submit.func}
+              style={{ textDecoration: 'none' }}>
               <Button type="submit" fullWidth variant="contained" sx={{ mt: 2, mb: 2 }}>
                 Confirm
               </Button>
             </Link>
-            <Link
-              id={`cancel-${title}`}
-              to={cancel.href}
-              onClick={(event: React.MouseEvent) => cancel.func && cancel.func(event)}
-              style={{ textDecoration: 'none' }}
-            >
+            <Link id={`cancel-${title}`} to={cancel.href} style={{ textDecoration: 'none' }}>
               <Button type="submit" fullWidth variant="contained" sx={{ mt: 0, mb: 2 }}>
                 {cancel.msg}
               </Button>
@@ -149,7 +85,7 @@ export const BillForm = (props: BillFormProps) => {
   );
 };
 
-BillForm.propTypes = {
+LoginForm.propTypes = {
   title: PropTypes.string,
   inputs: PropTypes.object,
   fields: PropTypes.array,

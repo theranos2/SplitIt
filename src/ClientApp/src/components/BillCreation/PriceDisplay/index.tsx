@@ -10,7 +10,7 @@ interface PriceProps {
 }
 
 export const PriceDisplay = (props: PriceProps) => {
-  const price = props.price;
+  const price: number = props.price;
 
   return (
     <FormControl fullWidth sx={{ m: 1 }} variant="standard">

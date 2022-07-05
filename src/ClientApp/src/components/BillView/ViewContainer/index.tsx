@@ -12,8 +12,8 @@ import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 
-import BillComplex from './BillComplex';
-import BillSimple from './BillSimple';
+import BillComplex from '../BillComplex';
+import BillSimple from '../BillSimple';
 
 interface ViewContainerProps {
   title: string;

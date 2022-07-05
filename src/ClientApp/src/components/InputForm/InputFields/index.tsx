@@ -4,19 +4,7 @@ import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
 
-interface ErrorType {
-  cond: boolean;
-  msg: string;
-}
-
-interface InputFieldProps {
-  name: string;
-  label: string;
-  type: string;
-  inputs: Record<string, any>;
-  set: Function;
-  err: ErrorType;
-}
+import InputFieldProps from './props';
 
 const InputField = (props: InputFieldProps) => {
   const { name, label, type, inputs, set, err } = props;
