@@ -22,8 +22,9 @@ namespace split_it.Middlewares
             }
             catch (Exception exception)
             {
-                await HandleExceptionAsync(
-                    context, GenerateProblemDetails(context, HttpStatusCode.InternalServerError, exception.Message), exception);
+                //await HandleExceptionAsync(
+                //context, GenerateProblemDetails(context, HttpStatusCode.InternalServerError, exception.Message), exception);
+                throw exception; // rethrow during devolopment. comment this in prod.
             }
         }
 
