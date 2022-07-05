@@ -40,7 +40,7 @@ namespace split_it.Authentication
             }
 
             // check if fully authenticated. it is fully authenticated when mfa is confirmed
-            if(cookie.hasPassedMfa == false)
+            if (cookie.hasPassedMfa == false)
                 return AuthenticateResult.Fail("MFA Not Confirmed");
 
             // update last usage time

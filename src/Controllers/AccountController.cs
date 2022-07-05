@@ -23,20 +23,21 @@ namespace split_it.Controllers
         // if we want it to not be authorize, use attribute [AllowAnonymous]  like the below
         // EXAMPLE ONLY
         [HttpGet("/useronly")]
-        public string UserOnly()        
+        public string UserOnly()
         {
             return "here is my secret";
         }
-        
+
         // EXAMPLE ONLY
         [AllowAnonymous]
         [HttpGet("/adduser")]
         public User AddUser()
         {
             var user = db.Users.Where(x => "kendrick@lamar.com" == x.Email).FirstOrDefault();
-            if(user == null)
+            if (user == null)
             {
-                User newUser = new User{
+                User newUser = new User
+                {
                     Email = "kendrick@lamar.com",
                     FirstName = "kendrick",
                     LastName = "lamar"
@@ -55,22 +56,23 @@ namespace split_it.Controllers
         public ActionResult Login(LoginDto login)
         {
             var user = db.Users.Where(x => login.Email == x.Email).FirstOrDefault();
-            if(user == null)
+            if (user == null)
                 throw new HttpBadRequest("Email or password is incorrect");
-            
+
             // TODO
             // check password here when implement password
 
             // issue pre-cookie
             // pre-cookie is used to identify when submitting mfa
-            string token = CookiesDb.IssueCookie(new MyCookie{
-                IssueDate =  DateTime.Now,
+            string token = CookiesDb.IssueCookie(new MyCookie
+            {
+                IssueDate = DateTime.Now,
                 ExpiryDate = DateTime.Now.AddMinutes(10),
                 LastSeen = DateTime.Now,
                 MfaCode = "1", // TODO implement this lol
                 hasPassedMfa = false,
                 UserId = user.Id
-            }); 
+            });
 
 
             // TODO
@@ -87,9 +89,9 @@ namespace split_it.Controllers
                 throw new HttpBadRequest("Invalid Token");
 
             string cookieString = Request.Headers["Token"];
-            MyCookie cookie = CookiesDb.Get(cookieString); 
+            MyCookie cookie = CookiesDb.Get(cookieString);
 
-            if(cookie == null)
+            if (cookie == null)
                 throw new HttpBadRequest("Invalid Token");
 
             // check mfa
@@ -99,9 +101,9 @@ namespace split_it.Controllers
                 throw new HttpBadRequest("Incorrect Mfa Code");
 
             cookie.ExpiryDate = cookie.IssueDate.AddHours(12); // increase expiration date
-            
 
-            
+
+
             // TODO: Wrap this in DTO
             return db.Users.Where(x => x.Id == cookie.UserId).FirstOrDefault();
         }
@@ -110,7 +112,7 @@ namespace split_it.Controllers
         public ActionResult Logout()
         {
             CookiesDb.RemoveCookie(HttpContext.User.Identity.Name); // identity.name is actually cookieStr
-            return Ok(new {Message = "Success!"});
+            return Ok(new { Message = "Success!" });
         }
     }
 }
