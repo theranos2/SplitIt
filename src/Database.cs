@@ -1,8 +1,8 @@
 // Database.cs
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace split_it
 {
@@ -11,18 +11,30 @@ namespace split_it
         public DbSet<User> Users { get; set; }
         public DbSet<Bill> Bills { get; set; }
 
+        public static DbContextOptions<DatabaseContext> DefaultDatabaseOptions = new DbContextOptionsBuilder<DatabaseContext>()
+            .UseSqlite("Data Source=database.db")
+            .Options;
+
+        public DatabaseContext() : this(DatabaseContext.DefaultDatabaseOptions)
+        {
+        }
+
+        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             // uncomment when we need to enforce unique email field
-            //builder.Entity<User>()
-            //.HasIndex(u => u.Email)
-            //.IsUnique();
+            builder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite("Data Source=database.db");
-        }
+        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        // {
+        //     optionsBuilder.UseSqlite("Data Source=database.db");
+        // }
     }
 
     public class Bill
@@ -57,5 +69,23 @@ namespace split_it
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+            var userObj = (User)obj;
+
+            return userObj.Id.Equals(Id) && userObj.Email.Equals(Email) &&
+                userObj.FirstName.Equals(FirstName) &&
+                userObj.LastName.Equals(LastName);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Email, FirstName, LastName);
+        }
     }
 }
