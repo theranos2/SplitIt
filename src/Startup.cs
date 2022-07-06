@@ -1,3 +1,5 @@
+using System.IO;
+using System.Reflection;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -43,6 +45,9 @@ namespace split_it
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Split-It!", Version = "v1" });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var filePath = Path.Combine(System.AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(filePath);
             });
 
             // Required to allow middleware to function. Because it inherists IMiddleWare 

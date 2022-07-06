@@ -31,10 +31,13 @@ namespace split_it
             .IsUnique();
         }
 
-        // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        // {
-        //     optionsBuilder.UseSqlite("Data Source=database.db");
-        // }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlite("Data Source=database.db");
+            }
+        }
     }
 
     public class Bill
@@ -69,6 +72,8 @@ namespace split_it
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Password { get; set; }
+        public bool MfaEnabled { get; set; } = false;
 
         public override bool Equals(object obj)
         {
@@ -78,14 +83,18 @@ namespace split_it
             }
             var userObj = (User)obj;
 
-            return userObj.Id.Equals(Id) && userObj.Email.Equals(Email) &&
-                userObj.FirstName.Equals(FirstName) &&
-                userObj.LastName.Equals(LastName);
+            return
+                userObj.Id.Equals(Id)
+                && userObj.Email.Equals(Email)
+                && userObj.FirstName.Equals(FirstName)
+                && userObj.LastName.Equals(LastName)
+                && userObj.Password.Equals(Password)
+                && userObj.MfaEnabled.Equals(MfaEnabled);
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, Email, FirstName, LastName);
+            return HashCode.Combine(Id, Email, FirstName, LastName, Password, MfaEnabled);
         }
     }
 }

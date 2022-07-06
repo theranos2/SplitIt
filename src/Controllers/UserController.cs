@@ -1,11 +1,15 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using split_it.Exceptions.Http;
+using split_it.Models;
 
 namespace split_it.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
@@ -15,31 +19,45 @@ namespace split_it.Controllers
             db = _db;
         }
 
-        [HttpGet("{user_id:Guid}")]
-        public User Get(Guid user_id)
+        private UserDto UserToDto(User u)
         {
-            var res = db.Users.Where(u => u.Id.Equals(user_id)).FirstOrDefault();
-            if (res == null) throw new HttpNotFound($"User with ID: {user_id} not found");
+            return new UserDto
+            {
+                Id = u.Id,
+                Email = u.Email,
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                MfaEnabled = u.MfaEnabled,
+            };
+        }
+
+        /// <summary>Show user given the ID</summary>
+        /// <response code="404">User with given ID does not exists</response>
+        [HttpGet("{userId:Guid}")]
+        public UserDto Get(Guid userId)
+        {
+            var res = db.Users.Where(u => u.Id.Equals(userId))
+                .Select(UserToDto)
+                .FirstOrDefault();
+            if (res == null) throw new HttpNotFound($"User with ID: {userId} not found");
             return res;
         }
 
-
-        [HttpPost]
-        public User Create(User user)
+        /// <summary>Show all users</summary>
+        /// <param name="take">Maximum users to return</param>
+        /// <param name="skip">Skip number of users</param>
+        /// <response code="400">Negative take, skip values</response>
+        [HttpGet]
+        public List<UserDto> GetMany(
+            [FromQuery(Name = "take")] int take = 10,
+            [FromQuery(Name = "skip")] int skip = 0
+        )
         {
-
-            if (
-                    user.Email == null || user.Email.Equals("")
-                    || user.FirstName == null || user.FirstName.Equals("")
-                    || user.LastName == null || user.LastName.Equals("")
-                )
-            {
-                throw new HttpBadRequest("Email, FirstName and LastName must not be empty");
-            }
-            user.Id = Guid.Empty;
-            db.Users.Add(user);
-            db.SaveChanges();
-            return user;
+            if (take < 0 || skip < 0)
+                throw new HttpBadRequest("Query parameters must be non-negative");
+            return db.Users.Take(take).Skip(skip)
+                .Select(UserToDto)
+                .ToList();
         }
     }
 }
