@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using split_it.Models;
 
 namespace split_it.Controllers
@@ -48,13 +49,13 @@ namespace split_it.Controllers
             foreach (Share share in bill.Shares)
             {
                 // share input validation
-                if (share.Amount < 0.05)
-                    // we need to handle exception in sprint 2 or later
-                    // currently no exception handler hence no strings return
-                    throw new Exception("Error");
+                //if (share.Amount < 0.05)
+                //// we need to handle exception in sprint 2 or later
+                //// currently no exception handler hence no strings return
+                //throw new Exception("Error");
 
-                if (share.Description == null)
-                    share.Description = "";
+                //if (share.Description == null)
+                //share.Description = "";
 
                 //share.Payer = TODO. this is dangerous. We need DTO.
                 //share.Payer = db.Users.Where(x => x.Email == share.Payer.Email).FirstOrDefault();
@@ -69,7 +70,7 @@ namespace split_it.Controllers
                     share.hasAccepted = true;
                 }
 
-                bill.Total += share.Amount;
+                //bill.Total += share.Amount;
             }
 
             // persist to the database
@@ -210,6 +211,83 @@ namespace split_it.Controllers
             }
 
             return db.Users.Where(x => x.FirstName == "Jack").FirstOrDefault();
+        }
+
+
+        [HttpGet("/create")]
+        public Bill Creet()
+        {
+            // Create dummy users
+            User bob = new User
+            {
+                Email = "bob@dylan.com",
+                FirstName = "bob",
+                LastName = "dylan",
+                MfaEnabled = false,
+                Password = "kekekekeke"
+            };
+
+            User lamar = new User
+            {
+                Email = "kendrick@lamar.com",
+                FirstName = "kendrick",
+                LastName = "lamar",
+                MfaEnabled = false,
+                Password = "kekekekeke"
+            };
+
+            //var bob = db.Users.Take(1).Skip(0).FirstOrDefault();
+            //var lamar = db.Users.Take(1).Skip(1).FirstOrDefault();
+
+            db.Users.Add(bob);
+            db.Users.Add(lamar);
+            db.SaveChanges();
+
+            // Create bill
+            List<Share> shares = new List<Share>()
+            {
+                Share.create_share(bob, new List<Item>{
+                    new Item{
+                        Name = "Pizza",
+                        Price = 10.99
+                    },
+                    new Item{
+                        Name = "Hotpie",
+                        Price = 2.99
+                    }
+                }),
+
+                Share.create_share(lamar, new List<Item>{
+                    new Item{
+                        Name = "Pizza",
+                        Price = 10.99
+                    },
+                    new Item{
+                        Name = "Hotpie",
+                        Price = 2.99
+                    }
+                }),
+            };
+
+            Bill bill = Bill.create_bill(bob, shares, "Bobs Bill");
+            db.Bills.Add(bill);
+
+            db.SaveChanges();
+
+            return bill;
+
+        }
+        
+        // Example how to return nested objects
+        [HttpGet("/getlots")]
+        public IEnumerable<Bill> Getslosts()
+        {
+            //arggggg!
+            return db.Bills.Include(bill => bill.Owner)
+                .Include(bill => bill.Shares)
+                .ThenInclude(share => share.Payer)
+                .Include(d => d.Shares)
+                .ThenInclude(share => share.Payer).ToList();
         }
     }
 }
