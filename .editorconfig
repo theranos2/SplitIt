@@ -7,3 +7,6 @@ end_of_line = lf
 [*.cs]
 indent_size = 4
 dotnet_sort_system_directives_first = true
+
+[{*.js,*.ts,*.tsx,*.json}]
+indent_size = 2
