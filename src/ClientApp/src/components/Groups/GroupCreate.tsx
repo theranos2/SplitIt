@@ -49,7 +49,8 @@ const GroupCreate = () => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center'
-          }}>
+          }}
+        >
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <GroupsIcon />
           </Avatar>
@@ -67,7 +68,14 @@ const GroupCreate = () => {
               autoFocus
             />
             <InputLabel id="users_select_label">Add users</InputLabel>
-            <Select required fullWidth name="users" labelId="users_select_label" id="group_users">
+            <Select
+              required
+              fullWidth
+              name="users"
+              labelId="users_select_label"
+              label="Add users"
+              id="group_users"
+            >
               <MenuItem value={1}>Adam</MenuItem>
               <MenuItem value={2}>Jingcheng</MenuItem>
               <MenuItem value={3}>Xibo</MenuItem>

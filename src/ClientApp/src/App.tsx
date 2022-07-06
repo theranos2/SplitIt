@@ -11,7 +11,7 @@ import BillSimple from './components/BillCreation/BillSimple';
 import BillAdvanced from './components/BillCreation/BillAdvanced';
 import BillsAll from './components/BillView/BillsAll';
 
-import GroupCreate from './Components/Groups/GroupCreate';
+import GroupCreate from './components/Groups/GroupCreate';
 
 import NotFound from './components/NotFound';
 import HomePage from './components/HomePage';

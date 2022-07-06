@@ -13,6 +13,7 @@ import Toolbar from '@mui/material/Toolbar';
 import AppBar from '@mui/material/AppBar';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 import DropDownMenu from './DropDownMenu';
 
@@ -20,7 +21,8 @@ const links = [
   { href: '/bill/create', icon: <AddBusinessRoundedIcon /> },
   { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
   { href: '/user/mail', icon: <MailIcon /> },
-  { href: '/login', icon: <AccountCircle /> }
+  { href: '/login', icon: <AccountCircle /> },
+  { href: '/groups/create', icon: <GroupsIcon /> }
 ];
 
 const TopNavigation = () => {
