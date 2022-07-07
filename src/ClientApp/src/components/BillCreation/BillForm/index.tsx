@@ -1,5 +1,3 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -123,15 +121,4 @@ export const BillForm = (props: BillFormProps) => {
       </Container>
     </ThemeProvider>
   );
-};
-
-BillForm.propTypes = {
-  title: PropTypes.string,
-  inputs: PropTypes.object,
-  fields: PropTypes.array,
-  set: PropTypes.func,
-  submit: PropTypes.object,
-  cancel: PropTypes.object
-};
-
-// based on: https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
+}; // based on: https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in

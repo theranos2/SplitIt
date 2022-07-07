@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import DateSelectorProps from './props';
 
@@ -39,12 +38,6 @@ export const DateSelector = (props: DateSelectorProps) => {
       </Stack>
     </LocalizationProvider>
   );
-};
-
-DateSelector.propTypes = {
-  start: PropTypes.string, // should be a date
-  end: PropTypes.string, // should be a date
-  set: PropTypes.func
 };
 
 // based on https://mui.com/x/react-date-pickers/getting-started/
