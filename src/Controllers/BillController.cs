@@ -18,17 +18,15 @@ namespace split_it.Controllers
             db = _db;
         }
 
-
-        [HttpGet]
-        public Guid OG()
-        {
-            return new Guid();
-        }
-
         [HttpGet("{bill_id:Guid}")]
         public Bill Get(Guid bill_id)
         {
-            return db.Bills.Where(x => x.Id == bill_id).FirstOrDefault();
+            return db.Bills.Where(x => x.Id == bill_id)
+                .Include(bill => bill.Owner)
+                .Include(bill => bill.Shares)
+                .ThenInclude(share => share.Payer)
+                .Include(share => share.Shares)
+                .ThenInclude(share => share.Payer).FirstOrDefault();
         }
 
         [HttpPost]
@@ -277,7 +275,6 @@ namespace split_it.Controllers
             return bill;
 
         }
-
         // Example how to return nested objects
         [HttpGet("/getlots")]
         public IEnumerable<Bill> Getslosts()
