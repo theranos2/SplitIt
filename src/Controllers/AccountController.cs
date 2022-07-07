@@ -11,6 +11,7 @@ namespace split_it.Controllers
 {
     [ApiController]
     [Authorize]
+    [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {
         DatabaseContext db;
@@ -35,7 +36,7 @@ namespace split_it.Controllers
         /// <summary>Register new user</summary>
         /// <response code="400">Email already in use</response>
         [AllowAnonymous]
-        [HttpPost("/register")]
+        [HttpPost("register")]
         public TokenDto Register([FromBody] RegisterDto input)
         {
             if (db.Users.Where(x => input.Email == x.Email).FirstOrDefault() != null)
@@ -60,7 +61,7 @@ namespace split_it.Controllers
         /// <summary>Login using credentials</summary>
         /// <response code="400">Incorrect email or password</response>
         [AllowAnonymous]
-        [HttpPost("/login")]
+        [HttpPost("login")]
         public TokenDto Login(LoginDto login)
         {
             var user = db.Users.Where(x => login.Email == x.Email).FirstOrDefault();
@@ -95,7 +96,7 @@ namespace split_it.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("/mfa/{mfaString}")]
+        [HttpPost("mfa/{mfaString}")]
         public TokenDto Mfa(string mfaString)
         {
             if (!Request.Headers.ContainsKey("Token"))
@@ -119,7 +120,7 @@ namespace split_it.Controllers
             return new TokenDto { Token = cookie.ToString() };
         }
 
-        [HttpPost("/logout")]
+        [HttpPost("logout")]
         public ActionResult Logout()
         {
             CookiesDb.RemoveCookie(HttpContext.User.Identity.Name); // identity.name is actually cookieStr

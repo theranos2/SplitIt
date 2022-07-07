@@ -7,7 +7,7 @@ using split_it.Models;
 namespace split_it.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class BillController : ControllerBase
     {
         DatabaseContext db;
@@ -79,7 +79,7 @@ namespace split_it.Controllers
             return bill;
         }
 
-        [HttpGet("/getmany")]
+        [HttpGet("getmany")]
         public IEnumerable<Bill> GetMany(BillFilter filter)
         {
             IQueryable<Bill> query = db.Bills.AsQueryable<Bill>();

@@ -10,7 +10,7 @@ namespace split_it.Controllers
 {
     [ApiController]
     [Authorize]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
         DatabaseContext db;
