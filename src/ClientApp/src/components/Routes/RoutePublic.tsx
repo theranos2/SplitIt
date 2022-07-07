@@ -1,20 +1,20 @@
 import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { token } from 'utility/config';
+import Redirect from './Redirect';
 
 interface RoutePublicProps {
   path: string;
   element: React.ReactNode;
-  restricted: boolean;
+  restricted?: boolean;
 }
 
-const RoutePrivate = (props: RoutePublicProps) => {
-  const { path, element, restricted } = props;
-  return (
-    <>
-      {token !== '' && restricted ? <Navigate to="/" /> : <Route path={path} element={element} />}
-    </>
+const RoutePublic = (props: RoutePublicProps) => {
+  return token !== '' && props.restricted ? (
+    <Redirect path={props.path} to="/" />
+  ) : (
+    <Route path={props.path} element={props.element} />
   );
 };
 
-export default RoutePrivate;
+export default RoutePublic;

@@ -1,32 +1,34 @@
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import './App.css';
 
-import Login from './components/AccountManagement/Login';
-import Register from './components/AccountManagement/Register';
-import BillCreate from './components/BillCreation/BillCreate';
-import BillSimple from './components/BillCreation/BillSimple';
-import BillAdvanced from './components/BillCreation/BillAdvanced';
-import BillsAll from './components/BillView/BillsAll';
+import PublicRoute from 'components/Routes/RoutePublic';
+import PrivateRoute from 'components/Routes/RoutePrivate';
 
-import NotFound from './components/NotFound';
-import HomePage from './components/HomePage';
+import Login from 'components/AccountManagement/Login';
+import Register from 'components/AccountManagement/Register';
+import BillsAll from 'components/BillView/BillsAll';
+import BillCreate from 'components/BillCreation/BillCreate';
+import BillSimple from 'components/BillCreation/BillSimple';
+import BillAdvanced from 'components/BillCreation/BillAdvanced';
 
-import TopNavigation from './components/Menu/TopNavigation';
+import TopNavigation from 'components/Menu/TopNavigation';
+import NotFound from 'components/NotFound';
+import HomePage from 'components/HomePage';
 
 const App = () => {
   return (
     <BrowserRouter>
       <TopNavigation />
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <PublicRoute path="/" element={<HomePage />} />
+        <PublicRoute restricted path="/login" element={<Login />} />
+        <PublicRoute restricted path="/register" element={<Register />} />
 
-        <Route path="/bill/view" element={<BillsAll />} />
-        <Route path="/bill/view:bill_id" element={<BillsAll />} />
-        <Route path="/bill/create" element={<BillCreate />} />
-        <Route path="/bill/simple" element={<BillSimple />} />
-        <Route path="/bill/advanced" element={<BillAdvanced />} />
+        <PublicRoute path="/bill/view:bill_id" element={<BillsAll />} />
+        <PrivateRoute path="/bill/view" element={<BillsAll />} />
+        <PrivateRoute path="/bill/create" element={<BillCreate />} />
+        <PrivateRoute path="/bill/simple" element={<BillSimple />} />
+        <PrivateRoute path="/bill/advanced" element={<BillAdvanced />} />
 
         {/* 404 - Not Found route */}
         <Route path="*" element={<NotFound />} />

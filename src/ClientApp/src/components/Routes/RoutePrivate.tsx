@@ -1,7 +1,7 @@
 import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { Route } from 'react-router-dom';
 import { token } from 'utility/config';
+import Redirect from './Redirect';
 
 interface RoutePrivateProps {
   path: string;
@@ -9,10 +9,11 @@ interface RoutePrivateProps {
 }
 
 const RoutePrivate = (props: RoutePrivateProps) => {
-  const { path, element } = props;
-  return <>{token === '' ? <Route path={path} element={element} /> : <Navigate to="/login" />}</>;
+  return token === '' ? (
+    <Redirect path={props.path} to="/login" />
+  ) : (
+    <Route path={props.path} element={props.element} />
+  );
 };
-
-RoutePrivate.propTypes = { path: PropTypes.string, component: PropTypes.any };
 
 export default RoutePrivate;
