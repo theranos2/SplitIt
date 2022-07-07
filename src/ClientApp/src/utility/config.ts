@@ -1,3 +1,8 @@
-export const port = 5000;
+export const port = 5001;
 
-export const token = 1234;
+export let token = '';
+
+export const set_token = (new_token: string) => {
+  token = new_token;
+  return {};
+};

@@ -1,6 +1,6 @@
 import React from 'react';
 import { LoginForm } from '../LoginForm';
-import { request } from 'utility/api';
+import { signup } from 'utility/api/account';
 
 const Register = () => {
   const [inputs, setInputs] = React.useState({
@@ -23,8 +23,7 @@ const Register = () => {
       return console.error('Passwords must match.');
     }
 
-    const res = request('POST', 'Account/register', inputs);
-    console.log(res);
+    return await signup(inputs);
   };
 
   return (
