@@ -277,7 +277,7 @@ namespace split_it.Controllers
             return bill;
 
         }
-        
+
         // Example how to return nested objects
         [HttpGet("/getlots")]
         public IEnumerable<Bill> Getslosts()
