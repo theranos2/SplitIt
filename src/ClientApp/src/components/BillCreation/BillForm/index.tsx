@@ -76,7 +76,14 @@ export const BillForm = (props: BillFormProps) => {
                     />
                   );
                 case 'price':
-                  return <PriceDisplay price={inputs.price} />;
+                  return (
+                    <PriceDisplay
+                      key={`price-${idx}`}
+                      price={inputs.price}
+                      set={set('price')}
+                      disabled={field.disabled}
+                    />
+                  );
                 default:
                   return (
                     <InputField
@@ -92,7 +99,7 @@ export const BillForm = (props: BillFormProps) => {
               }
             })}
             <Link
-              id={`submit-${title}`}
+              key={`submit-${title}`}
               to={submit.href}
               onClick={submit?.func}
               style={{ textDecoration: 'none' }}
