@@ -1,20 +1,21 @@
 import React from 'react';
 import { LoginForm } from '../LoginForm';
+import { login } from 'utility/api/account';
 
 const Login = () => {
-  const [inputs, setInputs] = React.useState({ email: '', pass: '' });
+  const [inputs, setInputs] = React.useState({ email: '', password: '' });
 
   const set = (name: string) => (event: any) =>
     setInputs((old) => ({ ...old, [name]: event.target.value }));
 
-  const submit = (event: any) => {
+  const submit = async (event: any) => {
     event.preventDefault();
 
-    if (inputs.email === '' || inputs.pass === '') {
+    if (inputs.email === '' || inputs.password === '') {
       return console.log('Inputs cannot be empty.');
     }
 
-    // fetch('/api') login to the account in the backend
+    return await login(inputs);
   };
 
   return (
@@ -35,12 +36,12 @@ const Login = () => {
           }
         },
         {
-          name: 'pass',
+          name: 'password',
           label: 'Password',
           type: 'password',
           err: {
-            cond: inputs?.pass?.length < 10,
-            msg: 'Password must be longer than 10 characters.'
+            cond: inputs?.password?.length < 6,
+            msg: 'Password must be 6 characters or longer.'
           }
         }
       ]}

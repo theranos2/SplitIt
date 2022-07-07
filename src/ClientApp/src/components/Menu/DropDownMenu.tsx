@@ -26,7 +26,7 @@ const DropDownMenu = () => {
       <MenuList dense>
         <MenuItem>
           {notifications.map((notification: notification, idx: number) => (
-            <ListItemText key={`notification-${idx}`}>notification.title</ListItemText>
+            <ListItemText key={`notification-${idx}`}>{notification.title}</ListItemText>
           ))}
         </MenuItem>
       </MenuList>
