@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using split_it.Models;
 
 namespace split_it
 {
@@ -69,6 +70,21 @@ namespace split_it
             };
             return bill;
         }
+
+        public BillDto ConvertToDto()
+        {
+            return new BillDto{
+                Created = this.Created,
+                Id = this.Id,
+                isSettled = this.isSettled,
+                //OverallItems = bill.OverallItems,
+                OwnerId = this.Owner.Id,
+                Shares = this.Shares.Select(x => x.ConvertToDto()).ToList(),
+                Title = this.Title,
+                Total =  this.Total
+            };
+        }
+
     }
 
     public class Item
@@ -76,6 +92,23 @@ namespace split_it
         public Guid Id { get; set; }
         public string Name { get; set; }
         public double Price { get; set; }
+
+        public static Item ConvertFromDto(ItemDto itemDto)
+        {
+            return new Item{
+                Name = itemDto.Name,
+                Price = itemDto.Price
+            };
+        }
+
+        public ItemDto ConvertToDto()
+        {
+            return new ItemDto{
+                Name =  this.Name,
+                Price =  this.Price
+            };
+        }
+
     }
 
     public class Share
@@ -99,6 +132,30 @@ namespace split_it
             };
 
             return share;
+        }
+
+        public ShareDto ConvertToDto()
+        {
+            return new ShareDto{
+                hasAccepted =  this.hasAccepted,
+                hasPaid = this.hasPaid,
+                PayerId = this.Payer.Id,
+                Total = this.Total,
+                Items = this.Items.Select(x => x.ConvertToDto()).ToList()
+            };
+        }
+
+        public static Share ConvertFromDto(ShareDto shareDto)
+        {
+            return new Share{
+                hasPaid = shareDto.hasPaid,
+                hasAccepted = shareDto.hasAccepted,
+                Payer = new User{
+                    Id = shareDto.PayerId
+                },
+                Items = shareDto.Items.Select(x => Item.ConvertFromDto(x)).ToList(),
+                Total = shareDto.Items.Sum(x => x.Price),
+            };
         }
 
     }
