@@ -117,7 +117,7 @@ namespace split_it.Controllers
             // increase expiration date
             cookie.ExpiryDate = cookie.IssueDate.AddHours(12);
 
-            return new TokenDto { Token = cookie.ToString() };
+            return new TokenDto { Token = cookieString };
         }
 
         [HttpPost("logout")]
