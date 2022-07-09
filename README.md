@@ -7,6 +7,11 @@
 - Ensure the latest LTS node version is installed (v16.15.1)
     - Use [nvm](https://github.com/nvm-sh/nvm) to make your life easier
 
+# Using swagger with authenticated routes
+- Click 'Authorize 🔒' on the top right of the page
+- Paste your token and click 'Authorize'
+- Now all requests you send will have the `Token` header
+
 # Database migrations
 - Currently not in use
 - Ensuring schema changes are reflected in database:
