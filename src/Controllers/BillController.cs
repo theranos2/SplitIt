@@ -32,15 +32,15 @@ namespace split_it.Controllers
                 .Include(share => share.Shares)
                 .ThenInclude(share => share.Items).FirstOrDefault();
 
-            if(bill == null)
+            if (bill == null)
                 throw new HttpNotFound("Cannot find bill.");
 
             Guid curUserId = GetCurrentUser().Id;
             // check if bill member is requesting the bill
-            bool found =  bill.Shares.Any(x => x.Payer.Id == curUserId);
+            bool found = bill.Shares.Any(x => x.Payer.Id == curUserId);
 
             // check ownership
-            if(bill.Owner.Id != curUserId && !found)
+            if (bill.Owner.Id != curUserId && !found)
                 throw new HttpBadRequest($"Permission Denied. Cannot view bill that you are not apart of.");
 
             return bill.ConvertToDto();
@@ -50,9 +50,9 @@ namespace split_it.Controllers
         private List<Share> ConvertToShares(ICollection<ShareDto> shares)
         {
             List<Share> newShares = new List<Share>();
-            foreach(var shareDto in shares) 
+            foreach (var shareDto in shares)
             {
-                if(shareDto == null)
+                if (shareDto == null)
                     throw new HttpBadRequest("A share cannot be null");
 
                 //shareDto.Id = Guid.Empty; // deprecated
@@ -65,21 +65,22 @@ namespace split_it.Controllers
                     throw new HttpBadRequest($"Cannot find payer: {shareDto.PayerId}");
 
                 // items cannot be empty
-                if(shareDto.Items == null || shareDto.Items.Count <= 0 )
+                if (shareDto.Items == null || shareDto.Items.Count <= 0)
                     throw new HttpBadRequest("Missing item from share. Must include at least one item per share.");
 
                 // check items
                 List<Item> newItems = new List<Item>();
-                foreach(var item in shareDto.Items)
+                foreach (var item in shareDto.Items)
                 {
-                    if(item.Name ==null)
+                    if (item.Name == null)
                         item.Name = "";
 
                     item.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item.Name.Trim().ToLower());
                     shareDto.Total += item.Price; // summing up the share
 
                     // convert itemDto to item
-                    newItems.Add(new Item{
+                    newItems.Add(new Item
+                    {
                         Id = Guid.Empty,
                         Name = item.Name,
                         Price = item.Price
@@ -87,7 +88,8 @@ namespace split_it.Controllers
                 }
 
                 newShares.Add(
-                    new Share {
+                    new Share
+                    {
                         //Id = shareDto.Id,
                         hasAccepted = shareDto.hasAccepted,
                         hasPaid = shareDto.hasAccepted,
@@ -110,7 +112,7 @@ namespace split_it.Controllers
             // Uncomment for production
             //var cookie = CookiesDb.Get(HttpContext.User.Identity.Name);
             //if(cookie == null)
-                //throw new HttpBadRequest($"Bad cookie");
+            //throw new HttpBadRequest($"Bad cookie");
 
             //return db.Users.Where(x => x.Id == cookie.UserId).FirstOrDefault();
 
@@ -122,10 +124,11 @@ namespace split_it.Controllers
         [HttpPost]
         public BillDto Create(BillDto billDto)
         {
-            User curUser = GetCurrentUser(); 
+            User curUser = GetCurrentUser();
 
             // create new bill
-            Bill newBill = new Bill{
+            Bill newBill = new Bill
+            {
                 Created = DateTime.Now,
                 Id = Guid.Empty,
                 isSettled = false,
@@ -153,12 +156,12 @@ namespace split_it.Controllers
                 .Include(d => d.Shares)
                 .ThenInclude(share => share.Items).FirstOrDefault();
 
-            if(bill == null)
+            if (bill == null)
                 throw new HttpBadRequest($"Cannot find payer: {bill_id}");
-            
-            User curUser = GetCurrentUser(); 
 
-            if(bill.Owner.Id != curUser.Id)
+            User curUser = GetCurrentUser();
+
+            if (bill.Owner.Id != curUser.Id)
                 throw new HttpBadRequest($"Permission Denied. Cannot edit bill that is not yours.");
 
             bill.Title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(billDto.Title.Trim().ToLower());
@@ -174,7 +177,7 @@ namespace split_it.Controllers
 
             bill.Shares = ConvertToShares(billDto.Shares);
             bill.Total = Math.Round(bill.Shares.Sum(x => x.Total), 2);
-            bill.isSettled = bill.Shares.All(x => x.hasPaid)? true: false;
+            bill.isSettled = bill.Shares.All(x => x.hasPaid) ? true : false;
             db.SaveChanges();
 
             // todo needs a mapper? or nah?
@@ -229,7 +232,7 @@ namespace split_it.Controllers
             var bob = db.Users.Where(x => x.Email == "bob@dylan.com").FirstOrDefault();
             var lamar = db.Users.Where(x => x.Email == "kendrick@lamar.com").FirstOrDefault();
 
-            if(bob == null)
+            if (bob == null)
             {
                 // Create dummy users
                 User bobby = new User
@@ -244,7 +247,7 @@ namespace split_it.Controllers
                 db.SaveChanges();
             }
 
-            if(lamar == null)
+            if (lamar == null)
             {
                 User kenny = new User
                 {
