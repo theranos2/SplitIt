@@ -31,7 +31,7 @@ namespace split_it.Models
         public bool hasPaid { get; set; } = false;
 
         public bool hasAccepted { get; set; } = false;
-        
+
         public double Total { get; set; }
 
         [Required]

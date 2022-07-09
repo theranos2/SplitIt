@@ -73,7 +73,8 @@ namespace split_it
 
         public BillDto ConvertToDto()
         {
-            return new BillDto{
+            return new BillDto
+            {
                 Created = this.Created,
                 Id = this.Id,
                 isSettled = this.isSettled,
@@ -81,7 +82,7 @@ namespace split_it
                 OwnerId = this.Owner.Id,
                 Shares = this.Shares.Select(x => x.ConvertToDto()).ToList(),
                 Title = this.Title,
-                Total =  this.Total
+                Total = this.Total
             };
         }
 
@@ -95,7 +96,8 @@ namespace split_it
 
         public static Item ConvertFromDto(ItemDto itemDto)
         {
-            return new Item{
+            return new Item
+            {
                 Name = itemDto.Name,
                 Price = itemDto.Price
             };
@@ -103,9 +105,10 @@ namespace split_it
 
         public ItemDto ConvertToDto()
         {
-            return new ItemDto{
-                Name =  this.Name,
-                Price =  this.Price
+            return new ItemDto
+            {
+                Name = this.Name,
+                Price = this.Price
             };
         }
 
@@ -136,8 +139,9 @@ namespace split_it
 
         public ShareDto ConvertToDto()
         {
-            return new ShareDto{
-                hasAccepted =  this.hasAccepted,
+            return new ShareDto
+            {
+                hasAccepted = this.hasAccepted,
                 hasPaid = this.hasPaid,
                 PayerId = this.Payer.Id,
                 Total = this.Total,
@@ -147,10 +151,12 @@ namespace split_it
 
         public static Share ConvertFromDto(ShareDto shareDto)
         {
-            return new Share{
+            return new Share
+            {
                 hasPaid = shareDto.hasPaid,
                 hasAccepted = shareDto.hasAccepted,
-                Payer = new User{
+                Payer = new User
+                {
                     Id = shareDto.PayerId
                 },
                 Items = shareDto.Items.Select(x => Item.ConvertFromDto(x)).ToList(),
