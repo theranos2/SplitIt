@@ -1,7 +1,7 @@
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import './App.css';
 
-import PublicRoute from 'components/Routes/RoutePublic';
+import ProtectedRoute from 'components/Routes/RouteProtected';
 import PrivateRoute from 'components/Routes/RoutePrivate';
 
 import Login from 'components/AccountManagement/Login';
@@ -10,7 +10,7 @@ import BillsAll from 'components/BillView/BillsAll';
 import BillCreate from 'components/BillCreation/BillCreate';
 import BillSimple from 'components/BillCreation/BillSimple';
 import BillAdvanced from 'components/BillCreation/BillAdvanced';
-import Notifications from 'components/
+import Notifications from 'components/Notifications/NotificationsPage';
 
 import TopNavigation from 'components/Menu/TopNavigation';
 import NotFound from 'components/NotFound';
@@ -21,17 +21,20 @@ const App = () => {
     <BrowserRouter>
       <TopNavigation />
       <Routes>
-        <PublicRoute path="/" element={<HomePage />} />
-        <PublicRoute restricted path="/login" element={<Login />} />
-        <PublicRoute restricted path="/register" element={<Register />} />
+        <Route path="/" element={<HomePage />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
 
-        <PublicRoute path="/bill/view:bill_id" element={<BillsAll />} />
-        <PrivateRoute path="/bill/view" element={<BillsAll />} />
-        <PrivateRoute path="/bill/create" element={<BillCreate />} />
-        <PrivateRoute path="/bill/simple" element={<BillSimple />} />
-        <PrivateRoute path="/bill/advanced" element={<BillAdvanced />} />
-
-	<Route path="/notifications" element={<Notifications />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/bill/view:bill_id" element={<BillsAll />} />
+          <Route path="/bill/view" element={<BillsAll />} />
+          <Route path="/bill/create" element={<BillCreate />} />
+          <Route path="/bill/simple" element={<BillSimple />} />
+          <Route path="/bill/advanced" element={<BillAdvanced />} />
+          <Route path="/notifications" element={<Notifications />} />
+        </Route>
 
         {/* 404 - Not Found route */}
         <Route path="*" element={<NotFound />} />

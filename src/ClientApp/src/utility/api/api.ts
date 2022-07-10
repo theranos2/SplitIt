@@ -10,7 +10,7 @@ export const request: RequestType = (method, path, data = '') =>
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Authorization: `Bearer ${token ?? ''}`
+      Token: token
     },
     body: data === '' ? null : JSON.stringify(data)
   })

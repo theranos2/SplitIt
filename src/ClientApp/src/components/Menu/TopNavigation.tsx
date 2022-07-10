@@ -21,9 +21,9 @@ const links =
     ? [
         { href: '/bill/create', icon: <AddBusinessRoundedIcon /> },
         { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
-        { href: '/bill/view', icon: <CardMembershipRoundedIcon /> }, 
-        { href: '/notifications', icon: <NotificationsIcons /> },
-	// { href: 'notif', icon: <NotificationsMenu /> },
+        { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
+        { href: '/notifications', icon: <NotificationsIcon /> },
+        // { href: 'notif', icon: <NotificationsMenu /> },
         { href: '/logout', icon: <ExitToAppIcon /> }
       ]
     : [{ href: '/login', icon: <AccountCircle /> }];
