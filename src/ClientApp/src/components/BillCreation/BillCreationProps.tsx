@@ -1,5 +1,5 @@
 export interface ButtonEventHandler {
-  (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>): void;
+  (event: any): void;
 }
 
 export interface ButtonSubmission {
