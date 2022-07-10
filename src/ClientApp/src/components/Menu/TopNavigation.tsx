@@ -11,7 +11,8 @@ import Toolbar from '@mui/material/Toolbar';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 
-import NotificationsMenu from './NotificationsMenu';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import NotificationsMenu from '../Notifications/NotificationsMenu';
 import IconLink from './IconLink';
 import { token } from 'utility/config';
 
@@ -20,8 +21,9 @@ const links =
     ? [
         { href: '/bill/create', icon: <AddBusinessRoundedIcon /> },
         { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
-        { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
-        { href: 'notif', icon: <NotificationsMenu /> },
+        { href: '/bill/view', icon: <CardMembershipRoundedIcon /> }, 
+        { href: '/notifications', icon: <NotificationsIcons /> },
+	// { href: 'notif', icon: <NotificationsMenu /> },
         { href: '/logout', icon: <ExitToAppIcon /> }
       ]
     : [{ href: '/login', icon: <AccountCircle /> }];

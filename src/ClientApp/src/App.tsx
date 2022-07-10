@@ -10,6 +10,7 @@ import BillsAll from 'components/BillView/BillsAll';
 import BillCreate from 'components/BillCreation/BillCreate';
 import BillSimple from 'components/BillCreation/BillSimple';
 import BillAdvanced from 'components/BillCreation/BillAdvanced';
+import Notifications from 'components/
 
 import TopNavigation from 'components/Menu/TopNavigation';
 import NotFound from 'components/NotFound';
@@ -29,6 +30,8 @@ const App = () => {
         <PrivateRoute path="/bill/create" element={<BillCreate />} />
         <PrivateRoute path="/bill/simple" element={<BillSimple />} />
         <PrivateRoute path="/bill/advanced" element={<BillAdvanced />} />
+
+	<Route path="/notifications" element={<Notifications />} />
 
         {/* 404 - Not Found route */}
         <Route path="*" element={<NotFound />} />
