@@ -11,7 +11,17 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+export enum UserSort {
+    EMAILASC = 'EMAIL_ASC',
+    EMAILDESC = 'EMAIL_DESC',
+    FIRSTNAMEASC = 'FIRSTNAME_ASC',
+    FIRSTNAMEDESC = 'FIRSTNAME_DESC',
+    LASTNAMEASC = 'LASTNAME_ASC',
+    LASTNAMEDESC = 'LASTNAME_DESC'
+}
 

@@ -17,6 +17,6 @@ typescript-client:
 	java -jar '../swagger-codegen-cli.jar' generate \
         -Dio.swagger.v3.parser.util.RemoteUrl.trustAll=true \
 		-i https://localhost:5001/swagger/v1/swagger.json \
-		-l typescript-fetch \
+		-l typescript-axios \
 		-o './ClientApp/src/api' 
 

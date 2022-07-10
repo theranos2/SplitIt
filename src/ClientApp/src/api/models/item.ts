@@ -11,7 +11,28 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-export * from "./api";
-export * from "./configuration";
-export * from "./models";
-
+/**
+ * 
+ * @export
+ * @interface Item
+ */
+export interface Item {
+    /**
+     * 
+     * @type {string}
+     * @memberof Item
+     */
+    id?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Item
+     */
+    name?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof Item
+     */
+    price?: number;
+}
