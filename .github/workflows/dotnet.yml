@@ -3,8 +3,12 @@ name: .NET
 on:
   push:
     branches: ["main"]
+    paths-ignore:
+      - src/ClientApp/**
   pull_request:
     branches: ["main"]
+    paths-ignore:
+      - src/ClientApp/**
 
 jobs:
   format:

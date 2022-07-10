@@ -85,5 +85,37 @@ namespace tests
             Assert.Equal(user.LastName, sameUser.LastName);
             Assert.Equal(user.MfaEnabled, user.MfaEnabled);
         }
+
+        [Theory]
+        [InlineData(3, 3, 2)]
+        [InlineData(1, 100, 4)] // since we have 5 users
+        [InlineData(0, 10, 5)] // since we have 5 users
+        public void UserTakeSkip(int expected, int take, int skip)
+        {
+            var users = userController.GetMany(take: take, skip: skip);
+            Assert.Equal(expected, users.Count);
+        }
+
+        [Fact]
+        public void UserFilter()
+        {
+            var users = userController.GetMany(filter: new UserFilter
+            {
+                FirstName = "ken"
+            });
+            Assert.Single(users);
+            Assert.Equal("ken", users[0].FirstName);
+        }
+
+        [Theory]
+        [InlineData(UserSort.EMAIL_ASC, UserSort.EMAIL_DESC)]
+        [InlineData(UserSort.FIRSTNAME_ASC, UserSort.FIRSTNAME_DESC)]
+        [InlineData(UserSort.LASTNAME_ASC, UserSort.LASTNAME_DESC)]
+        public void UserSorting(UserSort asc, UserSort desc)
+        {
+            var sortedAsc = userController.GetMany(sortBy: asc);
+            var sortedDesc = userController.GetMany(sortBy: desc);
+            Assert.Equal(sortedAsc[0].Id, sortedDesc[4].Id);
+        }
     }
 }

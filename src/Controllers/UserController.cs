@@ -96,7 +96,7 @@ namespace split_it.Controllers
                     break;
             }
 
-            return qb.Take(take).Skip(skip)
+            return qb.Skip(skip).Take(take)
                 .Select(UserToDto)
                 .ToList();
         }
