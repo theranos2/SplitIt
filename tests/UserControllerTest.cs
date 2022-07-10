@@ -71,13 +71,13 @@ namespace tests
         [InlineData(-1, -1)]
         public void GetAllUsersBadParam(int take, int skip)
         {
-            Assert.Throws<HttpBadRequest>(() => userController.GetMany(take, skip));
+            Assert.Throws<HttpBadRequest>(() => userController.GetMany(take: take, skip: skip));
         }
 
         [Fact]
         public void FindOneUser()
         {
-            var user = userController.GetMany(1)[0];
+            var user = userController.GetMany(take: 1)[0];
             var sameUser = userController.Get(user.Id);
             Assert.Equal(user.Id, sameUser.Id);
             Assert.Equal(user.Email, sameUser.Email);
