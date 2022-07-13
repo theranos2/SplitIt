@@ -22,5 +22,8 @@ namespace split_it.Models
         /// Like: '/api/{Domain}/{Id}' => '/api/Bill/0000-0000-0000-0000'
         /// </remarks>
         public string Domain { get; set; }
+
+        /// <summary>Notification creation date</summary>
+        public DateTime CreatedAt { get; set; }
     }
 }
