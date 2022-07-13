@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using split_it.Authentication;
 using split_it.Exceptions;
 using split_it.Middlewares;
+using split_it.Services;
 
 namespace split_it
 {
@@ -76,6 +77,8 @@ namespace split_it
                     }
                 });
             });
+
+            services.AddTransient<NotificationService>();
 
             // Required to allow middleware to function. Because it inherists IMiddleWare 
             services.AddTransient<ExceptionMiddleware>();
