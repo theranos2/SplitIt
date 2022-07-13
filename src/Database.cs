@@ -1,4 +1,3 @@
-// Database.cs
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,6 +13,7 @@ namespace split_it
         public DbSet<Bill> Bills { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<Share> Shares { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         public static DbContextOptions<DatabaseContext> DefaultDatabaseOptions = new DbContextOptionsBuilder<DatabaseContext>()
             .UseSqlite("Data Source=database.db")
@@ -176,6 +176,7 @@ namespace split_it
         public string LastName { get; set; }
         public string Password { get; set; }
         public bool MfaEnabled { get; set; } = false;
+        public ICollection<Notification> Notifications { get; set; }
 
         public override bool Equals(object obj)
         {
