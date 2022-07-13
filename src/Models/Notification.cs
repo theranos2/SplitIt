@@ -9,8 +9,8 @@ namespace split_it.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        /// <summary>Guid of Item in the specified Domain</summary>
-        public Guid ItemId { get; set; }
+        /// <summary>Guid of resource in the specified Domain</summary>
+        public Guid ResourceId { get; set; }
 
         /// <summary>Brief user friendly notification message</summary>
         public string Message { get; set; }
