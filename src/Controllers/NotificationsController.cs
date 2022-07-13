@@ -45,7 +45,7 @@ namespace split_it.Controllers
         }
 
         /// <response code="403">When NotificationId does not belong to the authenticated user</response>
-        /// <summary>Mark Notification as seen, its immediately deleted</summary>
+        /// <summary>Mark Notification as seen aka delete it</summary>
         [HttpDelete("{NotificationId:Guid}")]
         public void Seen(
             Guid NotificationId,
