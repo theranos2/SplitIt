@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using split_it.Exceptions.Http;
 using split_it.Models;
 
 namespace split_it.Services
@@ -15,7 +16,13 @@ namespace split_it.Services
 
         public Notification Add(Notification n)
         {
-            n.Id = Guid.Empty;
+            if (n.Id != null || n.Id != Guid.Empty)
+                throw new HttpBadRequest("Do not supply ID");
+
+            var user = db.Users.Where(u => u.Id == n.UserId).FirstOrDefault();
+            if (user == null)
+                throw new HttpBadRequest("User does not exists");
+
             db.Notifications.Add(n).Reload();
             db.SaveChanges();
             return n;
@@ -29,13 +36,21 @@ namespace split_it.Services
 
         public List<Notification> Get(
             Guid UserId,
-            int take = 10,
-            int skip = 0
+            NotificationSort sortBy,
+            int take,
+            int skip
         )
         {
-            return db.Notifications
-                .Where(n => n.UserId == UserId)
-                .OrderByDescending(n => n.CreatedAt)
+            if (take < 0 || skip < 0)
+                throw new HttpBadRequest("Take and Skip values must be positive");
+            var qb = db.Notifications
+                .AsQueryable()
+                .Where(n => n.UserId == UserId);
+            if (sortBy == NotificationSort.DATE_ASC)
+                qb = qb.OrderBy(n => n.CreatedAt);
+            else if (sortBy == NotificationSort.DATE_DESC)
+                qb = qb.OrderByDescending(n => n.CreatedAt);
+            return qb
                 .Skip(skip)
                 .Take(take)
                 .ToList();
@@ -43,10 +58,13 @@ namespace split_it.Services
 
         public Notification GetById(Guid UserId, Guid NotificationId)
         {
-            return db.Notifications
+            var n = db.Notifications
                 .Where(n => n.Id == NotificationId)
                 .Where(n => n.UserId == UserId)
                 .FirstOrDefault();
+            if (n == null)
+                throw new HttpNotFound("Notification not found");
+            return n;
         }
     }
 }

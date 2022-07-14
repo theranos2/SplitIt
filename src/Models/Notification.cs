@@ -35,4 +35,10 @@ namespace split_it.Models
         /// <summary>Notification creation date</summary>
         public DateTime CreatedAt { get; set; }
     }
+
+    public enum NotificationSort
+    {
+        DATE_ASC,
+        DATE_DESC
+    }
 }

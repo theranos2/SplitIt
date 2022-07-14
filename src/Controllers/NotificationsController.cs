@@ -23,12 +23,13 @@ namespace split_it.Controllers
         [HttpGet]
         public List<Notification> GetMany(
             [FromHeader(Name = "Token")] string Token,
+            [FromQuery(Name = "sortBy")] NotificationSort sortBy = NotificationSort.DATE_DESC,
             [FromQuery(Name = "take")] int take = 10,
             [FromQuery(Name = "skip")] int skip = 0
         )
         {
             Guid UserId = CookiesDb.Get(Token).UserId;
-            return service.Get(UserId, take, skip);
+            return service.Get(UserId, sortBy, take, skip);
         }
 
         /// <response code="404">Notification Id not found</response>
