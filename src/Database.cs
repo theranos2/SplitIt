@@ -176,7 +176,6 @@ namespace split_it
         public string LastName { get; set; }
         public string Password { get; set; }
         public bool MfaEnabled { get; set; } = false;
-        public ICollection<Notification> Notifications { get; set; }
 
         public override bool Equals(object obj)
         {

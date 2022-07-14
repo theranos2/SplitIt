@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace split_it.Models
 {
@@ -8,6 +9,14 @@ namespace split_it.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+
+        /// <summary>User that this notification belongs to, not really in use</summary>
+        [JsonIgnore]
+        public User User { get; set; }
+
+        /// <summary>UserId that this notification belongs to</summary>
+        [ForeignKey("User")]
+        public Guid UserId { get; set; }
 
         /// <summary>Guid of resource in the specified Domain</summary>
         public Guid ResourceId { get; set; }

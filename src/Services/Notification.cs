@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using split_it.Models;
 
 namespace split_it.Services
@@ -34,11 +33,9 @@ namespace split_it.Services
             int skip = 0
         )
         {
-            return db.Users
-                .Include(u => u.Notifications)
-                .Where(u => u.Id == UserId)
-                .FirstOrDefault()
-                .Notifications
+            return db.Notifications
+                .Where(n => n.UserId == UserId)
+                .OrderByDescending(n => n.CreatedAt)
                 .Skip(skip)
                 .Take(take)
                 .ToList();
@@ -46,13 +43,10 @@ namespace split_it.Services
 
         public Notification GetById(Guid UserId, Guid NotificationId)
         {
-            return db.Users
-                .Include(u => u.Notifications)
-                .Where(u => u.Id == UserId)
-                .FirstOrDefault()
-                ?.Notifications
+            return db.Notifications
                 .Where(n => n.Id == NotificationId)
-                ?.FirstOrDefault();
+                .Where(n => n.UserId == UserId)
+                .FirstOrDefault();
         }
     }
 }
