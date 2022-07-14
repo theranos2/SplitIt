@@ -36,9 +36,14 @@ namespace split_it.Services
             return n;
         }
 
-        public void Remove(Guid Id)
+        public void Remove(Guid UserId, Guid NotificationId)
         {
-            db.Notifications.Remove(new Notification { Id = Id });
+            var exists = db.Notifications
+                .Where(n => n.Id == NotificationId)
+                .Where(n => n.UserId == UserId)
+                .FirstOrDefault();
+            if (exists == null) throw new HttpNotFound();
+            db.Notifications.Remove(exists);
             db.SaveChanges();
         }
 

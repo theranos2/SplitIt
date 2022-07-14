@@ -55,7 +55,7 @@ namespace split_it.Controllers
             Guid UserId = CookiesDb.Get(Token).UserId;
             var n = service.GetById(UserId, NotificationId);
             if (n == null) throw new HttpForbidden();
-            service.Remove(n.Id);
+            service.Remove(n.Id, UserId);
         }
     }
 }
