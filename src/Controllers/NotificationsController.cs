@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using split_it.Authentication;
@@ -16,9 +15,9 @@ namespace split_it.Controllers
     public class NotificationsController : ControllerBase
     {
         private readonly NotificationService service;
-        public NotificationsController(NotificationService _service)
+        public NotificationsController(NotificationService service)
         {
-            service = _service;
+            this.service = service;
         }
 
         [HttpGet]
@@ -54,7 +53,7 @@ namespace split_it.Controllers
         {
             Guid UserId = CookiesDb.Get(Token).UserId;
             var n = service.GetById(UserId, NotificationId);
-            if (n == null) throw new CustomHttpException(HttpStatusCode.Forbidden);
+            if (n == null) throw new HttpForbidden();
             service.Remove(n.Id);
         }
     }
