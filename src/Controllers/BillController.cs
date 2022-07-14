@@ -21,6 +21,22 @@ namespace split_it.Controllers
             db = _db;
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
+        private User GetCurrentUser()
+        {
+            // Uncomment for production
+            //var cookie = CookiesDb.Get(HttpContext.User.Identity.Name);
+            //if(cookie == null)
+                //throw new HttpBadRequest($"Bad cookie");
+
+            //return db.Users.Where(x => x.Id == cookie.UserId).FirstOrDefault();
+
+            // FOR DEBUG only
+            return db.Users.Where(x => x.Email == "bob@dylan.com").FirstOrDefault();
+            //return db.Users.Where(x => x.Email == "kendrick@lamar.com").FirstOrDefault();
+        }
+
+
         // returns 204 if not found
         [HttpGet("{bill_id:Guid}")]
         public BillDto Get(Guid bill_id)
@@ -33,15 +49,14 @@ namespace split_it.Controllers
                 .ThenInclude(share => share.Items).FirstOrDefault();
 
             if(bill == null)
-                throw new HttpNotFound("Cannot find bill.");
+                throw new HttpNotFound($"Cannot find bill: {bill_id}");
 
-            Guid curUserId = GetCurrentUser().Id;
-            // check if bill member is requesting the bill
+            Guid curUserId = GetCurrentUser().Id; // check if bill member is requesting the bill
             bool found =  bill.Shares.Any(x => x.Payer.Id == curUserId);
 
             // check ownership
             if(bill.Owner.Id != curUserId && !found)
-                throw new HttpBadRequest($"Permission Denied. Cannot view bill that you are not apart of.");
+                throw new HttpForbiddenRequest($"Permission Denied. Cannot view bill that you are not apart of.");
 
             return bill.ConvertToDto();
         }
@@ -55,9 +70,11 @@ namespace split_it.Controllers
                 if(shareDto == null)
                     throw new HttpBadRequest("A share cannot be null");
 
-                //shareDto.Id = Guid.Empty; // deprecated
-                shareDto.hasPaid = false;  // done by paying / calling a paying route
-                shareDto.hasAccepted = false; // done by calling a route
+
+                //TODO
+                // owner can modify, owner can specify if they have paid or not. !
+                //shareDto.hasPaid = false;  // done by paying / calling a paying route
+                //shareDto.hasRejected = false; // everytime the owner updates or edit the bill it will resend to those who have rejected 
                 shareDto.Total = 0.0;
 
                 User payer = db.Users.Where(x => x.Id == shareDto.PayerId).FirstOrDefault();
@@ -89,8 +106,8 @@ namespace split_it.Controllers
                 newShares.Add(
                     new Share {
                         //Id = shareDto.Id,
-                        hasAccepted = shareDto.hasAccepted,
-                        hasPaid = shareDto.hasAccepted,
+                        hasRejected = shareDto.hasRejected,
+                        hasPaid = shareDto.hasPaid,
                         Payer = payer,
                         Items = newItems,
                         // round to upper 5 cents
@@ -102,21 +119,6 @@ namespace split_it.Controllers
             }
 
             return newShares;
-        }
-
-        [ApiExplorerSettings(IgnoreApi = true)]
-        private User GetCurrentUser()
-        {
-            // Uncomment for production
-            //var cookie = CookiesDb.Get(HttpContext.User.Identity.Name);
-            //if(cookie == null)
-                //throw new HttpBadRequest($"Bad cookie");
-
-            //return db.Users.Where(x => x.Id == cookie.UserId).FirstOrDefault();
-
-            // FOR DEBUG only
-            return db.Users.Where(x => x.Email == "bob@dylan.com").FirstOrDefault();
-            //return db.Users.Where(x => x.Email == "kendrick@lamar.com").FirstOrDefault();
         }
 
         [HttpPost]
@@ -159,7 +161,7 @@ namespace split_it.Controllers
             User curUser = GetCurrentUser(); 
 
             if(bill.Owner.Id != curUser.Id)
-                throw new HttpBadRequest($"Permission Denied. Cannot edit bill that is not yours.");
+                throw new HttpForbiddenRequest($"Permission Denied. Cannot edit bill that is not yours.");
 
             bill.Title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(billDto.Title.Trim().ToLower());
             //bill.OverallItems = billDto.OverallItems; //TODO
@@ -201,20 +203,83 @@ namespace split_it.Controllers
                     x.isSettled == filter.isSettled).Skip(filter.Offset).Take(filter.Limit);
         }
 
-        [HttpPost("accept/{bill_id:Guid}")]
-        public string Accept(Guid bill_id)
-        {
-            return "TODO";
-        }
-
         [HttpPost("reject/{bill_id:Guid}")]
         public string Reject(Guid bill_id)
         {
-            return "TODO";
+            // check if bill exists
+            Bill bill = db.Bills
+                .Include(bill => bill.Owner)
+                .Include(bill => bill.Shares)
+                .ThenInclude(share => share.Payer)
+                .Include(d => d.Shares)
+                .ThenInclude(share => share.Items).FirstOrDefault();
+
+            if(bill == null)
+                throw new HttpBadRequest($"Cannot find payer: {bill_id}");
+            
+            Guid curUserId = GetCurrentUser().Id; // check if bill member is requesting the bill
+            bool found =  bill.Shares.Any(x => x.Payer.Id == curUserId);
+
+            // check ownership
+            if(bill.Owner.Id != curUserId && !found)
+                throw new HttpForbiddenRequest($"Permission Denied. Cannot reject bill that you are not apart of.");
+
+            // check if paid
+            if(bill.isSettled)
+                throw new HttpBadRequest($". Cannot reject bill that has been settled.");
+
+            // logic
+            // if user rejects the bill, they will show as hasRejected
+            foreach(Share share in bill.Shares.Where(x => x.Payer.Id == curUserId))
+            {
+                share.hasRejected = true;
+            }
+
+            return "Success";
+            
         }
 
         [HttpDelete("{bill_id:Guid}")]
         public string Delete(Guid bill_id)
+        {
+            Bill bill = db.Bills
+                .Include(bill => bill.Owner)
+                .Include(bill => bill.Shares)
+                .ThenInclude(share => share.Payer)
+                .Include(d => d.Shares)
+                .ThenInclude(share => share.Items).FirstOrDefault();
+
+            if(bill == null)
+                throw new HttpBadRequest($"Cannot find payer: {bill_id}");
+            
+            Guid curUserId = GetCurrentUser().Id; // check if bill member is requesting the bill
+            bool found =  bill.Shares.Any(x => x.Payer.Id == curUserId);
+
+            // check ownership
+            if(bill.Owner.Id != curUserId && !found)
+                throw new HttpForbiddenRequest($"Permission Denied. Cannot reject bill that you are not apart of.");
+
+            foreach(Share share in bill.Shares)
+            {
+                foreach(Item item in share.Items)
+                    db.Items.Remove(item);
+
+                db.Shares.Remove(share);
+            }
+
+            db.Bills.Remove(bill);
+
+            return "Success";
+        }
+
+        [HttpPost("attachment/{bill_id:Guid}")]
+        public string AddAttachment(Guid bill_id)
+        {
+            return "TODO";
+        }
+
+        [HttpGet("/api/file/{file_name:string}")]
+        public string GetFile(string file_name)
         {
             return "TODO";
         }

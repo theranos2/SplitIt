@@ -14,6 +14,7 @@ namespace split_it
         public DbSet<Bill> Bills { get; set; }
         public DbSet<Item> Items { get; set; }
         public DbSet<Share> Shares { get; set; }
+        public DbSet<Group> Groups { get; set; }
 
         public static DbContextOptions<DatabaseContext> DefaultDatabaseOptions = new DbContextOptionsBuilder<DatabaseContext>()
             .UseSqlite("Data Source=database.db")
@@ -44,6 +45,12 @@ namespace split_it
         }
     }
 
+    public class FileAttachment
+    {
+        public string Filename { get; set; }
+        public string Extension { get; set; }
+    }
+
     public class Bill
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -52,7 +59,7 @@ namespace split_it
         public User Owner { get; set; }
         public double Total { get; set; }
         public string Title { get; set; }
-        //public List<string> Attachments { get; set; }
+        public List<FileAttachment> Attachments { get; set; }
         //public ICollection<Comments> Comments { get; set; }
         public ICollection<Share> Shares { get; set; }
         public ICollection<Item> OverallItems { get; set; } // derived from where?
@@ -116,7 +123,7 @@ namespace split_it
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public bool hasPaid { get; set; }
-        public bool hasAccepted { get; set; }
+        public bool hasRejected { get; set; }
         public double Total { get; set; }
         public User Payer { get; set; }
         public ICollection<Item> Items { get; set; }
@@ -125,7 +132,7 @@ namespace split_it
             Share share = new Share
             {
                 Payer = payer,
-                hasAccepted = true,
+                hasRejected = true,
                 hasPaid = true,
                 Total = items.Sum(x => x.Price),
                 Items = items
@@ -137,7 +144,7 @@ namespace split_it
         public ShareDto ConvertToDto()
         {
             return new ShareDto{
-                hasAccepted =  this.hasAccepted,
+                hasRejected =  this.hasRejected,
                 hasPaid = this.hasPaid,
                 PayerId = this.Payer.Id,
                 Total = this.Total,
@@ -149,12 +156,30 @@ namespace split_it
         {
             return new Share{
                 hasPaid = shareDto.hasPaid,
-                hasAccepted = shareDto.hasAccepted,
+                hasRejected = shareDto.hasRejected,
                 Payer = new User{
                     Id = shareDto.PayerId
                 },
                 Items = shareDto.Items.Select(x => Item.ConvertFromDto(x)).ToList(),
                 Total = shareDto.Items.Sum(x => x.Price),
+            };
+        }
+
+    }
+
+    public class Group
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public User Owner { get; set; }
+        public ICollection<User> Members { get; set; }
+
+        public GroupDto ConvertToDto()
+        {
+            return new GroupDto{
+                Id = this.Id,
+                OwnerId = this.Owner.Id,
+                MemberIds = Members.Select(x => x.Id).ToList()
             };
         }
 
