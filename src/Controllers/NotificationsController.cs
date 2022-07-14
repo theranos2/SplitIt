@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using split_it.Authentication;
-using split_it.Exceptions.Http;
 using split_it.Models;
 using split_it.Services;
 
@@ -20,6 +19,7 @@ namespace split_it.Controllers
             this.service = service;
         }
 
+        /// <response code="400">Take skip value invalid</response>
         [HttpGet]
         public List<Notification> GetMany(
             [FromHeader(Name = "Token")] string Token,
@@ -40,11 +40,10 @@ namespace split_it.Controllers
         )
         {
             Guid UserId = CookiesDb.Get(Token).UserId;
-            return service.GetById(UserId, NotificationId)
-                ?? throw new HttpNotFound($"Notification (ID: {NotificationId}) not found");
+            return service.GetById(UserId, NotificationId);
         }
 
-        /// <response code="403">When NotificationId does not belong to the authenticated user</response>
+        /// <response code="404">When NotificationId and UserId is not found</response>
         /// <summary>Mark Notification as seen aka delete it</summary>
         [HttpDelete("{NotificationId:Guid}")]
         public void Seen(
@@ -53,9 +52,7 @@ namespace split_it.Controllers
         )
         {
             Guid UserId = CookiesDb.Get(Token).UserId;
-            var n = service.GetById(UserId, NotificationId);
-            if (n == null) throw new HttpForbidden();
-            service.Remove(n.Id, UserId);
+            service.Remove(UserId, NotificationId);
         }
     }
 }
