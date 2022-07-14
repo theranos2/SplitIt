@@ -16,12 +16,20 @@ namespace split_it.Services
 
         public Notification Add(Notification n)
         {
-            if (n.Id != null || n.Id != Guid.Empty)
+            if (n.Id != Guid.Empty)
                 throw new HttpBadRequest("Do not supply ID");
+            if (string.IsNullOrEmpty(n.Domain))
+                throw new HttpBadRequest("Domain must not be empty");
+            if (string.IsNullOrEmpty(n.Message))
+                throw new HttpBadRequest("Message must not be empty");
+            if (n.ResourceId == Guid.Empty)
+                throw new HttpBadRequest("ResourceId must not be empty");
 
             var user = db.Users.Where(u => u.Id == n.UserId).FirstOrDefault();
             if (user == null)
                 throw new HttpBadRequest("User does not exists");
+
+            n.CreatedAt = DateTime.Now;
 
             db.Notifications.Add(n).Reload();
             db.SaveChanges();
