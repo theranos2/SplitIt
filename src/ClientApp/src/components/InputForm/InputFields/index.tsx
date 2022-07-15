@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
@@ -27,15 +26,6 @@ const InputField = (props: InputFieldProps) => {
       {err.cond ? <Alert severity="warning">{err.msg}</Alert> : <></>}
     </>
   );
-};
-
-InputField.propTypes = {
-  name: PropTypes.string,
-  type: PropTypes.string,
-  label: PropTypes.string,
-  inputs: PropTypes.object,
-  err: PropTypes.object,
-  set: PropTypes.func
 };
 
 export default InputField;

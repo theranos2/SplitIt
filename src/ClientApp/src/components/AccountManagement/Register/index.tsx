@@ -1,8 +1,15 @@
 import React from 'react';
 import { LoginForm } from '../LoginForm';
+import { signup } from 'utility/api/account';
 
 const Register = () => {
-  const [inputs, setInputs] = React.useState({ email: '', name: '', pass1: '', pass2: '' });
+  const [inputs, setInputs] = React.useState({
+    email: '',
+    firstName: '',
+    lastName: '',
+    password: '',
+    password2: ''
+  });
 
   const set = (name: string) => (event: any) =>
     setInputs((old) => ({ ...old, [name]: event.target.value }));
@@ -10,13 +17,13 @@ const Register = () => {
   const submit = async (event: any) => {
     event.preventDefault();
 
-    if (inputs.email === '' || inputs.name === '' || inputs.pass1 === '' || inputs.pass2 === '') {
+    if (Object.values(inputs).some((input) => input === '')) {
       return console.error('Inputs cannot be empty.');
-    } else if (inputs.pass1 !== inputs.pass2) {
+    } else if (inputs.password !== inputs.password2) {
       return console.error('Passwords must match.');
     }
 
-    // register account
+    return await signup(inputs);
   };
 
   return (
@@ -34,22 +41,28 @@ const Register = () => {
           err: { cond: inputs.email.length > 20, msg: 'Email is too long.' }
         },
         {
-          name: 'name',
-          label: 'Name',
+          name: 'firstName',
+          label: 'First name',
           type: 'text',
-          err: { cond: inputs.name.length > 20, msg: 'Name is too long.' }
+          err: { cond: inputs.firstName.length > 20, msg: 'Name is too long.' }
         },
         {
-          name: 'pass1',
+          name: 'lastName',
+          label: 'Last name',
+          type: 'text',
+          err: { cond: inputs.lastName.length > 20, msg: 'Name is too long.' }
+        },
+        {
+          name: 'password',
           label: 'Password',
           type: 'password',
-          err: { cond: inputs.pass1.length > 20, msg: 'Password is too long.' }
+          err: { cond: inputs.password.length > 20, msg: 'Password is too long.' }
         },
         {
-          name: 'pass2',
+          name: 'password2',
           label: 'Confirm Password',
           type: 'password',
-          err: { cond: inputs.pass2.length > 20, msg: 'Password is too long.' }
+          err: { cond: inputs.password2.length > 20, msg: 'Password is too long.' }
         }
       ]}
     />

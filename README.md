@@ -7,6 +7,11 @@
 - Ensure the latest LTS node version is installed (v16.15.1)
     - Use [nvm](https://github.com/nvm-sh/nvm) to make your life easier
 
+# Using swagger with authenticated routes
+- Click 'Authorize 🔒' on the top right of the page
+- Paste your token and click 'Authorize'
+- Now all requests you send will have the `Token` header
+
 # Database migrations
 - Currently not in use
 - Ensuring schema changes are reflected in database:
@@ -27,3 +32,18 @@ throw new HttpInternalServer("Reason");
 throw new HttpNotFound("Reason");
 ```
 - Refer code to see all possible overloads
+
+# Using typescript client
+## Generating from source
+- Ensure dotnet server is running (`dotnet run`)
+- In `src` directory do: `make typescript-client` (need java installed)
+- Do not modify any of the files generated in `src/ClientApp/src/api`
+## Consuming generated client
+```tsx
+import { UserApi } from 'api';
+const someFunc = async () => {
+  const api = new UserApi({ apiKey: "Token From Context" });
+  const result = await api.apiUserGet();
+}
+```
+- Refer `src/ClientApp/src/api` for more ways to use the generated client

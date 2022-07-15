@@ -62,7 +62,7 @@ const BillAdvanced = () => {
           type: 'items',
           err: { cond: inputs.items === [], msg: "You haven't added any items." }
         },
-        { name: 'price', label: 'Price', type: 'price' }
+        { name: 'price', label: 'Price', type: 'price', disabled: true }
       ]}
     />
   );

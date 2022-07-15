@@ -1,7 +1,5 @@
-import React from 'react';
-
 interface ButtonEventHandler {
-  (event: any): void;
+  (event: any): any;
 }
 
 interface ButtonSubmission {

@@ -49,7 +49,7 @@ namespace split_it.Authentication
             {
                 using (RandomNumberGenerator rng = new RNGCryptoServiceProvider())
                 {
-                    byte[] tokenData = new byte[1024];
+                    byte[] tokenData = new byte[128];
                     rng.GetBytes(tokenData);
 
                     cookieString = Convert.ToBase64String(tokenData);

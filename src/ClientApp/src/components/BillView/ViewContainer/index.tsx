@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CardActions from '@mui/material/CardActions';
@@ -74,12 +73,6 @@ const ViewContainer = (props: ViewContainerProps) => {
       </Box>
     </ThemeProvider>
   );
-};
-
-ViewContainer.propTypes = {
-  title: PropTypes.string,
-  description: PropTypes.string,
-  items: PropTypes.array
 };
 
 export default ViewContainer;

@@ -18,6 +18,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import GroupsIcon from '@mui/icons-material/Groups';
 
 import InputProps from './Props';
+import { UserSelector } from '../InputForm/UserSelector';
 
 const theme = createTheme();
 
@@ -55,9 +56,9 @@ const GroupCreate = () => {
             <GroupsIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Create group
           </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }}>
+          <Box component="form" noValidate sx={{ mt: 1 }} onSubmit={handleSubmit}>
             <TextField
               margin="normal"
               required

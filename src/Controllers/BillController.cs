@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using split_it.Authentication;
+using split_it.Exceptions.Http;
 using split_it.Models;
 
 namespace split_it.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class BillController : ControllerBase
     {
         DatabaseContext db;
@@ -17,69 +21,170 @@ namespace split_it.Controllers
             db = _db;
         }
 
-
-        [HttpGet]
-        public Guid OG()
+        // returns 204 if not found
+        [HttpGet("{bill_id:Guid}")]
+        public BillDto Get(Guid bill_id)
         {
-            return new Guid();
+            Bill bill = db.Bills.Where(x => x.Id == bill_id)
+                .Include(bill => bill.Owner)
+                .Include(bill => bill.Shares)
+                .ThenInclude(share => share.Payer)
+                .Include(share => share.Shares)
+                .ThenInclude(share => share.Items).FirstOrDefault();
+
+            if (bill == null)
+                throw new HttpNotFound("Cannot find bill.");
+
+            Guid curUserId = GetCurrentUser().Id;
+            // check if bill member is requesting the bill
+            bool found = bill.Shares.Any(x => x.Payer.Id == curUserId);
+
+            // check ownership
+            if (bill.Owner.Id != curUserId && !found)
+                throw new HttpBadRequest($"Permission Denied. Cannot view bill that you are not apart of.");
+
+            return bill.ConvertToDto();
         }
 
-        [HttpGet("{bill_id:Guid}")]
-        public Bill Get(Guid bill_id)
+        [ApiExplorerSettings(IgnoreApi = true)]
+        private List<Share> ConvertToShares(ICollection<ShareDto> shares)
         {
-            return db.Bills.Where(x => x.Id == bill_id).FirstOrDefault();
+            List<Share> newShares = new List<Share>();
+            foreach (var shareDto in shares)
+            {
+                if (shareDto == null)
+                    throw new HttpBadRequest("A share cannot be null");
+
+                //shareDto.Id = Guid.Empty; // deprecated
+                shareDto.hasPaid = false;  // done by paying / calling a paying route
+                shareDto.hasAccepted = false; // done by calling a route
+                shareDto.Total = 0.0;
+
+                User payer = db.Users.Where(x => x.Id == shareDto.PayerId).FirstOrDefault();
+                if (payer == null)
+                    throw new HttpBadRequest($"Cannot find payer: {shareDto.PayerId}");
+
+                // items cannot be empty
+                if (shareDto.Items == null || shareDto.Items.Count <= 0)
+                    throw new HttpBadRequest("Missing item from share. Must include at least one item per share.");
+
+                // check items
+                List<Item> newItems = new List<Item>();
+                foreach (var item in shareDto.Items)
+                {
+                    if (item.Name == null)
+                        item.Name = "";
+
+                    item.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item.Name.Trim().ToLower());
+                    shareDto.Total += item.Price; // summing up the share
+
+                    // convert itemDto to item
+                    newItems.Add(new Item
+                    {
+                        Id = Guid.Empty,
+                        Name = item.Name,
+                        Price = item.Price
+                    });
+                }
+
+                newShares.Add(
+                    new Share
+                    {
+                        //Id = shareDto.Id,
+                        hasAccepted = shareDto.hasAccepted,
+                        hasPaid = shareDto.hasAccepted,
+                        Payer = payer,
+                        Items = newItems,
+                        // round to upper 5 cents
+                        // 0.33 -> 0.35
+                        // 1.00 -> 1.00
+                        Total = Math.Round(Math.Ceiling(newItems.Sum(x => x.Price) / 0.01) * 0.01, 2)
+                    }
+                );
+            }
+
+            return newShares;
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        private User GetCurrentUser()
+        {
+            // Uncomment for production
+            //var cookie = CookiesDb.Get(HttpContext.User.Identity.Name);
+            //if(cookie == null)
+            //throw new HttpBadRequest($"Bad cookie");
+
+            //return db.Users.Where(x => x.Id == cookie.UserId).FirstOrDefault();
+
+            // FOR DEBUG only
+            return db.Users.Where(x => x.Email == "bob@dylan.com").FirstOrDefault();
+            //return db.Users.Where(x => x.Email == "kendrick@lamar.com").FirstOrDefault();
         }
 
         [HttpPost]
-        public Bill Create(Bill bill)
+        public BillDto Create(BillDto billDto)
         {
-            bill.Created = DateTime.Now;
-            bill.Id = Guid.Empty; // make invalid guid, that so database auto gen. also stops attackers from crafting custom guid
-            bill.Owner = GetCurrentUser(); // get the predefined user
+            User curUser = GetCurrentUser();
 
-            if (bill.Title == null)
-                bill.Title = "";
-
-            if (bill.Shares == null)
-                bill.Shares = new List<Share>();
-
-
-            bill.Total = 0.0;
-            foreach (Share share in bill.Shares)
+            // create new bill
+            Bill newBill = new Bill
             {
-                // share input validation
-                if (share.Amount < 0.05)
-                    // we need to handle exception in sprint 2 or later
-                    // currently no exception handler hence no strings return
-                    throw new Exception("Error");
+                Created = DateTime.Now,
+                Id = Guid.Empty,
+                isSettled = false,
+                OverallItems = null,
+                Owner = curUser, // current user
+                Shares = ConvertToShares(billDto.Shares),
+                Title = billDto.Title,
+            };
 
-                if (share.Description == null)
-                    share.Description = "";
+            newBill.Total = Math.Round(newBill.Shares.Sum(x => x.Total), 2);
 
-                //share.Payer = TODO. this is dangerous. We need DTO.
-                //share.Payer = db.Users.Where(x => x.Email == share.Payer.Email).FirstOrDefault();
-                share.Payer = db.Users.Where(x => x.Email == share.Payer.Email).FirstOrDefault();
-
-                share.hasAccepted = false;
-                share.hasPaid = false;
-
-                if (share.Payer == GetCurrentUser())
-                {
-                    share.hasPaid = true;
-                    share.hasAccepted = true;
-                }
-
-                bill.Total += share.Amount;
-            }
-
-            // persist to the database
-            db.Bills.Add(bill);
+            db.Bills.Add(newBill);
             db.SaveChanges();
 
-            return bill;
+            return newBill.ConvertToDto();
         }
 
-        [HttpGet("/getmany")]
+        [HttpPut("{bill_id:Guid}")]
+        public BillDto Edit(Guid bill_id, BillDto billDto)
+        {
+            Bill bill = db.Bills
+                .Include(bill => bill.Owner)
+                .Include(bill => bill.Shares)
+                .ThenInclude(share => share.Payer)
+                .Include(d => d.Shares)
+                .ThenInclude(share => share.Items).FirstOrDefault();
+
+            if (bill == null)
+                throw new HttpBadRequest($"Cannot find payer: {bill_id}");
+
+            User curUser = GetCurrentUser();
+
+            if (bill.Owner.Id != curUser.Id)
+                throw new HttpBadRequest($"Permission Denied. Cannot edit bill that is not yours.");
+
+            bill.Title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(billDto.Title.Trim().ToLower());
+            //bill.OverallItems = billDto.OverallItems; //TODO
+
+            // delete old shares
+            var oldShares = bill.Shares;
+            foreach (var s in oldShares)
+            {
+                db.Items.RemoveRange(s.Items);
+                db.Shares.Remove(s);
+            }
+
+            bill.Shares = ConvertToShares(billDto.Shares);
+            bill.Total = Math.Round(bill.Shares.Sum(x => x.Total), 2);
+            bill.isSettled = bill.Shares.All(x => x.hasPaid) ? true : false;
+            db.SaveChanges();
+
+            // todo needs a mapper? or nah?
+            return bill.ConvertToDto();
+        }
+
+        [HttpGet("getmany")]
         public IEnumerable<Bill> GetMany(BillFilter filter)
         {
             IQueryable<Bill> query = db.Bills.AsQueryable<Bill>();
@@ -89,7 +194,6 @@ namespace split_it.Controllers
 
             if (filter.BillMembers != null)
                 query = query.Where(x => x.Shares.Any(x => filter.BillMembers.Contains(x.Id)));
-
 
             return query.Where(x =>
                     new DateTimeOffset(x.Created).ToUnixTimeSeconds() <= filter.EndTime &&
@@ -103,113 +207,115 @@ namespace split_it.Controllers
         [HttpPost("accept/{bill_id:Guid}")]
         public string Accept(Guid bill_id)
         {
-            Bill bill = db.Bills.Where(x => x.Id == bill_id).FirstOrDefault();
-
-            if (bill == null)
-                return "Failed: Cannot find";
-
-            // determine who user is 
-            // problem because we havent got auth working
-            User curUser = GetCurrentUser();
-
-            bool accepted = false;
-            foreach (Share share in bill.Shares)
-                if (share.Payer == curUser)
-                    share.hasAccepted = true;
-
-            if (!accepted)
-                return "Failed: Cannot find";
-
-            return "Successful";
+            return "TODO";
         }
 
         [HttpPost("reject/{bill_id:Guid}")]
         public string Reject(Guid bill_id)
         {
-            Bill bill = db.Bills.Where(x => x.Id == bill_id).FirstOrDefault();
-
-            if (bill == null)
-                return "Failed: Cannot find";
-
-            // determine who user is 
-            // problem because we havent got auth working
-            User curUser = GetCurrentUser();
-
-            bool rejected = false;
-            foreach (Share share in bill.Shares)
-                if (share.Payer == curUser)
-                {
-                    if (share.hasAccepted)
-                        return "Failed: Cannot reject when you have accepted already";
-                    else
-                        // redundant
-                        share.hasAccepted = false;
-                    // TODO notifcation goes here
-                }
-
-            if (!rejected)
-                return "Failed: Cannot find";
-
-            return "Successful";
+            return "TODO";
         }
 
         [HttpDelete("{bill_id:Guid}")]
         public string Delete(Guid bill_id)
         {
-            Bill bill = db.Bills.Where(x => x.Id == bill_id).FirstOrDefault();
-
-            if (bill == null)
-                return "Failed: Cannot find";
-
-            db.Bills.Remove(bill);
-            db.SaveChanges();
-
-            return "Zuckzezz";
+            return "TODO";
         }
 
-        [HttpPut("{bill_id:Guid}")]
-        public Bill Edit(Guid bill_id, Bill bill)
+        ////////////////////////
+        ////DEBUGING METHODS////
+        ////////////////////////
+
+        [HttpGet("/create")]
+        public Bill Creet()
         {
-            // TODO EDIT AND POST(Create) SHOULD BE COUSINS else spag code
-            Bill myBill = db.Bills.Where(x => x.Id == bill_id).FirstOrDefault();
+            var bob = db.Users.Where(x => x.Email == "bob@dylan.com").FirstOrDefault();
+            var lamar = db.Users.Where(x => x.Email == "kendrick@lamar.com").FirstOrDefault();
 
-            if (myBill == null)
-                return null;
-
-            myBill.isSettled = bill.isSettled;
-            myBill.Shares = bill.Shares; // TODO get pwned son! CVE: 10
-            myBill.Title = bill.Title;
-            myBill.Total = bill.Total;
-
-            db.SaveChanges();
-            return myBill;
-        }
-
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public User GetCurrentUser()
-        {
-            // Stub function to return an existing user for now
-            // Will actually return current user when authentication is added
-            if (db.Users.Where(x => x.FirstName == "Jack").FirstOrDefault() == null)
+            if (bob == null)
             {
-                db.Users.Add(new User
+                // Create dummy users
+                User bobby = new User
                 {
-                    Email = "hello@example.com",
-                    FirstName = "Jack",
-                    LastName = "Sack"
-                });
-
-                db.Users.Add(new User
-                {
-                    Email = "hello2@example.com",
-                    FirstName = "Sack",
-                    LastName = "Jack"
-                });
-
+                    Email = "bob@dylan.com",
+                    FirstName = "bob",
+                    LastName = "dylan",
+                    MfaEnabled = false,
+                    Password = "kekekekeke"
+                };
+                db.Users.Add(bobby);
                 db.SaveChanges();
             }
 
-            return db.Users.Where(x => x.FirstName == "Jack").FirstOrDefault();
+            if (lamar == null)
+            {
+                User kenny = new User
+                {
+                    Email = "kendrick@lamar.com",
+                    FirstName = "kendrick",
+                    LastName = "lamar",
+                    MfaEnabled = false,
+                    Password = "kekekekeke"
+                };
+                db.Users.Add(kenny);
+                db.SaveChanges();
+            }
+
+            bob = db.Users.Where(x => x.Email == "bob@dylan.com").FirstOrDefault();
+            lamar = db.Users.Where(x => x.Email == "kendrick@lamar.com").FirstOrDefault();
+
+            // Create bill
+            List<Share> shares = new List<Share>()
+            {
+                Share.create_share(bob, new List<Item>{
+                    new Item{
+                        Name = "Pizza",
+                        Price = 10.99
+                    },
+                    new Item{
+                        Name = "Hotpie",
+                        Price = 2.99
+                    }
+                }),
+
+                Share.create_share(lamar, new List<Item>{
+                    new Item{
+                        Name = "Pizza",
+                        Price = 10.99
+                    },
+                    new Item{
+                        Name = "Hotpie",
+                        Price = 2.99
+                    }
+                }),
+            };
+
+            Bill bill = Bill.create_bill(bob, shares, "Bobs Bill");
+            db.Bills.Add(bill);
+
+            db.SaveChanges();
+
+            return bill;
+
         }
+
+        // Example how to return nested objects
+        [HttpGet("/bills")]
+        public IEnumerable<Bill> Getslosts()
+        {
+            return db.Bills
+                .Include(bill => bill.Owner)
+                .Include(bill => bill.Shares)
+                .ThenInclude(share => share.Payer)
+                .Include(d => d.Shares)
+                .ThenInclude(share => share.Items).ToList();
+        }
+
+        [HttpGet("/users")]
+        public IEnumerable<User> GetUsers()
+        {
+            return db.Users.ToList();
+        }
+
     }
 }

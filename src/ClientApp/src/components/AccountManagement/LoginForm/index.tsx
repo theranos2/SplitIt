@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -18,7 +17,13 @@ import Box from '@mui/material/Box';
 
 export const LoginForm = (props: LoginFormProps) => {
   const { title, inputs, fields, set, submit, cancel } = props;
+  const [error, setError] = React.useState('');
   const theme = createTheme();
+
+  const form_submit = async (event: any) => {
+    const res = await submit.func(event);
+    res?.error ? setError(res.msg) : setError('');
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -31,8 +36,9 @@ export const LoginForm = (props: LoginFormProps) => {
           <Typography component="h1" variant="h5">
             {title}
           </Typography>
+          {/* TODO: make this fit the width of the page */}
+          {error !== '' ? <Alert severity="error">{error}</Alert> : <></>}
           <Box component="form" noValidate sx={{ mt: 1 }}>
-            {/*onSubmit={submit.func}*/}
             {fields.map((field, idx) => {
               switch (field.type) {
                 case 'date':
@@ -67,7 +73,7 @@ export const LoginForm = (props: LoginFormProps) => {
             <Link
               id={`submit-${title}`}
               to={submit.href}
-              onClick={submit.func}
+              onClick={form_submit}
               style={{ textDecoration: 'none' }}
             >
               <Button type="submit" fullWidth variant="contained" sx={{ mt: 2, mb: 2 }}>
@@ -84,15 +90,6 @@ export const LoginForm = (props: LoginFormProps) => {
       </Container>
     </ThemeProvider>
   );
-};
-
-LoginForm.propTypes = {
-  title: PropTypes.string,
-  inputs: PropTypes.object,
-  fields: PropTypes.array,
-  set: PropTypes.func,
-  submit: PropTypes.object,
-  cancel: PropTypes.object
 };
 
 // based on: https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
