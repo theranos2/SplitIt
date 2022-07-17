@@ -27,14 +27,14 @@ const App = () => {
           <Route path="/register" element={<Register />} />
         </Route>
 
-        <Route element={<PrivateRoute />}>
-          <Route path="/bill/view:bill_id" element={<BillsAll />} />
-          <Route path="/bill/view" element={<BillsAll />} />
-          <Route path="/bill/create" element={<BillCreate />} />
-          <Route path="/bill/simple" element={<BillSimple />} />
-          <Route path="/bill/advanced" element={<BillAdvanced />} />
-          <Route path="/notifications" element={<Notifications />} />
-        </Route>
+        {/* <Route element={<PrivateRoute />}> */}
+        <Route path="/bill/view:bill_id" element={<BillsAll />} />
+        <Route path="/bill/view" element={<BillsAll />} />
+        <Route path="/bill/create" element={<BillCreate />} />
+        <Route path="/bill/simple" element={<BillSimple />} />
+        <Route path="/bill/advanced" element={<BillAdvanced />} />
+        <Route path="/notifications" element={<Notifications />} />
+        {/* </Route> */}
 
         {/* 404 - Not Found route */}
         <Route path="*" element={<NotFound />} />
