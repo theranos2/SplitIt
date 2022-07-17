@@ -46,16 +46,57 @@ namespace split_it.Controllers
         /// <summary>Show all users</summary>
         /// <param name="take">Maximum users to return</param>
         /// <param name="skip">Skip number of users</param>
+        /// <param name="filter">Filter user searching</param>
+        /// <param name="sortBy">Sort results</param>
         /// <response code="400">Negative take, skip values</response>
         [HttpGet]
         public List<UserDto> GetMany(
+            [FromQuery] UserSort sortBy = UserSort.FIRSTNAME_ASC,
+            [FromQuery] UserFilter filter = null,
             [FromQuery(Name = "take")] int take = 10,
             [FromQuery(Name = "skip")] int skip = 0
         )
         {
             if (take < 0 || skip < 0)
                 throw new HttpBadRequest("Query parameters must be non-negative");
-            return db.Users.Take(take).Skip(skip)
+
+            var qb = db.Users.AsQueryable();
+            if (!String.IsNullOrEmpty(filter?.Email))
+            {
+                qb = qb.Where(u => u.Email.ToLower().Contains(filter.Email));
+            }
+            if (!String.IsNullOrEmpty(filter?.FirstName))
+            {
+                qb = qb.Where(u => u.FirstName.Contains(filter.FirstName));
+            }
+            if (!String.IsNullOrEmpty(filter?.LastName))
+            {
+                qb = qb.Where(u => u.LastName.Contains(filter.LastName));
+            }
+
+            switch (sortBy)
+            {
+                case UserSort.EMAIL_ASC:
+                    qb = qb.OrderBy(u => u.Email);
+                    break;
+                case UserSort.EMAIL_DESC:
+                    qb = qb.OrderByDescending(u => u.Email);
+                    break;
+                case UserSort.FIRSTNAME_ASC:
+                    qb = qb.OrderBy(u => u.FirstName);
+                    break;
+                case UserSort.FIRSTNAME_DESC:
+                    qb = qb.OrderByDescending(u => u.FirstName);
+                    break;
+                case UserSort.LASTNAME_ASC:
+                    qb = qb.OrderBy(u => u.LastName);
+                    break;
+                case UserSort.LASTNAME_DESC:
+                    qb = qb.OrderByDescending(u => u.LastName);
+                    break;
+            }
+
+            return qb.Skip(skip).Take(take)
                 .Select(UserToDto)
                 .ToList();
         }

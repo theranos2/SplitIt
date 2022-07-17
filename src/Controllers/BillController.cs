@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -48,6 +48,7 @@ namespace split_it.Controllers
                 .Include(share => share.Shares)
                 .ThenInclude(share => share.Items).FirstOrDefault();
 
+
             if(bill == null)
                 throw new HttpNotFound($"Cannot find bill: {bill_id}");
 
@@ -65,9 +66,9 @@ namespace split_it.Controllers
         private List<Share> ConvertToShares(ICollection<ShareDto> shares)
         {
             List<Share> newShares = new List<Share>();
-            foreach(var shareDto in shares) 
+            foreach (var shareDto in shares)
             {
-                if(shareDto == null)
+                if (shareDto == null)
                     throw new HttpBadRequest("A share cannot be null");
 
 
@@ -82,21 +83,22 @@ namespace split_it.Controllers
                     throw new HttpBadRequest($"Cannot find payer: {shareDto.PayerId}");
 
                 // items cannot be empty
-                if(shareDto.Items == null || shareDto.Items.Count <= 0 )
+                if (shareDto.Items == null || shareDto.Items.Count <= 0)
                     throw new HttpBadRequest("Missing item from share. Must include at least one item per share.");
 
                 // check items
                 List<Item> newItems = new List<Item>();
-                foreach(var item in shareDto.Items)
+                foreach (var item in shareDto.Items)
                 {
-                    if(item.Name ==null)
+                    if (item.Name == null)
                         item.Name = "";
 
                     item.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item.Name.Trim().ToLower());
                     shareDto.Total += item.Price; // summing up the share
 
                     // convert itemDto to item
-                    newItems.Add(new Item{
+                    newItems.Add(new Item
+                    {
                         Id = Guid.Empty,
                         Name = item.Name,
                         Price = item.Price
@@ -104,7 +106,8 @@ namespace split_it.Controllers
                 }
 
                 newShares.Add(
-                    new Share {
+                    new Share
+                    {
                         //Id = shareDto.Id,
                         hasRejected = shareDto.hasRejected,
                         hasPaid = shareDto.hasPaid,
@@ -120,14 +123,15 @@ namespace split_it.Controllers
 
             return newShares;
         }
-
+        
         [HttpPost]
         public BillDto Create(BillDto billDto)
         {
-            User curUser = GetCurrentUser(); 
+            User curUser = GetCurrentUser();
 
             // create new bill
-            Bill newBill = new Bill{
+            Bill newBill = new Bill
+            {
                 Created = DateTime.Now,
                 Id = Guid.Empty,
                 isSettled = false,
@@ -155,13 +159,20 @@ namespace split_it.Controllers
                 .Include(d => d.Shares)
                 .ThenInclude(share => share.Items).FirstOrDefault();
 
-            if(bill == null)
+            if (bill == null)
                 throw new HttpBadRequest($"Cannot find payer: {bill_id}");
             
-            User curUser = GetCurrentUser(); 
+            User curUser = GetCurrentUser();
+
 
             if(bill.Owner.Id != curUser.Id)
                 throw new HttpForbiddenRequest($"Permission Denied. Cannot edit bill that is not yours.");
+
+            
+
+            if (bill.Owner.Id != curUser.Id)
+                throw new HttpBadRequest($"Permission Denied. Cannot edit bill that is not yours.");
+
 
             bill.Title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(billDto.Title.Trim().ToLower());
             //bill.OverallItems = billDto.OverallItems; //TODO
@@ -176,7 +187,7 @@ namespace split_it.Controllers
 
             bill.Shares = ConvertToShares(billDto.Shares);
             bill.Total = Math.Round(bill.Shares.Sum(x => x.Total), 2);
-            bill.isSettled = bill.Shares.All(x => x.hasPaid)? true: false;
+            bill.isSettled = bill.Shares.All(x => x.hasPaid) ? true : false;
             db.SaveChanges();
 
             // todo needs a mapper? or nah?
@@ -294,7 +305,7 @@ namespace split_it.Controllers
             var bob = db.Users.Where(x => x.Email == "bob@dylan.com").FirstOrDefault();
             var lamar = db.Users.Where(x => x.Email == "kendrick@lamar.com").FirstOrDefault();
 
-            if(bob == null)
+            if (bob == null)
             {
                 // Create dummy users
                 User bobby = new User
@@ -309,7 +320,7 @@ namespace split_it.Controllers
                 db.SaveChanges();
             }
 
-            if(lamar == null)
+            if (lamar == null)
             {
                 User kenny = new User
                 {

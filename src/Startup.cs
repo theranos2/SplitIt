@@ -1,5 +1,7 @@
+using System;
 using System.IO;
 using System.Reflection;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,9 +10,11 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using split_it.Authentication;
 using split_it.Exceptions;
 using split_it.Middlewares;
+using split_it.Services;
 
 namespace split_it
 {
@@ -28,7 +32,12 @@ namespace split_it
         {
 
             // Use our custom validation response
-            services.AddControllersWithViews(options => options.Filters.Add(typeof(ValidationResponse)));
+            services.AddControllersWithViews(options => options.Filters.Add(typeof(ValidationResponse)))
+                .AddJsonOptions(options =>
+                {
+                    var enumConverter = new JsonStringEnumConverter();
+                    options.JsonSerializerOptions.Converters.Add(enumConverter);
+                });
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 // Disable the default validation response
@@ -48,7 +57,28 @@ namespace split_it
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var filePath = Path.Combine(System.AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(filePath);
+                c.AddSecurityDefinition("Token", new OpenApiSecurityScheme
+                {
+                    Name = "Token",
+                    In = ParameterLocation.Header,
+                    Description = "Token needed for authenticated api calls",
+                    Type = SecuritySchemeType.ApiKey,
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                    {
+                        new OpenApiSecurityScheme {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Token"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
+
+            services.AddTransient<NotificationService>();
 
             // Required to allow middleware to function. Because it inherists IMiddleWare 
             services.AddTransient<ExceptionMiddleware>();

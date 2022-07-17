@@ -24,7 +24,7 @@ const BillSimple = () => {
 
   return (
     <BillForm
-      title="Create an advanced bill"
+      title="Create a simple bill"
       inputs={inputs}
       submit={{ href: '/', func: submit }}
       set={set}
@@ -42,7 +42,7 @@ const BillSimple = () => {
           type: 'users',
           err: { cond: inputs.users === [], msg: "You haven't added any users." }
         },
-        { name: 'price', label: 'Price', type: 'price' }
+        { name: 'price', label: 'Price', type: 'price', disabled: false }
       ]}
     />
   );

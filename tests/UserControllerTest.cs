@@ -71,19 +71,51 @@ namespace tests
         [InlineData(-1, -1)]
         public void GetAllUsersBadParam(int take, int skip)
         {
-            Assert.Throws<HttpBadRequest>(() => userController.GetMany(take, skip));
+            Assert.Throws<HttpBadRequest>(() => userController.GetMany(take: take, skip: skip));
         }
 
         [Fact]
         public void FindOneUser()
         {
-            var user = userController.GetMany(1)[0];
+            var user = userController.GetMany(take: 1)[0];
             var sameUser = userController.Get(user.Id);
             Assert.Equal(user.Id, sameUser.Id);
             Assert.Equal(user.Email, sameUser.Email);
             Assert.Equal(user.FirstName, sameUser.FirstName);
             Assert.Equal(user.LastName, sameUser.LastName);
             Assert.Equal(user.MfaEnabled, user.MfaEnabled);
+        }
+
+        [Theory]
+        [InlineData(3, 3, 2)]
+        [InlineData(1, 100, 4)] // since we have 5 users
+        [InlineData(0, 10, 5)] // since we have 5 users
+        public void UserTakeSkip(int expected, int take, int skip)
+        {
+            var users = userController.GetMany(take: take, skip: skip);
+            Assert.Equal(expected, users.Count);
+        }
+
+        [Fact]
+        public void UserFilter()
+        {
+            var users = userController.GetMany(filter: new UserFilter
+            {
+                FirstName = "ken"
+            });
+            Assert.Single(users);
+            Assert.Equal("ken", users[0].FirstName);
+        }
+
+        [Theory]
+        [InlineData(UserSort.EMAIL_ASC, UserSort.EMAIL_DESC)]
+        [InlineData(UserSort.FIRSTNAME_ASC, UserSort.FIRSTNAME_DESC)]
+        [InlineData(UserSort.LASTNAME_ASC, UserSort.LASTNAME_DESC)]
+        public void UserSorting(UserSort asc, UserSort desc)
+        {
+            var sortedAsc = userController.GetMany(sortBy: asc);
+            var sortedDesc = userController.GetMany(sortBy: desc);
+            Assert.Equal(sortedAsc[0].Id, sortedDesc[4].Id);
         }
     }
 }

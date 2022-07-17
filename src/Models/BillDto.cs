@@ -32,6 +32,7 @@ namespace split_it.Models
 
         public bool hasRejected { get; set; } = false;
         
+
         public double Total { get; set; }
 
         [Required]
