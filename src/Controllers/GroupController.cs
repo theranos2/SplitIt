@@ -21,21 +21,10 @@ namespace split_it.Controllers
             db = _db;
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)]
-        private User GetCurrentUser()
-        {
-            // Uncomment for production
-            //var cookie = CookiesDb.Get(HttpContext.User.Identity.Name);
-            //if(cookie == null)
-                //throw new HttpBadRequest($"Bad cookie");
-
-            //return db.Users.Where(x => x.Id == cookie.UserId).FirstOrDefault();
-
-            // FOR DEBUG only
-            return db.Users.Where(x => x.Email == "bob@dylan.com").FirstOrDefault();
-            //return db.Users.Where(x => x.Email == "kendrick@lamar.com").FirstOrDefault();
-        }
-
+        /// <summary>Get Group</summary>
+        /// <remarks>Use this route to get a group. Supply the group guid.</remarks>
+        /// <response code="404">Not found. When the supplied group guid is not found.</response>
+        /// <response code="403">Permission denied. Only group members can make see group details.</response>
         [HttpGet("{groupId:Guid}")]
         public GroupDto Get(Guid groupId)
         {
@@ -45,7 +34,7 @@ namespace split_it.Controllers
             if(group == null)
                 throw new HttpNotFound($"Cannot find group: {groupId}");
                 
-            Guid curUserId = GetCurrentUser().Id;
+            Guid curUserId = IdentityTools.GetUser(db, HttpContext.User.Identity).Id;
 
             // check if group member is requesting the group
             bool found =  group.Members.Any(x => x.Id == curUserId);
@@ -57,6 +46,7 @@ namespace split_it.Controllers
             return group.ConvertToDto();
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         private Group MakeGroup(GroupDto groupDto)
         {
             List<User> members = new List<User>();
@@ -71,18 +61,21 @@ namespace split_it.Controllers
             }
 
             // add owner into the group
-            User owner = GetCurrentUser();
+            User owner = IdentityTools.GetUser(db, HttpContext.User.Identity);
             members.Add(owner);
 
             return new Group{
                 Id = Guid.Empty,
                 Owner = owner,
-                Members = members.GroupBy(x => x.Id).Select(x => x.FirstOrDefault()).ToList(), // delete duplicates if any
+                Members = members.GroupBy(x => x.Id).Select(x => x.FirstOrDefault()).ToList(), // delete duplicates if any trading bigah oh for code readability
             };
         }
 
-        [HttpPut("{groupId:Guid}")]
-        public GroupDto Create(Guid groupId, GroupDto groupDto)
+        /// <summary>Create a Group</summary>
+        /// <remarks>Use this route to create a group. Supply member guids to create group. See the GroupDto</remarks>
+        /// <response code="404">Not found. When the supplied user guid is not found.</response>
+        [HttpPost]
+        public GroupDto Create(GroupDto groupDto)
         {
             Group newGroup = MakeGroup(groupDto);
             db.Groups.Add(newGroup);
@@ -91,6 +84,10 @@ namespace split_it.Controllers
             return newGroup.ConvertToDto();
         }
 
+        /// <summary>Edit a Group</summary>
+        /// <remarks>Use this route to edit a group. You must be the group owner to edit (remove/add) users. To edit group simply supply the new list of member guids. Example: To add a user to a group simply APPEND that user guid to the member guid list and call this route using that parameter. Keyword "append", if not append, your new group will be user that user.</remarks>
+        /// <response code="403">Permission denied. Only the owner of the group can make changes to the group.</response>
+        /// <response code="404">Not found. When the supplied user guid is not found.</response>
         [HttpPut("{groupId:Guid}")]
         public GroupDto Edit(Guid groupId, GroupDto groupDto)
         {
@@ -99,7 +96,7 @@ namespace split_it.Controllers
             if(group == null)
                 throw new HttpNotFound($"Cannot find group: {groupId}");
 
-            Guid curUserId = GetCurrentUser().Id;
+            Guid curUserId = IdentityTools.GetUser(db, HttpContext.User.Identity).Id;
             if(curUserId != group.Owner.Id)
                 throw new HttpForbiddenRequest($"Permission Denied. Cannot edit group that you are not the owner of.");
 
