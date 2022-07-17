@@ -1,7 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using split_it.Authentication;
@@ -22,47 +23,6 @@ namespace split_it.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        private User GetCurrentUser()
-        {
-            // Uncomment for production
-            //var cookie = CookiesDb.Get(HttpContext.User.Identity.Name);
-            //if(cookie == null)
-                //throw new HttpBadRequest($"Bad cookie");
-
-            //return db.Users.Where(x => x.Id == cookie.UserId).FirstOrDefault();
-
-            // FOR DEBUG only
-            return db.Users.Where(x => x.Email == "bob@dylan.com").FirstOrDefault();
-            //return db.Users.Where(x => x.Email == "kendrick@lamar.com").FirstOrDefault();
-        }
-
-
-        // returns 204 if not found
-        [HttpGet("{bill_id:Guid}")]
-        public BillDto Get(Guid bill_id)
-        {
-            Bill bill = db.Bills.Where(x => x.Id == bill_id)
-                .Include(bill => bill.Owner)
-                .Include(bill => bill.Shares)
-                .ThenInclude(share => share.Payer)
-                .Include(share => share.Shares)
-                .ThenInclude(share => share.Items).FirstOrDefault();
-
-
-            if(bill == null)
-                throw new HttpNotFound($"Cannot find bill: {bill_id}");
-
-            Guid curUserId = GetCurrentUser().Id; // check if bill member is requesting the bill
-            bool found =  bill.Shares.Any(x => x.Payer.Id == curUserId);
-
-            // check ownership
-            if(bill.Owner.Id != curUserId && !found)
-                throw new HttpForbiddenRequest($"Permission Denied. Cannot view bill that you are not apart of.");
-
-            return bill.ConvertToDto();
-        }
-
-        [ApiExplorerSettings(IgnoreApi = true)]
         private List<Share> ConvertToShares(ICollection<ShareDto> shares)
         {
             List<Share> newShares = new List<Share>();
@@ -71,16 +31,15 @@ namespace split_it.Controllers
                 if (shareDto == null)
                     throw new HttpBadRequest("A share cannot be null");
 
-
                 //TODO
-                // owner can modify, owner can specify if they have paid or not. !
+                // owner can modify, owner can specify if they have paid or not.!
                 //shareDto.hasPaid = false;  // done by paying / calling a paying route
                 //shareDto.hasRejected = false; // everytime the owner updates or edit the bill it will resend to those who have rejected 
                 shareDto.Total = 0.0;
 
                 User payer = db.Users.Where(x => x.Id == shareDto.PayerId).FirstOrDefault();
                 if (payer == null)
-                    throw new HttpBadRequest($"Cannot find payer: {shareDto.PayerId}");
+                    throw new HttpNotFound($"Cannot find payer: {shareDto.PayerId}");
 
                 // items cannot be empty
                 if (shareDto.Items == null || shareDto.Items.Count <= 0)
@@ -123,11 +82,43 @@ namespace split_it.Controllers
 
             return newShares;
         }
-        
+
+        /// <summary>Get Bill</summary>
+        /// <remarks>Use this route to get a bill. Pass in bill guid</remarks>
+        /// <response code="403">Permission denied. Only the members of the bill can view the bill.</response>
+        /// <response code="404">Not found. When the supplied bill guid is not found.</response>
+        [HttpGet("{bill_id:Guid}")]
+        public BillDto Get(Guid bill_id)
+        {
+            Bill bill = db.Bills.Where(x => x.Id == bill_id)
+                .Include(bill => bill.Owner)
+                .Include(bill => bill.Shares)
+                .ThenInclude(share => share.Payer)
+                .Include(share => share.Shares)
+                .ThenInclude(share => share.Items).FirstOrDefault();
+
+            if(bill == null)
+                throw new HttpNotFound($"Cannot find bill: {bill_id}");
+
+
+            Guid curUserId = IdentityTools.GetUser(db, HttpContext.User.Identity).Id; // check if bill member is requesting the bill
+            bool found =  bill.Shares.Any(x => x.Payer.Id == curUserId);
+
+            // check ownership
+            if(bill.Owner.Id != curUserId && !found)
+                throw new HttpForbiddenRequest($"Permission Denied. Cannot view bill that you are not apart of.");
+
+            return bill.ConvertToDto();
+        }
+
+        /// <summary>Create Bill</summary>
+        /// <remarks>Use this route to create a bill.</remarks>
+        /// <response code="404">Not found. When the supplied user guid is not found.</response>
+        /// <response code="400">Bad request. When supply share or item</response>
         [HttpPost]
         public BillDto Create(BillDto billDto)
         {
-            User curUser = GetCurrentUser();
+            User curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
 
             // create new bill
             Bill newBill = new Bill
@@ -149,6 +140,10 @@ namespace split_it.Controllers
             return newBill.ConvertToDto();
         }
 
+        /// <summary>Edit a bill</summary>
+        /// <remarks>Use this route to edit a bill. Quite similar to the create bill. To edit just do the same.</remarks>
+        /// <response code="404">Not found. When the supplied user guid is not found.</response>
+        /// <response code="400">Bad request. When supply share or item</response>
         [HttpPut("{bill_id:Guid}")]
         public BillDto Edit(Guid bill_id, BillDto billDto)
         {
@@ -160,10 +155,9 @@ namespace split_it.Controllers
                 .ThenInclude(share => share.Items).FirstOrDefault();
 
             if (bill == null)
-                throw new HttpBadRequest($"Cannot find payer: {bill_id}");
+                throw new HttpNotFound($"Cannot find payer: {bill_id}");
             
-            User curUser = GetCurrentUser();
-
+            User curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
 
             if(bill.Owner.Id != curUser.Id)
                 throw new HttpForbiddenRequest($"Permission Denied. Cannot edit bill that is not yours.");
@@ -171,7 +165,7 @@ namespace split_it.Controllers
             
 
             if (bill.Owner.Id != curUser.Id)
-                throw new HttpBadRequest($"Permission Denied. Cannot edit bill that is not yours.");
+                throw new HttpForbidden($"Permission Denied. Cannot edit bill that is not yours.");
 
 
             bill.Title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(billDto.Title.Trim().ToLower());
@@ -194,6 +188,10 @@ namespace split_it.Controllers
             return bill.ConvertToDto();
         }
 
+        /// <summary>Edit a bill</summary>
+        /// <remarks>Use this route to edit a bill. Quite similar to the create bill. To edit just do the same.</remarks>
+        /// <response code="404">Not found. When the supplied user guid is not found.</response>
+        /// <response code="400">Bad request. When supply share or item</response>
         [HttpGet("getmany")]
         public IEnumerable<Bill> GetMany(BillFilter filter)
         {
@@ -226,9 +224,9 @@ namespace split_it.Controllers
                 .ThenInclude(share => share.Items).FirstOrDefault();
 
             if(bill == null)
-                throw new HttpBadRequest($"Cannot find payer: {bill_id}");
+                throw new HttpNotFound($"Cannot find payer: {bill_id}");
             
-            Guid curUserId = GetCurrentUser().Id; // check if bill member is requesting the bill
+            Guid curUserId = IdentityTools.GetUser(db, HttpContext.User.Identity).Id; // check if bill member is requesting the bill
             bool found =  bill.Shares.Any(x => x.Payer.Id == curUserId);
 
             // check ownership
@@ -263,7 +261,7 @@ namespace split_it.Controllers
             if(bill == null)
                 throw new HttpBadRequest($"Cannot find payer: {bill_id}");
             
-            Guid curUserId = GetCurrentUser().Id; // check if bill member is requesting the bill
+            Guid curUserId = IdentityTools.GetUser(db, HttpContext.User.Identity).Id; // check if bill member is requesting the bill
             bool found =  bill.Shares.Any(x => x.Payer.Id == curUserId);
 
             // check ownership
@@ -289,106 +287,10 @@ namespace split_it.Controllers
             return "TODO";
         }
 
-        [HttpGet("/api/file/{file_name:string}")]
+        [HttpGet("/api/file/{file_name}")]
         public string GetFile(string file_name)
         {
             return "TODO";
         }
-
-        ////////////////////////
-        ////DEBUGING METHODS////
-        ////////////////////////
-
-        [HttpGet("/create")]
-        public Bill Creet()
-        {
-            var bob = db.Users.Where(x => x.Email == "bob@dylan.com").FirstOrDefault();
-            var lamar = db.Users.Where(x => x.Email == "kendrick@lamar.com").FirstOrDefault();
-
-            if (bob == null)
-            {
-                // Create dummy users
-                User bobby = new User
-                {
-                    Email = "bob@dylan.com",
-                    FirstName = "bob",
-                    LastName = "dylan",
-                    MfaEnabled = false,
-                    Password = "kekekekeke"
-                };
-                db.Users.Add(bobby);
-                db.SaveChanges();
-            }
-
-            if (lamar == null)
-            {
-                User kenny = new User
-                {
-                    Email = "kendrick@lamar.com",
-                    FirstName = "kendrick",
-                    LastName = "lamar",
-                    MfaEnabled = false,
-                    Password = "kekekekeke"
-                };
-                db.Users.Add(kenny);
-                db.SaveChanges();
-            }
-
-            bob = db.Users.Where(x => x.Email == "bob@dylan.com").FirstOrDefault();
-            lamar = db.Users.Where(x => x.Email == "kendrick@lamar.com").FirstOrDefault();
-
-            // Create bill
-            List<Share> shares = new List<Share>()
-            {
-                Share.create_share(bob, new List<Item>{
-                    new Item{
-                        Name = "Pizza",
-                        Price = 10.99
-                    },
-                    new Item{
-                        Name = "Hotpie",
-                        Price = 2.99
-                    }
-                }),
-
-                Share.create_share(lamar, new List<Item>{
-                    new Item{
-                        Name = "Pizza",
-                        Price = 10.99
-                    },
-                    new Item{
-                        Name = "Hotpie",
-                        Price = 2.99
-                    }
-                }),
-            };
-
-            Bill bill = Bill.create_bill(bob, shares, "Bobs Bill");
-            db.Bills.Add(bill);
-
-            db.SaveChanges();
-
-            return bill;
-
-        }
-
-        // Example how to return nested objects
-        [HttpGet("/bills")]
-        public IEnumerable<Bill> Getslosts()
-        {
-            return db.Bills
-                .Include(bill => bill.Owner)
-                .Include(bill => bill.Shares)
-                .ThenInclude(share => share.Payer)
-                .Include(d => d.Shares)
-                .ThenInclude(share => share.Items).ToList();
-        }
-
-        [HttpGet("/users")]
-        public IEnumerable<User> GetUsers()
-        {
-            return db.Users.ToList();
-        }
-
     }
 }

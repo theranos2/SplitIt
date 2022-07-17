@@ -31,7 +31,6 @@ namespace split_it.Models
         public bool hasPaid { get; set; } = false;
 
         public bool hasRejected { get; set; } = false;
-        
 
         public double Total { get; set; }
 
@@ -59,6 +58,7 @@ namespace split_it.Models
 
     public class GroupDto
     {
+
         public Guid Id { get; set; }
         public Guid OwnerId { get; set; }
         [Required]

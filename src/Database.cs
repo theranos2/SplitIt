@@ -15,6 +15,7 @@ namespace split_it
         public DbSet<Share> Shares { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<FileAttachment> Files { get; set; }
 
         public static DbContextOptions<DatabaseContext> DefaultDatabaseOptions = new DbContextOptionsBuilder<DatabaseContext>()
             .UseSqlite("Data Source=database.db")
@@ -47,6 +48,8 @@ namespace split_it
 
     public class FileAttachment
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
         public string Filename { get; set; }
         public string Extension { get; set; }
     }
