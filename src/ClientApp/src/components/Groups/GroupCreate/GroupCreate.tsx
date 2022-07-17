@@ -26,7 +26,7 @@ const GroupCreate = () => {
       inputs={inputs}
       submit={{ href: '/', func: submit }}
       set={set}
-      cancel={{ href: '/bill/create', msg: 'Cancel' }}
+      cancel={{ href: '/groups', msg: 'Cancel' }}
       fields={[
         {
           name: 'name',
