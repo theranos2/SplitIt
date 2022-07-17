@@ -1,9 +1,25 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Security.Principal;
 
 namespace split_it.Authentication
 {
+    public static class IdentityTools 
+    {
+        public static User GetUser(DatabaseContext db, IIdentity identity)
+        {
+            //string userGuid = ((ClaimsIdentity)identity).FindFirst("UserId").Value;
+            //return db.Users.Where(x => x.Id == Guid.Parse(userGuid)).FirstOrDefault();
+
+            // FOR DEBUG only
+            return db.Users.Where(x => x.Email == "bob@dylan.com").FirstOrDefault();
+            //return db.Users.Where(x => x.Email == "kendrick@lamar.com").FirstOrDefault();
+        }
+    }
+
     public class MyCookie
     {
         public DateTime IssueDate { get; set; }

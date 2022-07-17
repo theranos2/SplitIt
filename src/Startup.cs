@@ -78,7 +78,7 @@ namespace split_it
                 });
             });
 
-            services.AddTransient<NotificationService>();
+            //services.AddTransient<NotificationService>();
 
             // Required to allow middleware to function. Because it inherists IMiddleWare 
             services.AddTransient<ExceptionMiddleware>();
@@ -93,7 +93,7 @@ namespace split_it
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DatabaseContext _db)
         {
-            app.UseMiddleware<ExceptionMiddleware>();
+            //app.UseMiddleware<ExceptionMiddleware>();
 
             if (env.IsDevelopment())
             {
