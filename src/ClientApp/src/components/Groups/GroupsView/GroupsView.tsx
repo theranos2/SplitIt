@@ -19,7 +19,16 @@ const rows = [
   createData(3, 'Theranos2', 'Jingcheng', ['Lachlan', 'Razin', 'Ken', 'Xibo', 'Adam'])
 ];
 
-export default function Orders() {
+export default function GroupsView() {
+  const [selectedRow, setSelectedRow] = React.useState({});
+  console.log({ selectedRow });
+
+  const handleRowClick = (row: any) => {
+    const id = row.id;
+    // open a bill view page using bill id
+    // window.location.href = '/groups/view/' + id;
+  };
+
   return (
     <Grid item xs={12}>
       <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
@@ -35,7 +44,15 @@ export default function Orders() {
             </TableHead>
             <TableBody>
               {rows.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow
+                  key={row.id}
+                  onClick={() => handleRowClick(row)}
+                  sx={{
+                    '&.MuiTableRow-root:hover': {
+                      cursor: 'pointer'
+                    }
+                  }}
+                >
                   <TableCell>{row.name}</TableCell>
                   <TableCell>{row.owner}</TableCell>
                   <TableCell>{row.members.join(', ')}</TableCell>
