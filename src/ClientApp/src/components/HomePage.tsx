@@ -23,6 +23,9 @@ const HomePage = () => {
           <Button key="one">
             <Link to="/bill/view">View bills</Link>
           </Button>
+          <Button key="one">
+            <Link to="/groups">Groups</Link>
+          </Button>
         </ButtonGroup>
       </Grid>
     </Grid>

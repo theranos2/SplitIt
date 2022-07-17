@@ -23,7 +23,7 @@ const links =
         { href: '/bill/create', icon: <AddBusinessRoundedIcon /> },
         { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
         { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
-        { href: '/groups/create', icon: <GroupsIcon /> }
+        { href: '/groups', icon: <GroupsIcon /> },
         { href: '/notifications', icon: <NotificationsIcon /> },
         // { href: 'notif', icon: <NotificationsMenu /> },
         { href: '/logout', icon: <ExitToAppIcon /> }

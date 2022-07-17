@@ -13,7 +13,8 @@ import BillSimple from 'components/BillCreation/BillSimple';
 import BillAdvanced from 'components/BillCreation/BillAdvanced';
 import Notifications from 'components/Notifications/NotificationsPage';
 
-import GroupCreate from './components/Groups/GroupCreate';
+import Groups from './components/Groups/GroupIndex';
+import GroupCreate from './components/Groups/GroupCreate/GroupCreate';
 
 import TopNavigation from 'components/Menu/TopNavigation';
 import NotFound from 'components/NotFound';
@@ -37,9 +38,9 @@ const App = () => {
           <Route path="/bill/simple" element={<BillSimple />} />
           <Route path="/bill/advanced" element={<BillAdvanced />} />
           <Route path="/notifications" element={<Notifications />} />
+          <Route path="/groups" element={<Groups />} />
+          <Route path="/groups/create" element={<GroupCreate />} />
         </Route>
-
-        <Route path="/groups/create" element={<GroupCreate />} />
         {/* 404 - Not Found route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
