@@ -15,6 +15,7 @@ import Notifications from 'components/Notifications/NotificationsPage';
 
 import Groups from './components/Groups/GroupIndex';
 import GroupCreate from './components/Groups/GroupCreate/GroupCreate';
+import GroupsView from 'components/Groups/GroupsView/GroupsView';
 
 import TopNavigation from 'components/Menu/TopNavigation';
 import NotFound from 'components/NotFound';
@@ -40,6 +41,7 @@ const App = () => {
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/groups" element={<Groups />} />
           <Route path="/groups/create" element={<GroupCreate />} />
+          <Route path="/groups/view" element={<GroupsView />} />
         </Route>
         {/* 404 - Not Found route */}
         <Route path="*" element={<NotFound />} />

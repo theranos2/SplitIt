@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { GroupForm } from '../GroupForm';
 import { InputProps } from '../props';
 
+import { request } from 'utility/api/api';
+
 const GroupCreate = () => {
   const [inputs, setInputs] = React.useState<InputProps>({ name: '', users: [] });
 
@@ -17,7 +19,14 @@ const GroupCreate = () => {
     if (inputs.name === '' || inputs.users === []) {
       return console.error('Inputs cannot be empty.');
     }
-    // post request to create new group
+
+    const data = JSON.stringify({
+      name: inputs.name,
+      members: inputs.users
+    });
+
+    // API call to create new group
+    // return await request('put', 'group', data);
   };
 
   return (
