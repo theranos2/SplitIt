@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +9,12 @@ using split_it.Exceptions.Http;
 
 namespace split_it.Middlewares
 {
+    public class ProblemDetailsExt :  ProblemDetails
+    {
+
+        [JsonPropertyName("Errors")]
+        public string[] Errors { get; set; }
+    }
     public sealed class ExceptionMiddleware : IMiddleware
     {
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -28,13 +36,13 @@ namespace split_it.Middlewares
             }
         }
 
-        private static ProblemDetails GenerateProblemDetails(HttpContext context, HttpStatusCode code, string message)
+        private static ProblemDetailsExt GenerateProblemDetails(HttpContext context, HttpStatusCode code, string message)
         {
-            return new ProblemDetails
+            return new ProblemDetailsExt
             {
-                Status = (int)code,
-                Title = message,
-                Instance = context.Request.Path
+                //Status = (int)code,
+                Errors =  new string[] {message}
+                //Instance = context.Request.Path
             };
         }
 
