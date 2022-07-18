@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using split_it.Authentication;
 using split_it.Exceptions.Http;
 using split_it.Models;
+using split_it.Services;
 
 namespace split_it.Controllers
 {
@@ -16,10 +16,12 @@ namespace split_it.Controllers
     public class BillController : ControllerBase
     {
         DatabaseContext db;
+        NotificationService notificationService;
 
-        public BillController(DatabaseContext _db)
+        public BillController(DatabaseContext _db, NotificationService _notificationService)
         {
             db = _db;
+            notificationService = _notificationService;
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
@@ -97,15 +99,15 @@ namespace split_it.Controllers
                 .Include(share => share.Shares)
                 .ThenInclude(share => share.Items).FirstOrDefault();
 
-            if(bill == null)
+            if (bill == null)
                 throw new HttpNotFound($"Cannot find bill: {bill_id}");
 
 
             Guid curUserId = IdentityTools.GetUser(db, HttpContext.User.Identity).Id; // check if bill member is requesting the bill
-            bool found =  bill.Shares.Any(x => x.Payer.Id == curUserId);
+            bool found = bill.Shares.Any(x => x.Payer.Id == curUserId);
 
             // check ownership
-            if(bill.Owner.Id != curUserId && !found)
+            if (bill.Owner.Id != curUserId && !found)
                 throw new HttpForbiddenRequest($"Permission Denied. Cannot view bill that you are not apart of.");
 
             return bill.ConvertToDto();
@@ -134,8 +136,19 @@ namespace split_it.Controllers
 
             newBill.Total = Math.Round(newBill.Shares.Sum(x => x.Total), 2);
 
-            db.Bills.Add(newBill);
+            db.Bills.Add(newBill).Reload();
             db.SaveChanges();
+
+            foreach (var share in billDto.Shares)
+            {
+                notificationService.Add(new Notification
+                {
+                    UserId = share.PayerId,
+                    Domain = "bill",
+                    ResourceId = newBill.Id,
+                    Message = $"{curUser.FirstName} created bill: {newBill.Title}",
+                });
+            }
 
             return newBill.ConvertToDto();
         }
@@ -156,13 +169,11 @@ namespace split_it.Controllers
 
             if (bill == null)
                 throw new HttpNotFound($"Cannot find payer: {bill_id}");
-            
+
             User curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
 
-            if(bill.Owner.Id != curUser.Id)
+            if (bill.Owner.Id != curUser.Id)
                 throw new HttpForbiddenRequest($"Permission Denied. Cannot edit bill that is not yours.");
-
-            
 
             if (bill.Owner.Id != curUser.Id)
                 throw new HttpForbidden($"Permission Denied. Cannot edit bill that is not yours.");
@@ -223,29 +234,38 @@ namespace split_it.Controllers
                 .Include(d => d.Shares)
                 .ThenInclude(share => share.Items).FirstOrDefault();
 
-            if(bill == null)
+            if (bill == null)
                 throw new HttpNotFound($"Cannot find payer: {bill_id}");
-            
-            Guid curUserId = IdentityTools.GetUser(db, HttpContext.User.Identity).Id; // check if bill member is requesting the bill
-            bool found =  bill.Shares.Any(x => x.Payer.Id == curUserId);
+
+            var curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
+            Guid curUserId = curUser.Id;
+            bool found = bill.Shares.Any(x => x.Payer.Id == curUserId);
 
             // check ownership
-            if(bill.Owner.Id != curUserId && !found)
+            if (bill.Owner.Id != curUserId && !found)
                 throw new HttpForbiddenRequest($"Permission Denied. Cannot reject bill that you are not apart of.");
 
             // check if paid
-            if(bill.isSettled)
+            if (bill.isSettled)
                 throw new HttpBadRequest($". Cannot reject bill that has been settled.");
 
             // logic
             // if user rejects the bill, they will show as hasRejected
-            foreach(Share share in bill.Shares.Where(x => x.Payer.Id == curUserId))
+            foreach (Share share in bill.Shares.Where(x => x.Payer.Id == curUserId))
             {
                 share.hasRejected = true;
             }
 
+            notificationService.Add(new Notification
+            {
+                UserId = bill.Owner.Id,
+                Domain = "bill",
+                ResourceId = bill.Id,
+                Message = $"{curUser.FirstName} rejected bill {bill.Title}",
+            });
+
             return "Success";
-            
+
         }
 
         [HttpDelete("{bill_id:Guid}")]
@@ -258,22 +278,33 @@ namespace split_it.Controllers
                 .Include(d => d.Shares)
                 .ThenInclude(share => share.Items).FirstOrDefault();
 
-            if(bill == null)
+            if (bill == null)
                 throw new HttpBadRequest($"Cannot find payer: {bill_id}");
-            
+
             Guid curUserId = IdentityTools.GetUser(db, HttpContext.User.Identity).Id; // check if bill member is requesting the bill
-            bool found =  bill.Shares.Any(x => x.Payer.Id == curUserId);
+            bool found = bill.Shares.Any(x => x.Payer.Id == curUserId);
 
             // check ownership
-            if(bill.Owner.Id != curUserId && !found)
+            if (bill.Owner.Id != curUserId && !found)
                 throw new HttpForbiddenRequest($"Permission Denied. Cannot reject bill that you are not apart of.");
 
-            foreach(Share share in bill.Shares)
+            foreach (Share share in bill.Shares)
             {
-                foreach(Item item in share.Items)
+                foreach (Item item in share.Items)
                     db.Items.Remove(item);
 
                 db.Shares.Remove(share);
+            }
+
+            foreach (var share in bill.Shares)
+            {
+                notificationService.Add(new Notification
+                {
+                    UserId = share.Payer.Id,
+                    Domain = "bill",
+                    ResourceId = bill.Id,
+                    Message = $"Bill {bill.Title} deleted",
+                });
             }
 
             db.Bills.Remove(bill);
