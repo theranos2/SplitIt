@@ -4,6 +4,21 @@ using System.ComponentModel.DataAnnotations;
 
 namespace split_it.Models
 {
+    public class BillSimpleDtoIn
+    {
+        [Required]
+        [MaxLength(100)]
+        public string Title { get; set; }
+
+        [Required]
+        [MinLength(1)]
+        public List<Guid> UserIds { get; set; }
+
+        [Required]
+        [Range(1, 1000)]
+        public double Amount { get; set; }
+    }
+
     public class BillDto
     {
         public Guid Id { get; set; }
@@ -15,6 +30,7 @@ namespace split_it.Models
         public double Total { get; set; }
 
         [Required]
+        [MaxLength(100)]
         public string Title { get; set; }
 
         [Required]
@@ -42,7 +58,7 @@ namespace split_it.Models
 
         // Anonymous User
         public string Email { get; set; }
-        public string Name  { get; set; }
+        public string Name { get; set; }
     }
 
     public class ItemDto
