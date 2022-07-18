@@ -12,6 +12,10 @@ db-reset:
 	dotnet ef migrations add "Initial"
 	dotnet ef database update 
 
+db-seed:
+	rm -f ../seeder/database.db
+	(cd ../seeder; dotnet run)
+
 
 typescript-client:
 	java -jar '../swagger-codegen-cli.jar' generate \
