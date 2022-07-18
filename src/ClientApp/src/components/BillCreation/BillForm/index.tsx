@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import InputField from '../../InputForm/InputFields';
-import { DateSelector } from '../../InputForm/DateSelector';
-import { UserSelector } from '../../InputForm/UserSelector';
-import { ItemSelector } from '../../InputForm/ItemSelector';
+import InputField from 'components/InputForm/InputFields';
+import { DateSelector } from 'components/InputForm/DateSelector';
+import { UserSelector } from 'components/InputForm/UserSelector';
+import { ItemSelector } from 'components/InputForm/ItemSelector';
 import { PriceDisplay } from '../PriceDisplay';
 import BillFormProps from './props';
 
@@ -35,7 +35,6 @@ export const BillForm = (props: BillFormProps) => {
             {title}
           </Typography>
           <Box component="form" noValidate sx={{ mt: 1 }}>
-            {/* onSubmit={submit.func} */}
             {fields.map((field, idx) => {
               switch (field.type) {
                 case 'date':
@@ -59,8 +58,8 @@ export const BillForm = (props: BillFormProps) => {
                       key={`user-${idx}`}
                       name={field.name}
                       label={field.label}
-                      inputs={inputs}
-                      set={set}
+                      users={inputs['users']}
+                      setUsers={set('users')}
                       err={field.err}
                     />
                   );
@@ -70,8 +69,8 @@ export const BillForm = (props: BillFormProps) => {
                       key={`user-${idx}`}
                       name={field.name}
                       label={field.label}
-                      inputs={inputs}
-                      set={set}
+                      items={inputs['items']}
+                      setItems={set('items')}
                       err={field.err}
                     />
                   );
@@ -91,8 +90,8 @@ export const BillForm = (props: BillFormProps) => {
                       name={field.name}
                       label={field.label}
                       type={field.type}
-                      inputs={inputs}
-                      set={set}
+                      inputs={inputs[field.name]}
+                      set={set(field.name)}
                       err={field.err}
                     />
                   );

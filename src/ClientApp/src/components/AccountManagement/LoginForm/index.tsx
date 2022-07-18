@@ -73,8 +73,8 @@ export const LoginForm = (props: LoginFormProps) => {
                       name={field.name}
                       label={field.label}
                       type={field.type}
-                      inputs={inputs}
-                      set={set}
+                      inputs={inputs[field.name]}
+                      set={set(field.name)}
                       err={field.err}
                     />
                   );

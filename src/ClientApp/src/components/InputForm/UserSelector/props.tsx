@@ -1,9 +1,9 @@
-import { ButtonSubmission, ErrorType } from '../InputFormProps';
+import { ButtonEventHandler, ErrorType } from '../InputFormProps';
 
 export interface UserSelectorProps {
   name: string;
   label: string;
-  inputs: Record<string, any>;
-  set: ButtonSubmission;
+  users: number[];
+  setUsers: ButtonEventHandler;
   err: ErrorType;
 }

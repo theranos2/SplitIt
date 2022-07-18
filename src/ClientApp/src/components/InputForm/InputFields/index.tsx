@@ -17,7 +17,7 @@ const InputField = (props: InputFieldProps) => {
         type={type}
         id={name}
         value={inputs[name]}
-        onChange={set(name)}
+        onChange={set}
         margin="normal"
         required
         fullWidth

@@ -9,7 +9,7 @@ const BillSimple = () => {
 
   const set = (name: string) => (input: any) => {
     name === 'users'
-      ? input.forEach((e: number) => inputs['users'].push(e))
+      ? setInputs((old: InputProps) => ({ ...old, [name]: input }))
       : setInputs((old: InputProps) => ({ ...old, [name]: input.target.value }));
   };
 
@@ -20,7 +20,6 @@ const BillSimple = () => {
       return console.error('Inputs cannot be empty.');
     } else {
       return simple_create(inputs);
-      // send the new bill to the backend
     }
   };
 
