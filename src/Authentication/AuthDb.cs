@@ -7,15 +7,15 @@ using System.Security.Principal;
 
 namespace split_it.Authentication
 {
-    public static class IdentityTools 
+    public static class IdentityTools
     {
         public static User GetUser(DatabaseContext db, IIdentity identity)
         {
-            string userGuid = ((ClaimsIdentity)identity).FindFirst("UserId").Value;
-            return db.Users.Where(x => x.Id == Guid.Parse(userGuid)).FirstOrDefault();
+            //string userGuid = ((ClaimsIdentity)identity).FindFirst("UserId").Value;
+            //return db.Users.Where(x => x.Id == Guid.Parse(userGuid)).FirstOrDefault();
 
             // FOR DEBUG only
-            //return db.Users.Where(x => x.Email == "bob@dylan.com").FirstOrDefault();
+            return db.Users.Where(x => x.Email == "bob@dylan.com").FirstOrDefault();
             //return db.Users.Where(x => x.Email == "kendrick@lamar.com").FirstOrDefault();
         }
     }
