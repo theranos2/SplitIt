@@ -25,6 +25,7 @@ export const LoginForm = (props: LoginFormProps) => {
 
   const form_submit = async (event: any) => {
     const res = await submit.func(event);
+
     if (res?.error) {
       context?.logIn(false);
       setError(res.msg);

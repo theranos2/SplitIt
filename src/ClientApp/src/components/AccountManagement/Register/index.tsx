@@ -18,12 +18,12 @@ const Register = () => {
     event.preventDefault();
 
     if (Object.values(inputs).some((input) => input === '')) {
-      return console.error('Inputs cannot be empty.');
+      return { error: true, msg: 'Inputs cannot be empty.' };
     } else if (inputs.password !== inputs.password2) {
-      return console.error('Passwords must match.');
+      return { error: true, msg: 'Passwords must match.' };
+    } else {
+      return signup(inputs);
     }
-
-    return await signup(inputs);
   };
 
   return (

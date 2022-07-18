@@ -12,10 +12,10 @@ const Login = () => {
     event.preventDefault();
 
     if (inputs.email === '' || inputs.password === '') {
-      return console.log('Inputs cannot be empty.');
+      return { error: true, msg: 'Inputs cannot be empty.' };
+    } else {
+      return login(inputs);
     }
-
-    return await login(inputs);
   };
 
   return (
