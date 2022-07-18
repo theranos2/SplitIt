@@ -141,7 +141,7 @@ namespace split_it.Controllers
         }
 
         /// <summary>Create Bill Simple</summary>
-        /// <remarks>Use this route to create a bill.</remarks>
+        /// <remarks>Use this route to create a simple bill.</remarks>
         /// <response code="404">Not found. When the supplied user guid is not found.</response>
         [HttpPost("simple")]
         public BillDto CreateSimple(BillSimpleDtoIn billDto)
