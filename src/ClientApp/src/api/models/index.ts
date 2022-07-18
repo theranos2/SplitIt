@@ -4,6 +4,8 @@ export * from './bill-filter';
 export * from './item';
 export * from './item-dto';
 export * from './login-dto';
+export * from './notification';
+export * from './notification-sort';
 export * from './register-dto';
 export * from './share';
 export * from './share-dto';
