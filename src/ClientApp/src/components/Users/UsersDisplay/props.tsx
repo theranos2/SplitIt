@@ -1,4 +1,6 @@
+import { User } from '../../BillCreation/BillCreationProps';
+
 export interface UserDisplayProps {
-  users: number[];
-  removeUser: (user: number) => void;
+  users: User[];
+  removeUser: (user: User) => void;
 }

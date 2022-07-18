@@ -15,9 +15,8 @@ import Alert from '@mui/material/Alert';
 export const UserSelector = (props: UserSelectorProps) => {
   const { name, label, users, setUsers, err } = props;
 
-  const addUser = (event: any) => setUsers([...users, event.target.value]);
-  const removeUser = (event: any) =>
-    setUsers(users.filter((user: number) => user !== event.target.value));
+  const addUser = (event: any) => setUsers([...users, new_users[event.target.value]]);
+  const removeUser = (uid: User) => setUsers(users.filter((user: User) => user !== uid));
 
   const new_users: User[] = [
     { name: 'Adam', id: 1 },
@@ -37,9 +36,9 @@ export const UserSelector = (props: UserSelectorProps) => {
   //     }
 
   //     getUsers();
-  //     // console.log(users);
   // }, [NewUsers]);
 
+  console.log(`${new_users} \n${new_users.filter((user) => !users.includes(user))}`);
   return (
     <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
       <FormControl sx={{ m: 1, minWidth: 500 }}>
@@ -52,9 +51,12 @@ export const UserSelector = (props: UserSelectorProps) => {
           input={<OutlinedInput label={label} />}
         >
           {new_users
-            .filter((user) => !users.includes(user.id))
+            .filter((user) => !users.some((u) => u.id === user.id))
             .map((user, idx) => (
-              <MenuItem key={`menuitem-add-usr-${idx}`} value={user.id}>
+              <MenuItem
+                key={`menuitem-add-usr-${idx}`}
+                value={new_users.findIndex((u) => u.id === user.id)}
+              >
                 {user.name}
               </MenuItem>
             ))}
@@ -67,24 +69,3 @@ export const UserSelector = (props: UserSelectorProps) => {
 };
 
 // based on https://mui.com/material-ui/react-select/
-
-/*
-<FormControl sx={{ m: 1, minWidth: 120 }}>
-  <InputLabel id={`select-${name}-inputlabel`}>Remove {label}</InputLabel>
-  <Select
-    labelId={`select-${name}-label`}
-    id={`select-${name}-id`}
-    value={inputs[name]}
-    onChange={removeUser}
-    input={<OutlinedInput label={label} />}
-  >
-    {users
-      .filter((user) => inputs[name].includes(user.id) || NewUsers.includes(user.id))
-      .map((user, idx) => (
-        <MenuItem key={`menuitem-remove-usr-${idx}`} value={user.id}>
-          {user.name}
-        </MenuItem>
-      ))}
-  </Select>
-</FormControl>
-*/

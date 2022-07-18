@@ -13,6 +13,11 @@ export interface Item {
   user: number; // a user-id
 }
 
+export interface User {
+  name: string;
+  id: number;
+}
+
 export interface SubmitProps {
   href: string;
   func: ButtonEventHandler;
@@ -25,7 +30,7 @@ export interface CancelProps {
 
 export interface InputProps {
   name: string;
-  users: number[]; // an array of user-ids
+  users: User[]; // an array of user-ids
   items?: Item[];
   price: number;
 }
