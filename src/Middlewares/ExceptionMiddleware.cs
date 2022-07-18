@@ -9,10 +9,14 @@ using split_it.Exceptions.Http;
 
 namespace split_it.Middlewares
 {
-    public class ProblemDetailsExt :  ProblemDetails
+    public class ProblemDetailsExt
     {
         [JsonPropertyName("Errors")]
-        public string[] Errors { get; set; }
+        public List<string> Errors { get; set; }
+
+        [JsonIgnore]
+        public int? Status { get; set; }
+
     }
     public sealed class ExceptionMiddleware : IMiddleware
     {
@@ -40,12 +44,12 @@ namespace split_it.Middlewares
             return new ProblemDetailsExt
             {
                 Status = (int)code,
-                Errors =  new string[] {message},
-                Instance = context.Request.Path
+                Errors = new List <string>{message},
+                //Instance = context.Request.Path
             };
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, ProblemDetails problemDetails, Exception exception)
+        private static Task HandleExceptionAsync(HttpContext context, ProblemDetailsExt problemDetails, Exception exception)
         {
             if (context.Response.HasStarted)
             {
