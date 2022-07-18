@@ -28,7 +28,7 @@ namespace split_it.Controllers
                 ExpiryDate = expiry,
                 LastSeen = DateTime.Now,
                 MfaCode = "1", // TODO: implement this lol
-                hasPassedMfa = false,
+                hasPassedMfa = true,
                 UserId = userId
             });
         }
