@@ -11,7 +11,6 @@ namespace split_it.Middlewares
 {
     public class ProblemDetailsExt :  ProblemDetails
     {
-
         [JsonPropertyName("Errors")]
         public string[] Errors { get; set; }
     }
@@ -40,9 +39,9 @@ namespace split_it.Middlewares
         {
             return new ProblemDetailsExt
             {
-                //Status = (int)code,
-                Errors =  new string[] {message}
-                //Instance = context.Request.Path
+                Status = (int)code,
+                Errors =  new string[] {message},
+                Instance = context.Request.Path
             };
         }
 
