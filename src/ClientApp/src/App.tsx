@@ -7,6 +7,7 @@ import { Provider } from 'utility/Context';
 
 import Login from 'components/AccountManagement/Login';
 import Register from 'components/AccountManagement/Register';
+import Logout from 'components/AccountManagement/Logout';
 import BillsAll from 'components/BillView/BillsAll';
 import BillCreate from 'components/BillCreation/BillCreate';
 import BillSimple from 'components/BillCreation/BillSimple';
@@ -36,6 +37,7 @@ const App = () => {
             <Route path="/bill/simple" element={<BillSimple />} />
             <Route path="/bill/advanced" element={<BillAdvanced />} />
             <Route path="/notifications" element={<Notifications />} />
+            <Route path="/logout" element={<Logout />} />
           </Route>
 
           {/* 404 - Not Found route */}
