@@ -8,6 +8,8 @@ import { ItemSelector } from '../../InputForm/ItemSelector';
 import { PriceDisplay } from '../PriceDisplay';
 import BillFormProps from './props';
 
+import BillStepper from '../Stepper';
+
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
@@ -119,6 +121,7 @@ export const BillForm = (props: BillFormProps) => {
           </Box>
         </Box>
       </Container>
+      <BillStepper></BillStepper>
     </ThemeProvider>
   );
 }; // based on: https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in

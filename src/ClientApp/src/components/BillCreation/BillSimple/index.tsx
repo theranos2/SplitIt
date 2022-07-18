@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { BillForm } from '../BillForm';
 import { InputProps } from '../BillCreationProps';
+import { simple_create } from 'utility/api/billcreate';
 
 const BillSimple = () => {
   const [inputs, setInputs] = React.useState<InputProps>({ name: '', users: [], price: 0 });
@@ -17,9 +18,10 @@ const BillSimple = () => {
 
     if (inputs.name === '' || inputs.users === [] || inputs.price === 0) {
       return console.error('Inputs cannot be empty.');
+    } else {
+      return simple_create(inputs);
+      // send the new bill to the backend
     }
-
-    // send the new bill to the backend
   };
 
   return (

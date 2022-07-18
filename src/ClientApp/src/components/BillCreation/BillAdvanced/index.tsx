@@ -31,9 +31,9 @@ const BillAdvanced = () => {
 
     if (inputs.name === '' || inputs.users === [] || inputs.price === 0 || inputs.items === []) {
       return console.error('Inputs cannot be empty.');
+    } else {
+      // send the new bill to the backend
     }
-
-    // send the new bill to the backend
   };
 
   return (

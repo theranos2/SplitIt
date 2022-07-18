@@ -18,7 +18,7 @@ export const request: RequestType = async (method, path, data = '') => {
 
     return result.status === 200
       ? result.json()
-      : { error: true, msg: (await result.json()).errors[0] };
+      : { error: true, msg: (await result.json()).Errors[0] };
   } catch (err: any) {
     // unhandled server exception
     console.warn(`API ERROR @ [${method}] ${path}: ${err.message}`);
