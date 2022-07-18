@@ -1,4 +1,4 @@
-import { port, token } from '../config';
+import { port } from '../config';
 
 interface RequestType {
   (method: string, path: string, data?: any): Promise<Record<string, any> | void>;
@@ -10,7 +10,7 @@ export const request: RequestType = (method, path, data = '') =>
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      Token: token
+      Token: localStorage.getItem('token') ?? ''
     },
     body: data === '' ? null : JSON.stringify(data)
   })

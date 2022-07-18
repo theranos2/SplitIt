@@ -1,5 +1,9 @@
+import React from 'react';
+
 import { request } from './api';
-import { set_token } from '../config';
+import { Context } from '../Context';
+
+const context = React.useContext(Context);
 
 /* Refactor login & signup to the same function? */
 export const signup = async (inputs: Record<string, any>) => {
@@ -8,7 +12,8 @@ export const signup = async (inputs: Record<string, any>) => {
   if (res?.status) {
     return { error: true, msg: res.title };
   } else {
-    set_token(res?.token);
+    context?.logIn(true);
+    localStorage.setItem('token', res?.token);
     return { error: false };
   }
 };
@@ -19,7 +24,8 @@ export const login = async (inputs: Record<string, any>) => {
   if (res?.status) {
     return { error: true, msg: res.title };
   } else {
-    set_token(res?.token);
+    context?.logIn(true);
+    localStorage.setItem('token', res?.token);
     return { error: false };
   }
 };
@@ -30,7 +36,8 @@ export const logout = async () => {
   if (res?.status) {
     return { error: true, msg: res.title };
   } else {
-    set_token('');
+    context?.logIn(false);
+    localStorage.setItem('token', res?.token);
     return { error: false };
   }
 };
