@@ -42,7 +42,7 @@ namespace split_it.Models
 
         // Anonymous User
         public string Email { get; set; }
-        public string Name  { get; set; }
+        public string Name { get; set; }
     }
 
     public class ItemDto

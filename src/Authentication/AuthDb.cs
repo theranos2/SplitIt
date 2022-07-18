@@ -7,7 +7,7 @@ using System.Security.Principal;
 
 namespace split_it.Authentication
 {
-    public static class IdentityTools 
+    public static class IdentityTools
     {
         public static User GetUser(DatabaseContext db, IIdentity identity)
         {

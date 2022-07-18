@@ -30,17 +30,17 @@ namespace split_it.Controllers
         {
 
             Group group = db.Groups.Where(x => x.Id == groupId).FirstOrDefault();
-            
-            if(group == null)
+
+            if (group == null)
                 throw new HttpNotFound($"Cannot find group: {groupId}");
-                
+
             Guid curUserId = IdentityTools.GetUser(db, HttpContext.User.Identity).Id;
 
             // check if group member is requesting the group
-            bool found =  group.Members.Any(x => x.Id == curUserId);
+            bool found = group.Members.Any(x => x.Id == curUserId);
 
             // check ownership
-            if(group.Owner.Id != curUserId && !found)
+            if (group.Owner.Id != curUserId && !found)
                 throw new HttpForbiddenRequest($"Permission Denied. Cannot view group that you are not apart of.");
 
             return group.ConvertToDto();
@@ -54,9 +54,9 @@ namespace split_it.Controllers
             foreach (var memberId in groupDto.MemberIds)
             {
                 User member = db.Users.Where(x => x.Id == memberId).FirstOrDefault();
-                if(member == null)
+                if (member == null)
                     throw new HttpNotFound($"Cannot find user: {memberId}");
-                
+
                 members.Add(member);
             }
 
@@ -64,7 +64,8 @@ namespace split_it.Controllers
             User owner = IdentityTools.GetUser(db, HttpContext.User.Identity);
             members.Add(owner);
 
-            return new Group{
+            return new Group
+            {
                 Id = Guid.Empty,
                 Owner = owner,
                 Members = members.GroupBy(x => x.Id).Select(x => x.FirstOrDefault()).ToList(), // delete duplicates if any trading bigah oh for code readability
@@ -93,18 +94,18 @@ namespace split_it.Controllers
         {
             Group group = db.Groups.Where(x => x.Id == groupId).FirstOrDefault();
 
-            if(group == null)
+            if (group == null)
                 throw new HttpNotFound($"Cannot find group: {groupId}");
 
             Guid curUserId = IdentityTools.GetUser(db, HttpContext.User.Identity).Id;
-            if(curUserId != group.Owner.Id)
+            if (curUserId != group.Owner.Id)
                 throw new HttpForbiddenRequest($"Permission Denied. Cannot edit group that you are not the owner of.");
 
             Group updatedGroup = MakeGroup(groupDto);
-            
+
             // update original group in database
             group.Members = updatedGroup.Members;
-            
+
             db.SaveChanges();
 
             return group.ConvertToDto();
