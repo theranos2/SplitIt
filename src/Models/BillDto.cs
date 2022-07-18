@@ -61,6 +61,10 @@ namespace split_it.Models
 
         public Guid Id { get; set; }
         public Guid OwnerId { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
         [Required]
         public ICollection<Guid> MemberIds { get; set; }
     }
