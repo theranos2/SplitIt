@@ -14,7 +14,7 @@ namespace split_it.Authentication
         {
         }
 
-        // ATTENTION: when invoking AuthenticationResult.Fail or Success please DONT FORGET "retutrn".
+        // ATTENTION: when invoking AuthenticationResult.Fail or Success please DONT FORGET to "return".
         // This does not get picked up by intellisense. BEWARE!
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
@@ -47,8 +47,9 @@ namespace split_it.Authentication
             // todo if it actually updates origin
             cookie.LastSeen = DateTime.Now;
 
-            var claims = new[] { new Claim(ClaimTypes.Name, cookieString) };
+            var claims = new[] { new Claim(ClaimTypes.Name, cookieString), };
             var identity = new ClaimsIdentity(claims, Scheme.Name);
+            identity.AddClaim(new Claim("UserId", cookie.UserId.ToString())); // easier accessing userid
             var principal = new ClaimsPrincipal(identity);
             var auth = new AuthenticationTicket(principal, Scheme.Name);
 

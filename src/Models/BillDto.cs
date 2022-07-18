@@ -30,7 +30,7 @@ namespace split_it.Models
         //public Guid Id { get; set; } // do we need share id?
         public bool hasPaid { get; set; } = false;
 
-        public bool hasAccepted { get; set; } = false;
+        public bool hasRejected { get; set; } = false;
 
         public double Total { get; set; }
 
@@ -39,6 +39,10 @@ namespace split_it.Models
 
         [Required]
         public ICollection<ItemDto> Items { get; set; }
+
+        // Anonymous User
+        public string Email { get; set; }
+        public string Name { get; set; }
     }
 
     public class ItemDto
@@ -50,5 +54,14 @@ namespace split_it.Models
         [Required]
         [Range(0.05, 1000)]
         public double Price { get; set; }
+    }
+
+    public class GroupDto
+    {
+
+        public Guid Id { get; set; }
+        public Guid OwnerId { get; set; }
+        [Required]
+        public ICollection<Guid> MemberIds { get; set; }
     }
 }
