@@ -8,3 +8,8 @@ export default interface BillFormProps {
   cancel: CancelProps;
   fields: Array<Record<string, any>>; // TODO: should be the actual types
 }
+
+export interface Steps {
+  element: React.ReactNode;
+  label: string;
+}
