@@ -11,68 +11,47 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { FileAttachment } from './file-attachment';
-import { Item } from './item';
-import { Share } from './share';
-import { User } from './user';
+import { UserInfoDto } from './user-info-dto';
 /**
  * 
  * @export
- * @interface Bill
+ * @interface SimpleBillDto
  */
-export interface Bill {
+export interface SimpleBillDto {
     /**
      * 
      * @type {string}
-     * @memberof Bill
+     * @memberof SimpleBillDto
      */
     id?: string;
     /**
      * 
      * @type {Date}
-     * @memberof Bill
+     * @memberof SimpleBillDto
      */
     created?: Date;
     /**
      * 
-     * @type {User}
-     * @memberof Bill
+     * @type {UserInfoDto}
+     * @memberof SimpleBillDto
      */
-    owner?: User;
+    owner?: UserInfoDto;
     /**
      * 
      * @type {number}
-     * @memberof Bill
+     * @memberof SimpleBillDto
      */
     total?: number;
     /**
      * 
      * @type {string}
-     * @memberof Bill
+     * @memberof SimpleBillDto
      */
     title?: string | null;
     /**
      * 
-     * @type {Array<FileAttachment>}
-     * @memberof Bill
-     */
-    attachments?: Array<FileAttachment> | null;
-    /**
-     * 
-     * @type {Array<Share>}
-     * @memberof Bill
-     */
-    shares?: Array<Share> | null;
-    /**
-     * 
-     * @type {Array<Item>}
-     * @memberof Bill
-     */
-    overallItems?: Array<Item> | null;
-    /**
-     * 
      * @type {boolean}
-     * @memberof Bill
+     * @memberof SimpleBillDto
      */
     isSettled?: boolean;
 }

@@ -29,7 +29,7 @@ export interface ShareDto {
      * @type {boolean}
      * @memberof ShareDto
      */
-    hasAccepted?: boolean;
+    hasRejected?: boolean;
     /**
      * 
      * @type {number}
@@ -48,4 +48,16 @@ export interface ShareDto {
      * @memberof ShareDto
      */
     items: Array<ItemDto>;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShareDto
+     */
+    email?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ShareDto
+     */
+    name?: string | null;
 }

@@ -10,20 +10,22 @@ import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsMenu from '../Notifications/NotificationsMenu';
 import IconLink from './IconLink';
-import { token } from 'utility/config';
+import DropDownMenu from 'components/Notifications/DropDownMenu';
+// import { token } from 'utility/config';
+const token = 'TEMP TOKEN';
 
 const links =
   token !== ''
     ? [
         { href: '/bill/create', icon: <AddBusinessRoundedIcon /> },
         { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
-        { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
-        { href: '/notifications', icon: <NotificationsIcon /> },
-        // { href: 'notif', icon: <NotificationsMenu /> },
+        { href: '/groups', icon: <GroupsIcon /> },
+        { href: 'notif', icon: <NotificationsMenu /> },
         { href: '/logout', icon: <ExitToAppIcon /> }
       ]
     : [{ href: '/login', icon: <AccountCircle /> }];
@@ -47,6 +49,7 @@ const TopNavigation = () => {
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             {links.map((link, idx) =>
               link.href === 'notif' ? (
+                // <DropDownMenu key={`menu-link-${idx}`} />
                 <NotificationsMenu key={`menu-link-${idx}`} />
               ) : (
                 <IconLink key={`menu-link-${idx}`} href={link.href} icon={link.icon} />

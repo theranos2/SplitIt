@@ -5,7 +5,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 
-const HomePage = () => {
+const GroupIndex = () => {
   return (
     <Grid
       container
@@ -18,13 +18,13 @@ const HomePage = () => {
       <Grid item xs={3}>
         <ButtonGroup orientation="vertical" aria-label="vertical outlined button group">
           <Button key="one">
-            <Link to="/bill/create">Create a bill</Link>
+            <Link to="/groups/create">Create a group</Link>
           </Button>
           <Button key="one">
-            <Link to="/bill/view">View bills</Link>
+            <Link to="/groups/view">View groups</Link>
           </Button>
           <Button key="one">
-            <Link to="/groups">Groups</Link>
+            <Link to="/">Back</Link>
           </Button>
         </ButtonGroup>
       </Grid>
@@ -32,4 +32,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default GroupIndex;

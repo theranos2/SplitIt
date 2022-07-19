@@ -1,8 +1,14 @@
-import React from 'react';
-
+import * as React from 'react';
+import {
+  useAutocomplete,
+  AutocompleteGetTagProps,
+} from '@mui/base/AutocompleteUnstyled';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import { styled } from '@mui/material/styles';
+import { autocompleteClasses } from '@mui/material/Autocomplete';
 import { UserSelectorProps } from './props';
 import { User } from '../InputFormProps';
-
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -15,102 +21,217 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import Alert from '@mui/material/Alert';
+import { UserApi, UserDto, UserSort } from 'api';
+import { Checkbox, List, ListItem, ListItemButton, TextField } from '@mui/material';
+import { token } from 'utility/config';
+import InputField from '../InputFields';
+import Autocomplete from '@mui/material/Autocomplete';
 
-export const UserSelector = (props: UserSelectorProps) => {
-  const { name, label, inputs, set, err } = props;
-  const users: User[] = [
-    { name: 'Adam', id: 1 },
-    { name: 'Ken', id: 2 },
-    { name: 'Razin', id: 3 },
-    { name: 'Lachlan', id: 4 },
-    { name: 'Xibo', id: 5 }
-  ];
-
-  const [NewUsers, SetNewUsers] = React.useState<number[]>([]);
-  const addUser = (event: any) => SetNewUsers((old) => [...old, event.target.value]);
-  const removeUser = (event: any) =>
-    SetNewUsers((old) => old.filter((e) => e !== event.target.value));
-  const submit = () => {
-    set(name)(NewUsers);
-    cancel();
+const Root = styled('div')(
+  ({ theme }) => `
+  color: ${
+    theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,.85)'
   };
-  const cancel = () => {
-    SetNewUsers(() => []);
-    setOpen(false);
-  };
+  font-size: 14px;
+`,
+);
 
-  const [open, setOpen] = React.useState(false);
-  const openModal = () => setOpen(true);
-  const closeModal = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-    reason !== 'backdropClick' && setOpen(false);
-  };
+const Label = styled('label')`
+  padding: 0 0 4px;
+  line-height: 1.5;
+  display: block;
+`;
 
-  /* TODO: actually fetch the users from the backend, rather than hardcode them */
-  // React.useEffect(() => {
-  //     const getUsers = () => {
-  //         // users =
-  //         // await request('/api/users/')
-  //             // .then((res) => res.users)
-  //             // .then
-  //     }
+const InputWrapper = styled('div')(
+  ({ theme }) => `
+  width: 300px;
+  border: 1px solid ${theme.palette.mode === 'dark' ? '#434343' : '#d9d9d9'};
+  background-color: ${theme.palette.mode === 'dark' ? '#141414' : '#fff'};
+  border-radius: 4px;
+  padding: 1px;
+  display: flex;
+  flex-wrap: wrap;
 
-  //     getUsers();
-  //     // console.log(users);
-  // }, [NewUsers]);
+  &:hover {
+    border-color: ${theme.palette.mode === 'dark' ? '#177ddc' : '#40a9ff'};
+  }
 
+  &.focused {
+    border-color: ${theme.palette.mode === 'dark' ? '#177ddc' : '#40a9ff'};
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  }
+
+  & input {
+    background-color: ${theme.palette.mode === 'dark' ? '#141414' : '#fff'};
+    color: ${
+      theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,.85)'
+    };
+    height: 30px;
+    box-sizing: border-box;
+    padding: 4px 6px;
+    width: 0;
+    min-width: 30px;
+    flex-grow: 1;
+    border: 0;
+    margin: 0;
+    outline: 0;
+  }
+`,
+);
+
+interface TagProps extends ReturnType<AutocompleteGetTagProps> {
+  label: string;
+}
+
+function Tag(props: TagProps) {
+  const { label, onDelete, ...other } = props;
   return (
-    <div>
-      <Button onClick={openModal}>Add/Remove {label}</Button>
-      <Dialog disableEscapeKeyDown open={open} onClose={closeModal}>
-        <DialogTitle>Add/Remove {label}</DialogTitle>
-        <DialogContent>
-          <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-              <InputLabel id={`select-${name}-inputlabel`}>Add {label}</InputLabel>
-              <Select
-                labelId={`select-${name}-label`}
-                id={`select-${name}-id`}
-                value={inputs[name]}
-                onChange={addUser}
-                input={<OutlinedInput label={label} />}
-              >
-                {users
-                  .filter((user) => !inputs[name].includes(user.id) && !NewUsers.includes(user.id))
-                  .map((user, idx) => (
-                    <MenuItem key={`menuitem-add-usr-${idx}`} value={user.id}>
-                      {user.name}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-              <InputLabel id={`select-${name}-inputlabel`}>Remove {label}</InputLabel>
-              <Select
-                labelId={`select-${name}-label`}
-                id={`select-${name}-id`}
-                value={inputs[name]}
-                onChange={removeUser}
-                input={<OutlinedInput label={label} />}
-              >
-                {users
-                  .filter((user) => inputs[name].includes(user.id) || NewUsers.includes(user.id))
-                  .map((user, idx) => (
-                    <MenuItem key={`menuitem-remove-usr-${idx}`} value={user.id}>
-                      {user.name}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={cancel}>Close</Button>
-          <Button onClick={submit}>Confirm</Button>
-        </DialogActions>
-      </Dialog>
-      {err.cond ? <Alert severity="warning">{err.msg}</Alert> : <></>}
+    <div {...other}>
+      <span>{label}</span>
+      <CloseIcon onClick={onDelete} />
     </div>
   );
-};
+}
 
-// based on https://mui.com/material-ui/react-select/
+const StyledTag = styled(Tag)<TagProps>(
+  ({ theme }) => `
+  display: flex;
+  align-items: center;
+  height: 24px;
+  margin: 2px;
+  line-height: 22px;
+  background-color: ${
+    theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : '#fafafa'
+  };
+  border: 1px solid ${theme.palette.mode === 'dark' ? '#303030' : '#e8e8e8'};
+  border-radius: 2px;
+  box-sizing: content-box;
+  padding: 0 4px 0 10px;
+  outline: 0;
+  overflow: hidden;
+
+  &:focus {
+    border-color: ${theme.palette.mode === 'dark' ? '#177ddc' : '#40a9ff'};
+    background-color: ${theme.palette.mode === 'dark' ? '#003b57' : '#e6f7ff'};
+  }
+
+  & span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  & svg {
+    font-size: 12px;
+    cursor: pointer;
+    padding: 4px;
+  }
+`,
+);
+
+const Listbox = styled('ul')(
+  ({ theme }) => `
+  width: 300px;
+  margin: 2px 0 0;
+  padding: 0;
+  position: absolute;
+  list-style: none;
+  background-color: ${theme.palette.mode === 'dark' ? '#141414' : '#fff'};
+  overflow: auto;
+  max-height: 250px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1;
+
+  & li {
+    padding: 5px 12px;
+    display: flex;
+
+    & span {
+      flex-grow: 1;
+    }
+
+    & svg {
+      color: transparent;
+    }
+  }
+
+  & li[aria-selected='true'] {
+    background-color: ${theme.palette.mode === 'dark' ? '#2b2b2b' : '#fafafa'};
+    font-weight: 600;
+
+    & svg {
+      color: #1890ff;
+    }
+  }
+
+  & li.${autocompleteClasses.focused} {
+    background-color: ${theme.palette.mode === 'dark' ? '#003b57' : '#e6f7ff'};
+    cursor: pointer;
+
+    & svg {
+      color: currentColor;
+    }
+  }
+`,
+);
+
+export const UserSelector = (props: UserSelectorProps) =>  {
+  const {setSelectedUsers} = props;
+  const [users, SetUsers] = React.useState<UserDto[]>([]);
+
+  React.useEffect(() => {
+    const api = new UserApi({apiKey: token});
+    (async () => {
+      const resp = await api.apiUserGet();
+      SetUsers(resp.data);
+    })()
+  }, []);
+
+  const {
+    getRootProps,
+    getInputLabelProps,
+    getInputProps,
+    getTagProps,
+    getListboxProps,
+    getOptionProps,
+    groupedOptions,
+    value,
+    focused,
+    setAnchorEl,
+  } = useAutocomplete({
+    id: 'customized-hook-demo',
+    defaultValue: [],
+    multiple: true,
+    options: users,
+    getOptionLabel: (option) => option.firstName + " " + option.lastName,
+  });
+  
+  React.useEffect(() => {
+    setSelectedUsers(value);
+  }, [value])
+
+  return (
+    <Root>
+      <div {...getRootProps()}>
+        <Label {...getInputLabelProps()}>Members</Label>
+        <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
+          {value.map((option: UserDto, index: number) => (
+            <StyledTag label={option.firstName + " " + option.lastName} {...getTagProps({ index })} />
+          ))}
+          <input {...getInputProps()} />
+        </InputWrapper>
+      </div>
+      {groupedOptions.length > 0 ? (
+        <Listbox {...getListboxProps()}>
+          {(groupedOptions as typeof users).map((option, index) => (
+            <li {...getOptionProps({ option, index })}>
+              <span>{option.firstName + " " + option.lastName}</span>
+              <CheckIcon fontSize="small" />
+            </li>
+          ))}
+        </Listbox>
+      ) : null}
+    </Root>
+  );
+}
