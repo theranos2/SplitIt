@@ -193,6 +193,7 @@ namespace split_it
             return new GroupDto
             {
                 Id = this.Id,
+                Name = this.Name,
                 OwnerId = this.Owner.Id,
                 MemberIds = Members.Select(x => x.Id).ToList()
             };

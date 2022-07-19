@@ -29,6 +29,7 @@ export interface Item {
 }
 
 export interface User {
-  name: string;
-  id: number;
+  firstName: string;
+  lastName: string;
+  id: string;
 }

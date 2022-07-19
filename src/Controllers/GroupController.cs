@@ -29,7 +29,6 @@ namespace split_it.Controllers
         [HttpGet("{groupId:Guid}")]
         public GroupDto Get(Guid groupId)
         {
-
             Group group = db.Groups.Where(x => x.Id == groupId).FirstOrDefault();
 
             if (group == null)

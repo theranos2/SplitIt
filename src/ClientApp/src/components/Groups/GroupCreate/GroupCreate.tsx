@@ -3,9 +3,13 @@ import { GroupForm } from '../GroupForm';
 import { InputProps } from '../props';
 
 import { request } from 'utility/api/api';
+import { UserDto } from 'api/models';
+import { token } from 'utility/config';
+import { GroupApi } from 'api';
 
 const GroupCreate = () => {
   const [inputs, setInputs] = React.useState<InputProps>({ name: '', users: [] });
+  const [ selectedUsers, setSelectedUsers ] = useState<UserDto[]>([]);
 
   const set = (name: string) => (input: any) => {
     name === 'users'
@@ -16,21 +20,16 @@ const GroupCreate = () => {
   const submit = async (event: any) => {
     event.preventDefault();
 
-    if (inputs.name === '' || inputs.users === []) {
-      return console.error('Inputs cannot be empty.');
-    }
-
-    const data = JSON.stringify({
-      name: inputs.name,
-      members: inputs.users
-    });
-
-    // API call to create new group
-    // return await request('put', 'group', data);
+    console.log(selectedUsers);
+    const api = new GroupApi({apiKey: token});
+    
+    let memberIdsx = selectedUsers.map(x =>  x.id ?? "");
+    const resp = await api.apiGroupPost({name: inputs.name, memberIds: memberIdsx});
   };
 
   return (
     <GroupForm
+      setSelectedUsers={setSelectedUsers}
       title="Create a group"
       inputs={inputs}
       submit={{ href: '/', func: submit }}

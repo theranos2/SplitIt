@@ -16,32 +16,31 @@ import { Configuration } from '../configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
-import { LoginDto } from '../models';
-import { RegisterDto } from '../models';
-import { TokenDto } from '../models';
-import { UserDto } from '../models';
+import { Notification } from '../models';
+import { NotificationSort } from '../models';
 /**
- * AccountApi - axios parameter creator
+ * NotificationsApi - axios parameter creator
  * @export
  */
-export const AccountApiAxiosParamCreator = function (configuration?: Configuration) {
+export const NotificationsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Login using credentials
-         * @param {LoginDto} [body] 
+         * @summary Delete many notification at once
+         * @param {Array<string>} [body] 
+         * @param {string} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountLoginPost: async (body?: LoginDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/Account/login`;
+        apiNotificationsDelete: async (body?: Array<string>, token?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Notifications`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -51,6 +50,10 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
                     ? await configuration.apiKey("Token")
                     : await configuration.apiKey;
                 localVarHeaderParameter["Token"] = localVarApiKeyValue;
+            }
+
+            if (token !== undefined && token !== null) {
+                localVarHeaderParameter['Token'] = String(token);
             }
 
             localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -75,53 +78,15 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @param {string} [token] 
+         * @param {NotificationSort} [sortBy] 
+         * @param {number} [take] 
+         * @param {number} [skip] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountLogoutPost: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/Account/logout`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Token required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-                    ? await configuration.apiKey("Token")
-                    : await configuration.apiKey;
-                localVarHeaderParameter["Token"] = localVarApiKeyValue;
-            }
-
-            const query = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                query.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.params) {
-                query.set(key, options.params[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(query)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Show currently logged in user data
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiAccountMeGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/Account/me`;
+        apiNotificationsGet: async (token?: string, sortBy?: NotificationSort, take?: number, skip?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Notifications`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -140,6 +105,22 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
                 localVarHeaderParameter["Token"] = localVarApiKeyValue;
             }
 
+            if (sortBy !== undefined) {
+                localVarQueryParameter['sortBy'] = sortBy;
+            }
+
+            if (take !== undefined) {
+                localVarQueryParameter['take'] = take;
+            }
+
+            if (skip !== undefined) {
+                localVarQueryParameter['skip'] = skip;
+            }
+
+            if (token !== undefined && token !== null) {
+                localVarHeaderParameter['Token'] = String(token);
+            }
+
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
                 query.set(key, localVarQueryParameter[key]);
@@ -158,24 +139,26 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @param {string} mfaString 
+         * @summary Mark Notification as seen aka delete it
+         * @param {string} notificationId 
+         * @param {string} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountMfaMfaStringPost: async (mfaString: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'mfaString' is not null or undefined
-            if (mfaString === null || mfaString === undefined) {
-                throw new RequiredError('mfaString','Required parameter mfaString was null or undefined when calling apiAccountMfaMfaStringPost.');
+        apiNotificationsNotificationIdDelete: async (notificationId: string, token?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'notificationId' is not null or undefined
+            if (notificationId === null || notificationId === undefined) {
+                throw new RequiredError('notificationId','Required parameter notificationId was null or undefined when calling apiNotificationsNotificationIdDelete.');
             }
-            const localVarPath = `/api/Account/mfa/{mfaString}`
-                .replace(`{${"mfaString"}}`, encodeURIComponent(String(mfaString)));
+            const localVarPath = `/api/Notifications/{NotificationId}`
+                .replace(`{${"NotificationId"}}`, encodeURIComponent(String(notificationId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -187,6 +170,10 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
                 localVarHeaderParameter["Token"] = localVarApiKeyValue;
             }
 
+            if (token !== undefined && token !== null) {
+                localVarHeaderParameter['Token'] = String(token);
+            }
+
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
                 query.set(key, localVarQueryParameter[key]);
@@ -205,20 +192,25 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @summary Register new user
-         * @param {RegisterDto} [body] 
+         * @param {string} notificationId 
+         * @param {string} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountRegisterPost: async (body?: RegisterDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/Account/register`;
+        apiNotificationsNotificationIdGet: async (notificationId: string, token?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'notificationId' is not null or undefined
+            if (notificationId === null || notificationId === undefined) {
+                throw new RequiredError('notificationId','Required parameter notificationId was null or undefined when calling apiNotificationsNotificationIdGet.');
+            }
+            const localVarPath = `/api/Notifications/{NotificationId}`
+                .replace(`{${"NotificationId"}}`, encodeURIComponent(String(notificationId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -230,7 +222,9 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
                 localVarHeaderParameter["Token"] = localVarApiKeyValue;
             }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            if (token !== undefined && token !== null) {
+                localVarHeaderParameter['Token'] = String(token);
+            }
 
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
@@ -242,8 +236,6 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
             localVarUrlObj.search = (new URLSearchParams(query)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -254,20 +246,21 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
 };
 
 /**
- * AccountApi - functional programming interface
+ * NotificationsApi - functional programming interface
  * @export
  */
-export const AccountApiFp = function(configuration?: Configuration) {
+export const NotificationsApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Login using credentials
-         * @param {LoginDto} [body] 
+         * @summary Delete many notification at once
+         * @param {Array<string>} [body] 
+         * @param {string} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountLoginPost(body?: LoginDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<TokenDto>>> {
-            const localVarAxiosArgs = await AccountApiAxiosParamCreator(configuration).apiAccountLoginPost(body, options);
+        async apiNotificationsDelete(body?: Array<string>, token?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
+            const localVarAxiosArgs = await NotificationsApiAxiosParamCreator(configuration).apiNotificationsDelete(body, token, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -275,11 +268,15 @@ export const AccountApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} [token] 
+         * @param {NotificationSort} [sortBy] 
+         * @param {number} [take] 
+         * @param {number} [skip] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountLogoutPost(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
-            const localVarAxiosArgs = await AccountApiAxiosParamCreator(configuration).apiAccountLogoutPost(options);
+        async apiNotificationsGet(token?: string, sortBy?: NotificationSort, take?: number, skip?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<Notification>>>> {
+            const localVarAxiosArgs = await NotificationsApiAxiosParamCreator(configuration).apiNotificationsGet(token, sortBy, take, skip, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -287,12 +284,14 @@ export const AccountApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Show currently logged in user data
+         * @summary Mark Notification as seen aka delete it
+         * @param {string} notificationId 
+         * @param {string} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountMeGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<UserDto>>> {
-            const localVarAxiosArgs = await AccountApiAxiosParamCreator(configuration).apiAccountMeGet(options);
+        async apiNotificationsNotificationIdDelete(notificationId: string, token?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
+            const localVarAxiosArgs = await NotificationsApiAxiosParamCreator(configuration).apiNotificationsNotificationIdDelete(notificationId, token, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -300,26 +299,13 @@ export const AccountApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} mfaString 
+         * @param {string} notificationId 
+         * @param {string} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountMfaMfaStringPost(mfaString: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<TokenDto>>> {
-            const localVarAxiosArgs = await AccountApiAxiosParamCreator(configuration).apiAccountMfaMfaStringPost(mfaString, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Register new user
-         * @param {RegisterDto} [body] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiAccountRegisterPost(body?: RegisterDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<TokenDto>>> {
-            const localVarAxiosArgs = await AccountApiAxiosParamCreator(configuration).apiAccountRegisterPost(body, options);
+        async apiNotificationsNotificationIdGet(notificationId: string, token?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Notification>>> {
+            const localVarAxiosArgs = await NotificationsApiAxiosParamCreator(configuration).apiNotificationsNotificationIdGet(notificationId, token, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -329,116 +315,111 @@ export const AccountApiFp = function(configuration?: Configuration) {
 };
 
 /**
- * AccountApi - factory interface
+ * NotificationsApi - factory interface
  * @export
  */
-export const AccountApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+export const NotificationsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     return {
         /**
          * 
-         * @summary Login using credentials
-         * @param {LoginDto} [body] 
+         * @summary Delete many notification at once
+         * @param {Array<string>} [body] 
+         * @param {string} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountLoginPost(body?: LoginDto, options?: AxiosRequestConfig): Promise<AxiosResponse<TokenDto>> {
-            return AccountApiFp(configuration).apiAccountLoginPost(body, options).then((request) => request(axios, basePath));
+        async apiNotificationsDelete(body?: Array<string>, token?: string, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
+            return NotificationsApiFp(configuration).apiNotificationsDelete(body, token, options).then((request) => request(axios, basePath));
         },
         /**
          * 
+         * @param {string} [token] 
+         * @param {NotificationSort} [sortBy] 
+         * @param {number} [take] 
+         * @param {number} [skip] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountLogoutPost(options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
-            return AccountApiFp(configuration).apiAccountLogoutPost(options).then((request) => request(axios, basePath));
+        async apiNotificationsGet(token?: string, sortBy?: NotificationSort, take?: number, skip?: number, options?: AxiosRequestConfig): Promise<AxiosResponse<Array<Notification>>> {
+            return NotificationsApiFp(configuration).apiNotificationsGet(token, sortBy, take, skip, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary Show currently logged in user data
+         * @summary Mark Notification as seen aka delete it
+         * @param {string} notificationId 
+         * @param {string} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountMeGet(options?: AxiosRequestConfig): Promise<AxiosResponse<UserDto>> {
-            return AccountApiFp(configuration).apiAccountMeGet(options).then((request) => request(axios, basePath));
+        async apiNotificationsNotificationIdDelete(notificationId: string, token?: string, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
+            return NotificationsApiFp(configuration).apiNotificationsNotificationIdDelete(notificationId, token, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {string} mfaString 
+         * @param {string} notificationId 
+         * @param {string} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountMfaMfaStringPost(mfaString: string, options?: AxiosRequestConfig): Promise<AxiosResponse<TokenDto>> {
-            return AccountApiFp(configuration).apiAccountMfaMfaStringPost(mfaString, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Register new user
-         * @param {RegisterDto} [body] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiAccountRegisterPost(body?: RegisterDto, options?: AxiosRequestConfig): Promise<AxiosResponse<TokenDto>> {
-            return AccountApiFp(configuration).apiAccountRegisterPost(body, options).then((request) => request(axios, basePath));
+        async apiNotificationsNotificationIdGet(notificationId: string, token?: string, options?: AxiosRequestConfig): Promise<AxiosResponse<Notification>> {
+            return NotificationsApiFp(configuration).apiNotificationsNotificationIdGet(notificationId, token, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * AccountApi - object-oriented interface
+ * NotificationsApi - object-oriented interface
  * @export
- * @class AccountApi
+ * @class NotificationsApi
  * @extends {BaseAPI}
  */
-export class AccountApi extends BaseAPI {
+export class NotificationsApi extends BaseAPI {
     /**
      * 
-     * @summary Login using credentials
-     * @param {LoginDto} [body] 
+     * @summary Delete many notification at once
+     * @param {Array<string>} [body] 
+     * @param {string} [token] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AccountApi
+     * @memberof NotificationsApi
      */
-    public async apiAccountLoginPost(body?: LoginDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<TokenDto>> {
-        return AccountApiFp(this.configuration).apiAccountLoginPost(body, options).then((request) => request(this.axios, this.basePath));
+    public async apiNotificationsDelete(body?: Array<string>, token?: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
+        return NotificationsApiFp(this.configuration).apiNotificationsDelete(body, token, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 
+     * @param {string} [token] 
+     * @param {NotificationSort} [sortBy] 
+     * @param {number} [take] 
+     * @param {number} [skip] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AccountApi
+     * @memberof NotificationsApi
      */
-    public async apiAccountLogoutPost(options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
-        return AccountApiFp(this.configuration).apiAccountLogoutPost(options).then((request) => request(this.axios, this.basePath));
+    public async apiNotificationsGet(token?: string, sortBy?: NotificationSort, take?: number, skip?: number, options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<Notification>>> {
+        return NotificationsApiFp(this.configuration).apiNotificationsGet(token, sortBy, take, skip, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 
-     * @summary Show currently logged in user data
+     * @summary Mark Notification as seen aka delete it
+     * @param {string} notificationId 
+     * @param {string} [token] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AccountApi
+     * @memberof NotificationsApi
      */
-    public async apiAccountMeGet(options?: AxiosRequestConfig) : Promise<AxiosResponse<UserDto>> {
-        return AccountApiFp(this.configuration).apiAccountMeGet(options).then((request) => request(this.axios, this.basePath));
+    public async apiNotificationsNotificationIdDelete(notificationId: string, token?: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
+        return NotificationsApiFp(this.configuration).apiNotificationsNotificationIdDelete(notificationId, token, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 
-     * @param {string} mfaString 
+     * @param {string} notificationId 
+     * @param {string} [token] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AccountApi
+     * @memberof NotificationsApi
      */
-    public async apiAccountMfaMfaStringPost(mfaString: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<TokenDto>> {
-        return AccountApiFp(this.configuration).apiAccountMfaMfaStringPost(mfaString, options).then((request) => request(this.axios, this.basePath));
-    }
-    /**
-     * 
-     * @summary Register new user
-     * @param {RegisterDto} [body] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AccountApi
-     */
-    public async apiAccountRegisterPost(body?: RegisterDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<TokenDto>> {
-        return AccountApiFp(this.configuration).apiAccountRegisterPost(body, options).then((request) => request(this.axios, this.basePath));
+    public async apiNotificationsNotificationIdGet(notificationId: string, token?: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<Notification>> {
+        return NotificationsApiFp(this.configuration).apiNotificationsNotificationIdGet(notificationId, token, options).then((request) => request(this.axios, this.basePath));
     }
 }

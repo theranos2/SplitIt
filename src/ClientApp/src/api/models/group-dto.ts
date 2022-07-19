@@ -11,48 +11,34 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { Item } from './item';
-import { User } from './user';
 /**
  * 
  * @export
- * @interface Share
+ * @interface GroupDto
  */
-export interface Share {
+export interface GroupDto {
     /**
      * 
      * @type {string}
-     * @memberof Share
+     * @memberof GroupDto
      */
     id?: string;
     /**
      * 
-     * @type {boolean}
-     * @memberof Share
+     * @type {string}
+     * @memberof GroupDto
      */
-    hasPaid?: boolean;
+    ownerId?: string;
     /**
      * 
-     * @type {boolean}
-     * @memberof Share
+     * @type {string}
+     * @memberof GroupDto
      */
-    hasRejected?: boolean;
+    name: string;
     /**
      * 
-     * @type {number}
-     * @memberof Share
+     * @type {Array<string>}
+     * @memberof GroupDto
      */
-    total?: number;
-    /**
-     * 
-     * @type {User}
-     * @memberof Share
-     */
-    payer?: User;
-    /**
-     * 
-     * @type {Array<Item>}
-     * @memberof Share
-     */
-    items?: Array<Item> | null;
+    memberIds: Array<string>;
 }
