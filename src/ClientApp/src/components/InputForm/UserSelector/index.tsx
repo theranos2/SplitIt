@@ -1,6 +1,7 @@
 import { UserSelectorProps } from './props';
 import { User } from '../InputFormProps';
 import UserDisplay from 'components/Users/UsersDisplay';
+import database from 'utility/database/database.json';
 
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
@@ -13,16 +14,9 @@ import Alert from '@mui/material/Alert';
 export const UserSelector = (props: UserSelectorProps) => {
   const { name, label, users, setUsers, err } = props;
 
+  const new_users: User[] = database.users;
   const addUser = (event: any) => setUsers([...users, new_users[event.target.value]]);
   const removeUser = (uid: User) => setUsers(users.filter((user: User) => user !== uid));
-
-  const new_users: User[] = [
-    { name: 'Adam', id: 1 },
-    { name: 'Ken', id: 2 },
-    { name: 'Razin', id: 3 },
-    { name: 'Lachlan', id: 4 },
-    { name: 'Xibo', id: 5 }
-  ];
 
   /* TODO: actually fetch the users from the backend, rather than hardcode them */
   // React.useEffect(() => {
@@ -36,7 +30,6 @@ export const UserSelector = (props: UserSelectorProps) => {
   //     getUsers();
   // }, [NewUsers]);
 
-  console.log(`${new_users} \n${new_users.filter((user) => !users.includes(user))}`);
   return (
     <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
       <FormControl sx={{ m: 1, width: '100%' }}>

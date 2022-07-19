@@ -1,6 +1,4 @@
-import React from 'react';
-import fs from 'fs';
-
+import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -15,24 +13,26 @@ const BillDisplay = (props: BillDisplayProps) => {
   const { bill } = props;
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          height="140"
-          image={`/img/lizards/lizard${Math.floor(Math.random() * 7)}.jpg`}
-          alt="green iguana"
-        />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="div" align="center">
-            {bill.name}
-          </Typography>
-          <Typography variant="body2" color="text.secondary" align="center">
-            ${bill.price}.00
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
+    <Grid item xs={12} sm={6} md={4} onClick={() => console.log('hello')}>
+      <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <CardActionArea>
+          <CardMedia
+            component="img"
+            height="140"
+            image={`/img/lizards/lizard${Math.floor(Math.random() * 7)}.jpg`}
+            alt="green iguana"
+          />
+          <CardContent sx={{ flexGrow: 1 }}>
+            <Typography gutterBottom variant="h5" component="div" align="center">
+              {bill.name}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" align="center">
+              ${bill.price}.00
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+      </Card>
+    </Grid>
   );
 };
 

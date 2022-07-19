@@ -8,11 +8,12 @@ import { Provider } from 'utility/Context';
 import Login from 'components/AccountManagement/Login';
 import Register from 'components/AccountManagement/Register';
 import Logout from 'components/AccountManagement/Logout';
-import BillsAll from 'components/BillView/BillsAll';
+import BillAdvanced from 'components/BillCreation/BillAdvanced';
+import BillDetailed from 'components/BillView/BillDetailed';
 import BillCreate from 'components/BillCreation/BillCreate';
 import BillSimple from 'components/BillCreation/BillSimple';
-import BillAdvanced from 'components/BillCreation/BillAdvanced';
-import Notifications from 'components/Notifications/NotificationsPage';
+import BillsAll from 'components/BillView/BillsAll';
+// import Notifications from 'components/Notifications/NotificationsPage';
 
 import TopNavigation from 'components/Menu/TopNavigation';
 import NotFound from 'components/NotFound';
@@ -31,12 +32,12 @@ const App = () => {
           </Route>
 
           <Route element={<PrivateRoute />}>
-            <Route path="/bill/view:bill_id" element={<BillsAll />} />
+            <Route path="/bill/view:bill_id" element={<BillDetailed />} />
             <Route path="/bill/view" element={<BillsAll />} />
             <Route path="/bill/create" element={<BillCreate />} />
             <Route path="/bill/simple" element={<BillSimple />} />
             <Route path="/bill/advanced" element={<BillAdvanced />} />
-            <Route path="/notifications" element={<Notifications />} />
+            {/* <Route path="/notifications" element={<Notifications />} /> */}
             <Route path="/logout" element={<Logout />} />
           </Route>
 

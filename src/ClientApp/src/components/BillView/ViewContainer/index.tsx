@@ -1,11 +1,8 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 
 import BillDisplay from '../BillDisplay';
@@ -34,19 +31,7 @@ const ViewContainer = (props: ViewContainerProps) => {
         <Container sx={{ py: 0 }} maxWidth="md">
           <Grid container spacing={4}>
             {bills?.map((bill) => (
-              <Grid item key={`item-${bill.id}`} xs={12} sm={6} md={4}>
-                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                  {/* TODO: an image could be nice? maybe */}
-                  {/* <CardMedia component='img' sx={{ pt: '56.25%' }} image={i.tnail} alt='An image of the property'/> */}
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    {/* <Typography gutterBottom variant="h5" component="h2">
-                      {bill.name}
-                    </Typography> */}
-                    <BillDisplay bill={bill} />
-                  </CardContent>
-                  {/* <CardActions>Menu to interact with the listing</CardActions> */}
-                </Card>
-              </Grid>
+              <BillDisplay key={`item-${bill.id}`} bill={bill} />
             ))}
           </Grid>
         </Container>

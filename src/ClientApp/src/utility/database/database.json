@@ -1,0 +1,68 @@
+{
+    "users": [
+        { "name": "Adam", "id": 1 },
+        { "name": "Ken", "id": 2 },
+        { "name": "Razin", "id": 3 },
+        { "name": "Lachlan", "id": 4 },
+        { "name": "Xibo", "id": 5 }
+    ],
+    "bills": [
+        {
+          "id": 1,
+          "name": "Rent money",
+          "price": 1000,
+          "users": [
+            {
+              "id": 1,
+              "name": "Iguana"
+            },
+            {
+              "id": 2,
+              "name": "Lizard"
+            },
+            {
+              "id": 3,
+              "name": "Kimodo-dragon"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Dinner",
+          "price": 42000000,
+          "users": [
+            {
+              "id": 1,
+              "name": "Iguana"
+            },
+            {
+              "id": 2,
+              "name": "Lizard"
+            },
+            {
+              "id": 4,
+              "name": "Bill gates"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "name": "Sushi Train",
+          "price": 17000,
+          "users": [
+            {
+              "id": 5,
+              "name": "Xibo"
+            },
+            {
+              "id": 6,
+              "name": "Steve Jobs"
+            },
+            {
+              "id": 3,
+              "name": "Kimodo-dragon"
+            }
+          ]
+        }
+    ]
+}
