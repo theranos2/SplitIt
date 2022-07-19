@@ -18,14 +18,14 @@ const Login = () => {
     }
   };
 
-  const fake_login = () => login({ email: 'test@test.com', password: 'password' });
+  // const fake_login = () => login({ email: 'test@test.com', password: 'password' });
 
   return (
     <LoginForm
       title="Sign In"
       inputs={inputs}
       set={set}
-      submit={{ href: '/', func: fake_login }}
+      submit={{ href: '/', func: submit }}
       cancel={{ href: '/register', msg: 'Register an account' }}
       fields={[
         {
