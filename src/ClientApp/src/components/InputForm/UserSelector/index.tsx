@@ -1,6 +1,6 @@
 import { UserSelectorProps } from './props';
 import { User } from '../InputFormProps';
-import UserDisplay from 'components/Users/UsersDisplay';
+import UserDisplay from 'components/Users/UserDisplay';
 import database from 'utility/database/database.json';
 
 import Box from '@mui/material/Box';

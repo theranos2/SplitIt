@@ -10,7 +10,7 @@
         {
           "id": 1,
           "name": "Rent money",
-          "price": 1000,
+          "price": 900,
           "users": [
             {
               "id": 1,
@@ -61,6 +61,11 @@
             {
               "id": 3,
               "name": "Kimodo-dragon"
+            }
+          ],
+          "items": [
+            {
+
             }
           ]
         }

@@ -9,7 +9,7 @@ import Box from '@mui/material/Box';
 import { ItemDisplayProps } from './props';
 import { Item } from '../../BillCreation/BillCreationProps';
 
-const ItemsDisplay = (props: ItemDisplayProps) => {
+const ItemDisplay = (props: ItemDisplayProps) => {
   const { items, removeItem } = props;
 
   return (
@@ -43,4 +43,4 @@ const ItemsDisplay = (props: ItemDisplayProps) => {
 // To be used in bill creation (simple/advanced), and view
 // also for friends lists and stuff later on.
 
-export default ItemsDisplay;
+export default ItemDisplay;

@@ -1,3 +1,5 @@
+import React from 'react';
+
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -5,15 +7,19 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 
+import { Context } from 'utility/Context';
+
 interface BillDisplayProps {
   bill: any;
 }
 
 const BillDisplay = (props: BillDisplayProps) => {
   const { bill } = props;
+  const history = React.useContext(Context)?.history;
+  const navigate = () => history(`/bill/view/:${bill.id}`, { replace: true });
 
   return (
-    <Grid item xs={12} sm={6} md={4} onClick={() => console.log('hello')}>
+    <Grid item xs={12} sm={6} md={4} onClick={navigate}>
       <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
         <CardActionArea>
           <CardMedia

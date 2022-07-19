@@ -10,7 +10,7 @@ import Box from '@mui/material/Box';
 import { UserDisplayProps } from './props';
 import { User } from '../../BillCreation/BillCreationProps';
 
-const UsersDisplay = (props: UserDisplayProps) => {
+const UserDisplay = (props: UserDisplayProps) => {
   const { users, removeUser } = props;
 
   return (
@@ -46,4 +46,4 @@ const UsersDisplay = (props: UserDisplayProps) => {
 // To be used in bill creation (simple/advanced), and view
 // also for friends lists and stuff later on.
 
-export default UsersDisplay;
+export default UserDisplay;
