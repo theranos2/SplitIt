@@ -9,6 +9,8 @@ import PriceProps from './props';
 export const PriceDisplay = (props: PriceProps) => {
   const { price, set, disabled } = props;
 
+  console.log(price);
+
   return (
     <FormControl fullWidth sx={{ m: 1 }} variant="standard">
       <InputLabel htmlFor="standard-adornment-amount">Amount</InputLabel>

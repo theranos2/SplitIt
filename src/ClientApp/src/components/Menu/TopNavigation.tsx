@@ -5,6 +5,7 @@ import CardMembershipRoundedIcon from '@mui/icons-material/CardMembershipRounded
 import AddBusinessRoundedIcon from '@mui/icons-material/AddBusinessRounded';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import GroupsIcon from '@mui/icons-material/Groups';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -22,7 +23,7 @@ const links = (loggedIn: boolean | undefined) =>
     ? [
         { href: '/bill/create', icon: <AddBusinessRoundedIcon /> },
         { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
-        { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
+        { href: '/groups', icon: <GroupsIcon /> },
         { href: '/notifications', icon: <NotificationsIcon /> },
         // { href: 'notif', icon: <NotificationsMenu /> },
         { href: '/logout', icon: <ExitToAppIcon /> }

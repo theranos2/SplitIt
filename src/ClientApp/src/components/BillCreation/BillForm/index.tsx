@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-// import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import StepLabel from '@mui/material/StepLabel';
 import Container from '@mui/material/Container';
 import Stepper from '@mui/material/Stepper';
@@ -91,7 +91,7 @@ export const BillForm = (props: BillFormProps) => {
         ))}
       </Stepper>
       <Container component="main" maxWidth="xs" style={{ textAlign: 'center', paddingTop: '15px' }}>
-        {/* <LockOutlinedIcon /> */}
+        <LockOutlinedIcon />
         {steps[activeStep].label}
         {steps[activeStep].element}
         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
