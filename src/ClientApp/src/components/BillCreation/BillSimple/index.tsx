@@ -33,12 +33,14 @@ const BillSimple = () => {
       fields={[
         {
           name: 'name',
+          menu_label: 'Name the bill',
           label: 'Name',
           type: 'text',
           err: { cond: inputs.name.length > 20, msg: 'Name is too long.' }
         },
         {
           name: 'users',
+          menu_label: 'Add some friends',
           label: 'Users',
           type: 'users',
           err: { cond: inputs.users === [], msg: "You haven't added any users." }

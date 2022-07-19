@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { BillForm } from '../BillForm';
 import InputProps from './props';
-import { Item } from '../BillCreationProps';
 
 const BillAdvanced = () => {
   const [inputs, setInputs] = React.useState<InputProps>({
@@ -16,10 +15,8 @@ const BillAdvanced = () => {
     // should be event<???> | Array<number> | Array<Item>
     switch (name) {
       case 'users':
-        input.forEach((e: number) => inputs['users'].push(e));
-        break;
       case 'items':
-        input.forEach((e: Item) => inputs['items'].push(e));
+        setInputs((old: InputProps) => ({ ...old, [name]: input }));
         break;
       default:
         setInputs((old: InputProps) => ({ ...old, [name]: input.target.value }));
@@ -46,18 +43,21 @@ const BillAdvanced = () => {
       fields={[
         {
           name: 'name',
+          menu_label: 'Name the bill',
           label: 'Name',
           type: 'text',
           err: { cond: inputs.name.length > 20, msg: 'Name is too long.' }
         },
         {
           name: 'users',
+          menu_label: 'Invite some friends',
           label: 'Users',
           type: 'users',
           err: { cond: inputs.users === [], msg: "You haven't added any users." }
         },
         {
           name: 'items',
+          menu_label: 'Add your items',
           label: 'Items',
           type: 'items',
           err: { cond: inputs.items === [], msg: "You haven't added any items." }

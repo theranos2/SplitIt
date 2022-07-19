@@ -10,11 +10,12 @@ import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 
+import ItemDisplay from 'components/Users/ItemDisplay';
 import { ItemSelectorProps } from './props';
-import { Item } from '../InputFormProps';
+import { Item, User } from '../InputFormProps';
 
 export const ItemSelector = (props: ItemSelectorProps) => {
-  const { name, label, items, setItems, err } = props;
+  const { name, label, items, setItems, users, err } = props;
 
   const [currentItem, setCurrentItem] = React.useState<Item>({
     name: '',
@@ -24,18 +25,15 @@ export const ItemSelector = (props: ItemSelectorProps) => {
   });
 
   const setItem = (event: any) => setCurrentItem((old) => ({ ...old, [name]: event.target.value }));
+  const cancel = () => setCurrentItem({ name: '', id: 0, price: 0, user: 0 });
 
-  const submit = (event: any) => {
+  const addItem = (event: any) => {
     event.preventDefault();
     setItems((old: Item[]) => [...old, currentItem]);
     cancel();
   };
 
-  const cancel = () => {
-    setCurrentItem(() => {
-      return { name: '', id: 0, price: 0, user: 0 };
-    });
-  };
+  const removeItem = (iid: Item) => setItems(items?.filter((item: Item) => item !== iid));
 
   /* TODO: actually fetch the users from the backend, rather than hardcode them */
   // React.useEffect(() => {
@@ -75,17 +73,17 @@ export const ItemSelector = (props: ItemSelectorProps) => {
             onChange={setItem}
             input={<OutlinedInput label={label} />}
           >
-            {items.map((item: Item, idx: number) => (
-              <MenuItem key={`menuitem-item-${idx}`} value={item.id}>
-                {item.name}
+            {users.map((user: User, idx: number) => (
+              <MenuItem key={`menuitem-user-${idx}`} value={user.id}>
+                {user.name}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
       </Box>
-      <Button onClick={cancel}>Close</Button>
-      <Button onClick={submit}>Confirm</Button>
+      <Button onClick={addItem}>Confirm</Button>
       {err.cond ? <Alert severity="warning">{err.msg}</Alert> : <></>}
+      <ItemDisplay items={items} removeItem={removeItem} />
     </div>
   );
 };

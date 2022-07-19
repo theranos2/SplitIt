@@ -1,8 +1,8 @@
-import { Item } from '../BillCreationProps';
+import { Item, User } from '../BillCreationProps';
 
 export default interface InputProps {
   name: string;
-  users: number[]; // an array of user-ids
+  users: User[]; // an array of user-ids
   items: Item[];
   price: number;
 }

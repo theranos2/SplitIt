@@ -2,38 +2,31 @@ import CardContent from '@mui/material/CardContent';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 
-import { UserDisplayProps } from './props';
-import { User } from '../../BillCreation/BillCreationProps';
+import { ItemDisplayProps } from './props';
+import { Item } from '../../BillCreation/BillCreationProps';
 
-const UsersDisplay = (props: UserDisplayProps) => {
-  const { users, removeUser } = props;
+const ItemsDisplay = (props: ItemDisplayProps) => {
+  const { items, removeItem } = props;
 
   return (
     <>
-      {users.map((user: User, idx: number) => (
+      {items.map((item: Item, idx: number) => (
         <Card
-          key={`user-display-${idx}`}
+          key={`item-display-${idx}`}
           sx={{ display: 'flex', width: '100%', paddingLeft: '10px' }}>
-          <CardMedia
-            component="img"
-            sx={{ width: 70 }}
-            image="/img/default-user.jpg"
-            alt="user img"
-          />
           <Box sx={{ display: 'flex', flexDirection: 'column', paddingBottom: '10px' }}>
             <CardContent sx={{ flex: '1 0 auto' }}>
               <Typography component="div" variant="h5">
-                {user.name}
+                {item.name}
               </Typography>
             </CardContent>
           </Box>
           <Grid container justifyContent="flex-end">
-            <IconButton onClick={() => removeUser(user)}>
+            <IconButton onClick={() => removeItem(item)}>
               <CloseIcon />
             </IconButton>
           </Grid>
@@ -46,4 +39,4 @@ const UsersDisplay = (props: UserDisplayProps) => {
 // To be used in bill creation (simple/advanced), and view
 // also for friends lists and stuff later on.
 
-export default UsersDisplay;
+export default ItemsDisplay;

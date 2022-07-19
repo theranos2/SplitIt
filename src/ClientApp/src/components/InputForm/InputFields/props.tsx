@@ -4,7 +4,7 @@ export default interface InputFieldProps {
   name: string;
   label: string;
   type: string;
-  inputs: Record<string, any>;
+  inputs: any;
   set: ButtonEventHandler;
   err: ErrorType;
 }

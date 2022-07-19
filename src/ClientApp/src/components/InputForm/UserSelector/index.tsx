@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { UserSelectorProps } from './props';
 import { User } from '../InputFormProps';
 import UserDisplay from 'components/Users/UsersDisplay';
@@ -41,7 +39,7 @@ export const UserSelector = (props: UserSelectorProps) => {
   console.log(`${new_users} \n${new_users.filter((user) => !users.includes(user))}`);
   return (
     <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
-      <FormControl sx={{ m: 1, minWidth: 500 }}>
+      <FormControl sx={{ m: 1, width: '100%' }}>
         <InputLabel id={`select-${name}-inputlabel`}>Add {label}</InputLabel>
         <Select
           labelId={`select-${name}-label`}

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import Typography from '@mui/material/Typography';
+// import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import StepLabel from '@mui/material/StepLabel';
+import Container from '@mui/material/Container';
 import Stepper from '@mui/material/Stepper';
 import Button from '@mui/material/Button';
-import Alert from '@mui/material/Alert';
 import Step from '@mui/material/Step';
 import Box from '@mui/material/Box';
 
@@ -28,12 +28,12 @@ export const BillForm = (props: BillFormProps) => {
         };
       case 'price':
         return {
-          label: '',
-          element: <PriceDisplay price={inputs.price} set={set('price')} disabled={f.disabled} />
+          label: 'Set the price',
+          element: <PriceDisplay price={inputs['price']} set={set('price')} disabled={f.disabled} />
         };
       case 'users':
         return {
-          label: 'Invite some users',
+          label: f.menu_label,
           element: (
             <UserSelector
               name={f.name}
@@ -46,20 +46,21 @@ export const BillForm = (props: BillFormProps) => {
         };
       case 'items':
         return {
-          label: '',
+          label: f.menu_label,
           element: (
             <ItemSelector
               name={f.name}
               label={f.label}
               items={inputs['items']}
               setItems={set('items')}
+              users={inputs['users']}
               err={f.err}
             />
           )
         };
       default:
         return {
-          label: '',
+          label: f.menu_label,
           element: (
             <InputField
               name={f.name}
@@ -74,8 +75,6 @@ export const BillForm = (props: BillFormProps) => {
     }
   });
 
-  console.log(steps);
-
   const [activeStep, setActiveStep] = React.useState(0);
 
   const handle_next = () => setActiveStep((prev) => prev + 1);
@@ -83,18 +82,17 @@ export const BillForm = (props: BillFormProps) => {
   const handle_back = () => setActiveStep((prev) => prev - 1);
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', paddingTop: '10px' }}>
       <Stepper activeStep={activeStep} alternativeLabel>
-        {steps.map((step) => {
-          const stepProps: { completed?: boolean } = {};
-          return (
-            <Step key={step.label} {...stepProps}>
-              <StepLabel>{step.label} 123</StepLabel>
-            </Step>
-          );
-        })}
+        {steps.map((step) => (
+          <Step key={step.label}>
+            <StepLabel>{step.label}</StepLabel>
+          </Step>
+        ))}
       </Stepper>
-      <>
+      <Container component="main" maxWidth="xs" style={{ textAlign: 'center', paddingTop: '15px' }}>
+        {/* <LockOutlinedIcon /> */}
+        {steps[activeStep].label}
         {steps[activeStep].element}
         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
           {activeStep === 0 ? (
@@ -115,9 +113,7 @@ export const BillForm = (props: BillFormProps) => {
             <Button onClick={handle_next}>Next</Button>
           )}
         </Box>
-      </>
+      </Container>
     </Box>
   );
-}; // based on: https://github.com/mui-org/material-ui/tree/master/docs/src/pages/getting-started/templates/sign-in
-
-{/* <LockOutlinedIcon /> */}
+};
