@@ -65,7 +65,22 @@
           ],
           "items": [
             {
-
+              "name": "tuna avocado roll",
+              "id": 0,
+              "price": 10,
+              "user": 5
+            },
+            {
+              "name": "salmon sashimi",
+              "id": 1,
+              "price": 15,
+              "user": 6
+            },
+            {
+              "name": "Grange Hermitage",
+              "id": 2,
+              "price": 16975,
+              "user": 3
             }
           ]
         }

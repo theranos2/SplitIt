@@ -12,6 +12,9 @@ import BillAdvanced from 'components/BillCreation/BillAdvanced';
 import BillDetailed from 'components/BillView/BillDetailed';
 import BillCreate from 'components/BillCreation/BillCreate';
 import BillSimple from 'components/BillCreation/BillSimple';
+import BillEdit from 'components/BillModify/BillEdit';
+import BillShare from 'components/BillModify/BillShare';
+import BillDelete from 'components/BillModify/BillDelete';
 import BillsAll from 'components/BillView/BillsAll';
 // import Notifications from 'components/Notifications/NotificationsPage';
 
@@ -33,6 +36,9 @@ const App = () => {
 
           <Route element={<PrivateRoute />}>
             <Route path="/bill/view/:bill_id" element={<BillDetailed />} />
+            <Route path="/bill/edit/:bill_id" element={<BillEdit />} />
+            <Route path="/bill/share/:bill_id" element={<BillShare />} />
+            <Route path="/bill/delete/:bill_id" element={<BillDelete />} />
             <Route path="/bill/view" element={<BillsAll />} />
             <Route path="/bill/create" element={<BillCreate />} />
             <Route path="/bill/simple" element={<BillSimple />} />
