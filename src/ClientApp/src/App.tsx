@@ -1,4 +1,5 @@
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
+
 import './App.css';
 
 import ProtectedRoute from 'components/Routes/RouteProtected';
@@ -13,6 +14,10 @@ import BillCreate from 'components/BillCreation/BillCreate';
 import BillSimple from 'components/BillCreation/BillSimple';
 import BillAdvanced from 'components/BillCreation/BillAdvanced';
 import Notifications from 'components/Notifications/NotificationsPage';
+
+import Groups from './components/Groups/GroupIndex';
+import GroupCreate from './components/Groups/GroupCreate/GroupCreate';
+import GroupsView from 'components/Groups/GroupsView/GroupsView';
 
 import TopNavigation from 'components/Menu/TopNavigation';
 import NotFound from 'components/NotFound';
@@ -38,6 +43,9 @@ const App = () => {
             <Route path="/bill/advanced" element={<BillAdvanced />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/logout" element={<Logout />} />
+            <Route path="/groups" element={<Groups />} />
+            <Route path="/groups/create" element={<GroupCreate />} />
+            <Route path="/groups/view" element={<GroupsView />} />
           </Route>
 
           {/* 404 - Not Found route */}

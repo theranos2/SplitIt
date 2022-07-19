@@ -1,7 +1,5 @@
 using System;
 
-using System.ComponentModel.DataAnnotations;
-
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -14,6 +12,14 @@ namespace split_it.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public bool MfaEnabled { get; set; } = false;
+    }
+
+    // Use me in lists
+    public class UserInfoDto
+    {
+        public Guid Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 
     public class UserFilter

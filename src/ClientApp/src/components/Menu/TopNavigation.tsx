@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsMenu from '../Notifications/NotificationsMenu';
@@ -23,6 +24,7 @@ const links = (loggedIn: boolean | undefined) =>
         { href: '/bill/create', icon: <AddBusinessRoundedIcon /> },
         { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
         { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
+        { href: '/groups', icon: <GroupsIcon /> },
         { href: '/notifications', icon: <NotificationsIcon /> },
         // { href: 'notif', icon: <NotificationsMenu /> },
         { href: '/logout', icon: <ExitToAppIcon /> }

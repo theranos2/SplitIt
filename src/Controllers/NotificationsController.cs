@@ -32,6 +32,18 @@ namespace split_it.Controllers
             return service.Get(UserId, sortBy, take, skip);
         }
 
+        /// <response code="404">Zero notifications deleted</response>
+        /// <summary>Delete many notification at once</summary>
+        [HttpDelete]
+        public void SeenMany(
+            List<Guid> NotificationIds,
+            [FromHeader(Name = "Token")] string Token
+        )
+        {
+            Guid UserId = CookiesDb.Get(Token).UserId;
+            service.RemoveBatch(UserId, NotificationIds);
+        }
+
         /// <response code="404">Notification Id not found</response>
         [HttpGet("{NotificationId:Guid}")]
         public Notification GetById(

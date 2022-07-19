@@ -80,10 +80,8 @@ namespace tests
             var user = userController.GetMany(take: 1)[0];
             var sameUser = userController.Get(user.Id);
             Assert.Equal(user.Id, sameUser.Id);
-            Assert.Equal(user.Email, sameUser.Email);
             Assert.Equal(user.FirstName, sameUser.FirstName);
             Assert.Equal(user.LastName, sameUser.LastName);
-            Assert.Equal(user.MfaEnabled, user.MfaEnabled);
         }
 
         [Theory]

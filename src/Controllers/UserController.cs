@@ -19,22 +19,20 @@ namespace split_it.Controllers
             db = _db;
         }
 
-        private UserDto UserToDto(User u)
+        private UserInfoDto UserToDto(User u)
         {
-            return new UserDto
+            return new UserInfoDto
             {
                 Id = u.Id,
-                Email = u.Email,
                 FirstName = u.FirstName,
                 LastName = u.LastName,
-                MfaEnabled = u.MfaEnabled,
             };
         }
 
         /// <summary>Show user given the ID</summary>
         /// <response code="404">User with given ID does not exists</response>
         [HttpGet("{userId:Guid}")]
-        public UserDto Get(Guid userId)
+        public UserInfoDto Get(Guid userId)
         {
             var res = db.Users.Where(u => u.Id.Equals(userId))
                 .Select(UserToDto)
@@ -50,7 +48,7 @@ namespace split_it.Controllers
         /// <param name="sortBy">Sort results</param>
         /// <response code="400">Negative take, skip values</response>
         [HttpGet]
-        public List<UserDto> GetMany(
+        public List<UserInfoDto> GetMany(
             [FromQuery] UserSort sortBy = UserSort.FIRSTNAME_ASC,
             [FromQuery] UserFilter filter = null,
             [FromQuery(Name = "take")] int take = 10,
