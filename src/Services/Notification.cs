@@ -47,6 +47,25 @@ namespace split_it.Services
             db.SaveChanges();
         }
 
+        /// <summary>Removes many notifications</summary>
+        /// <exception cref="HttpNotFound">If no notifications deleted</exception>
+        public void RemoveBatch(Guid UserId, List<Guid> NotificationIds)
+        {
+            var notifications = db.Notifications
+                .Where(n => NotificationIds.Contains(n.Id))
+                .Where(n => UserId == n.UserId)
+                .ToList();
+            if (notifications.Any())
+            {
+                db.Notifications.RemoveRange(notifications);
+                db.SaveChanges();
+            }
+            else
+            {
+                throw new HttpNotFound();
+            }
+        }
+
         public List<Notification> Get(
             Guid UserId,
             NotificationSort sortBy,

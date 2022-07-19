@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "split-it", "src\split-it.cs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests", "tests\tests.csproj", "{CEBE5FDB-63B9-4AF5-A3A3-EAFB3032A58B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "seeder", "seeder\seeder.csproj", "{B17C84BD-BBEA-4555-8F28-9313328E952A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,5 +46,17 @@ Global
 		{CEBE5FDB-63B9-4AF5-A3A3-EAFB3032A58B}.Release|x64.Build.0 = Release|Any CPU
 		{CEBE5FDB-63B9-4AF5-A3A3-EAFB3032A58B}.Release|x86.ActiveCfg = Release|Any CPU
 		{CEBE5FDB-63B9-4AF5-A3A3-EAFB3032A58B}.Release|x86.Build.0 = Release|Any CPU
+		{B17C84BD-BBEA-4555-8F28-9313328E952A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B17C84BD-BBEA-4555-8F28-9313328E952A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B17C84BD-BBEA-4555-8F28-9313328E952A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B17C84BD-BBEA-4555-8F28-9313328E952A}.Debug|x64.Build.0 = Debug|Any CPU
+		{B17C84BD-BBEA-4555-8F28-9313328E952A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B17C84BD-BBEA-4555-8F28-9313328E952A}.Debug|x86.Build.0 = Debug|Any CPU
+		{B17C84BD-BBEA-4555-8F28-9313328E952A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B17C84BD-BBEA-4555-8F28-9313328E952A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B17C84BD-BBEA-4555-8F28-9313328E952A}.Release|x64.ActiveCfg = Release|Any CPU
+		{B17C84BD-BBEA-4555-8F28-9313328E952A}.Release|x64.Build.0 = Release|Any CPU
+		{B17C84BD-BBEA-4555-8F28-9313328E952A}.Release|x86.ActiveCfg = Release|Any CPU
+		{B17C84BD-BBEA-4555-8F28-9313328E952A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

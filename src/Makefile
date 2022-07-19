@@ -1,3 +1,4 @@
+.PHONY: db-clean db-reset
 # Install dependencies and tools
 init:
 	dotnet restore
@@ -5,13 +6,18 @@ init:
 	# pip install pre-commit
 	# pre-commit install
 
-# Reset database
-db-reset:
+# Get new clean database
+db-clean:
 	rm -rf ./Migrations
 	rm -f database.db
 	dotnet ef migrations add "Initial"
 	dotnet ef database update 
 
+# Seed database
+db-seed:
+	cd ../seeder; dotnet run
+
+db-reset: db-clean db-seed
 
 typescript-client:
 	java -jar '../swagger-codegen-cli.jar' generate \

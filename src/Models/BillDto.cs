@@ -4,6 +4,38 @@ using System.ComponentModel.DataAnnotations;
 
 namespace split_it.Models
 {
+    // For output only
+    public class SimpleBillDto
+    {
+        public Guid Id { get; set; }
+        public DateTime Created { get; set; }
+        public UserInfoDto Owner { get; set; }
+        public double Total { get; set; }
+        public string Title { get; set; }
+        public bool IsSettled { get; set; }
+    }
+
+    // For output only
+    public class DetailedBillDto : SimpleBillDto
+    {
+        public ICollection<ShareDto> Shares { get; set; }
+        public ICollection<ItemDto> OverallItems { get; set; }
+    }
+    public class BillSimpleDtoIn
+    {
+        [Required]
+        [MaxLength(100)]
+        public string Title { get; set; }
+
+        [Required]
+        [MinLength(1)]
+        public List<Guid> UserIds { get; set; }
+
+        [Required]
+        [Range(1, 1000)]
+        public double Amount { get; set; }
+    }
+
     public class BillDto
     {
         public Guid Id { get; set; }
@@ -15,6 +47,7 @@ namespace split_it.Models
         public double Total { get; set; }
 
         [Required]
+        [MaxLength(100)]
         public string Title { get; set; }
 
         [Required]
@@ -42,7 +75,7 @@ namespace split_it.Models
 
         // Anonymous User
         public string Email { get; set; }
-        public string Name  { get; set; }
+        public string Name { get; set; }
     }
 
     public class ItemDto
@@ -61,6 +94,10 @@ namespace split_it.Models
 
         public Guid Id { get; set; }
         public Guid OwnerId { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
         [Required]
         public ICollection<Guid> MemberIds { get; set; }
     }

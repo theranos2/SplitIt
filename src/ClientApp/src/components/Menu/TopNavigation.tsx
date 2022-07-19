@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 import CardMembershipRoundedIcon from '@mui/icons-material/CardMembershipRounded';
@@ -11,18 +10,20 @@ import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsMenu from '../Notifications/NotificationsMenu';
 import IconLink from './IconLink';
-import { Context } from '../../utility/Context';
+import { token } from 'utility/config';
 
-const links = (loggedIn: boolean | undefined) =>
-  loggedIn
+const links =
+  token !== ''
     ? [
         { href: '/bill/create', icon: <AddBusinessRoundedIcon /> },
         { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
         { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
+        { href: '/groups', icon: <GroupsIcon /> },
         { href: '/notifications', icon: <NotificationsIcon /> },
         // { href: 'notif', icon: <NotificationsMenu /> },
         { href: '/logout', icon: <ExitToAppIcon /> }
@@ -30,8 +31,6 @@ const links = (loggedIn: boolean | undefined) =>
     : [{ href: '/login', icon: <AccountCircle /> }];
 
 const TopNavigation = () => {
-  const context = React.useContext(Context);
-
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -48,7 +47,7 @@ const TopNavigation = () => {
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            {links(context?.loggedIn).map((link, idx) =>
+            {links.map((link, idx) =>
               link.href === 'notif' ? (
                 <NotificationsMenu key={`menu-link-${idx}`} />
               ) : (

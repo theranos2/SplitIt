@@ -17,11 +17,14 @@ const HomePage = () => {
     >
       <Grid item xs={3}>
         <ButtonGroup orientation="vertical" aria-label="vertical outlined button group">
-          <Button key="bill-create-home">
+          <Button key="one">
             <Link to="/bill/create">Create a bill</Link>
           </Button>
-          <Button key="bill-view-home">
+          <Button key="one">
             <Link to="/bill/view">View bills</Link>
+          </Button>
+          <Button key="one">
+            <Link to="/groups">Groups</Link>
           </Button>
         </ButtonGroup>
       </Grid>
