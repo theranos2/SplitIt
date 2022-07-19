@@ -42,19 +42,27 @@ const ViewContainer = (props: ViewContainerProps) => {
                     {/* <Typography gutterBottom variant="h5" component="h2">
                       {bill.name}
                     </Typography> */}
-                    <Typography>
-                      <BillDisplay bill={bill} />
-                    </Typography>
+                    <BillDisplay bill={bill} />
                   </CardContent>
-                  <CardActions>{/* Menu to interact with the listing */}</CardActions>
+                  {/* <CardActions>Menu to interact with the listing</CardActions> */}
                 </Card>
               </Grid>
             ))}
           </Grid>
         </Container>
       </main>
-      {/* TODO: should stick to the bottom of the page */}
-      <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
+      <Box
+        sx={{
+          bgcolor: 'background.paper',
+          p: 6,
+          position: 'fixed',
+          bottom: 0,
+          width: '100%',
+          height: 60,
+          textAlign: 'center'
+        }}
+        component="footer"
+      >
         <Typography variant="h6" align="center" gutterBottom>
           SplitIt:&nbsp;
           <Typography display="inline" variant="subtitle1" color="text.secondary" component="p">
