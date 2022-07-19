@@ -20,7 +20,6 @@ const NotificationsPage = () => {
     })();
 
     // Temp test with local data
-    setNotifications(data);
   }, []);
 
   return (

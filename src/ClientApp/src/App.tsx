@@ -30,7 +30,7 @@ const App = () => {
           <Route path="/register" element={<Register />} />
         </Route>
 
-        {/* <Route element={<PrivateRoute />}>  */}
+        <Route element={<PrivateRoute />}> 
         <Route path="/bill/view:bill_id" element={<BillsAll />} />
         <Route path="/bill/view" element={<BillsAll />} />
         <Route path="/bill/create" element={<BillCreate />} />
@@ -40,7 +40,7 @@ const App = () => {
         <Route path="/groups" element={<GroupIndex />} />
         <Route path="/groups/create" element={<GroupCreate />} />
         <Route path="/groups/view" element={<GroupsView />} />
-        {/* </Route> */}
+        </Route>
 
         {/* 404 - Not Found route */}
         <Route path="*" element={<NotFound />} />

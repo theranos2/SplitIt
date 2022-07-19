@@ -20,9 +20,10 @@ const NotificationDisplay = (props: { notification: Notification }) => {
 
   const linkRoute =
     notification.domain && notification.resourceId
-      ? `/${notification.domain}:${notification.resourceId}`
+      ? `/${notification.domain}/${notification.resourceId}`
       : '/notifications';
 
+let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   return (
     <Box sx={{ flexGrow: 1, overflow: 'hidden', px: 3 }}>
       <StyledPaper
@@ -48,7 +49,7 @@ const NotificationDisplay = (props: { notification: Notification }) => {
                 {notification.message}
               </Typography>
               <Typography noWrap variant="caption" color={'#2196f3'} fontWeight={'bold'}>
-                {getNotifAge(notification.createdAt, currDate)}
+                {getNotifAge(notification.createdAt.toLocaleString(), currDate)}
               </Typography>
             </Grid>
           </Grid>
@@ -58,29 +59,34 @@ const NotificationDisplay = (props: { notification: Notification }) => {
   );
 };
 
-const getNotifAge = (notifDate: Date | undefined, now: Date): String => {
-  if (!notifDate) return 'no date';
+ const getNotifAge = (notifDate: string, now: Date): String => {
+   if (!notifDate) return 'no date';
 
-  let age = now.getFullYear() - notifDate.getFullYear();
-  let timeUnit = 'years';
-  if (age < 1) {
-    age = now.getMonth() - notifDate.getMonth();
-    timeUnit = 'months';
-  }
-  if (age < 1) {
-    age = now.getDate() - notifDate.getDate();
-    timeUnit = 'dates';
-  }
-  if (age < 1) {
-    age = now.getMinutes() - notifDate.getMinutes();
-    timeUnit = 'minutes';
-  }
-  if (age < 1) {
-    age = now.getSeconds() - notifDate.getSeconds();
-    timeUnit = 'seconds';
-  }
-  return `${age} ${timeUnit} ago`;
-};
+   let s:Date = new Date(notifDate);
+
+   console.log(typeof now );
+   console.log(typeof s);
+
+   let age = now.getFullYear() - s.getFullYear();
+   let timeUnit = 'year(s)';
+   if (age < 1) {
+     age = now.getMonth() - s.getMonth();
+     timeUnit = 'month(s)';
+   }
+   if (age < 1) {
+     age = now.getDate() - s.getDate();
+     timeUnit = 'day(s)';
+   }
+   if (age < 1) {
+     age = now.getMinutes() - s.getMinutes();
+     timeUnit = 'minute(s)';
+   }
+   if (age < 1) {
+     age = now.getSeconds() - s.getSeconds();
+     timeUnit = 'second(s)';
+   }
+   return `${age} ${timeUnit} ago`;
+ };
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',

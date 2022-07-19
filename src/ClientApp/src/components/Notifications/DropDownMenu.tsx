@@ -54,7 +54,7 @@ const DropDownMenu = (props: DropDownMenuProps) => {
       </MenuItem>
       {notifications.map((n: Notification, idx: number) => (
         <MenuItem key={`notification-${idx}`} onClick={() => handleClose()}>
-          <Link to={`/${n.domain}:${n.resourceId}`} style={{ textDecoration: 'none' }}>
+          <Link to={`/${n.domain}/${n.resourceId}`} style={{ textDecoration: 'none' }}>
             {n.message}
           </Link>
         </MenuItem>
