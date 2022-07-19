@@ -14,10 +14,11 @@ const ItemsDisplay = (props: ItemDisplayProps) => {
 
   return (
     <>
-      {items.map((item: Item, idx: number) => (
+      {items?.map((item: Item, idx: number) => (
         <Card
           key={`item-display-${idx}`}
-          sx={{ display: 'flex', width: '100%', paddingLeft: '10px' }}>
+          sx={{ display: 'flex', width: '100%', paddingLeft: '10px' }}
+        >
           <Box sx={{ display: 'flex', flexDirection: 'column', paddingBottom: '10px' }}>
             <CardContent sx={{ flex: '1 0 auto' }}>
               <Typography component="div" variant="h5">

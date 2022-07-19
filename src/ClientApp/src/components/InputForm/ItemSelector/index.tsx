@@ -24,12 +24,13 @@ export const ItemSelector = (props: ItemSelectorProps) => {
     user: 0
   });
 
-  const setItem = (event: any) => setCurrentItem((old) => ({ ...old, [name]: event.target.value }));
+  const setItem = (name: string) => (event: any) =>
+    setCurrentItem((old) => ({ ...old, [name]: event.target.value }));
   const cancel = () => setCurrentItem({ name: '', id: 0, price: 0, user: 0 });
 
   const addItem = (event: any) => {
     event.preventDefault();
-    setItems((old: Item[]) => [...old, currentItem]);
+    items && setItems([...items, currentItem]);
     cancel();
   };
 
@@ -56,21 +57,25 @@ export const ItemSelector = (props: ItemSelectorProps) => {
             id="outlined-number"
             label="Name"
             type="text"
+            value={currentItem.name}
+            onChange={setItem('name')}
             InputLabelProps={{ shrink: true }}
           />
           <TextField
             id="outlined-number"
             label="Price"
+            value={currentItem.price}
+            onChange={setItem('price')}
             type="number"
             InputLabelProps={{ shrink: true }}
           />
-          <InputLabel id={`select-${name}-inputlabel`}>Add {label}</InputLabel>
+          {/* <InputLabel id={`select-${name}-inputlabel`}>Add {label}</InputLabel> */}
           <Select
             labelId={`select-${name}-label`}
             id={`select-${name}-id`}
-            value={items}
+            value={currentItem.user}
             label="Choose users"
-            onChange={setItem}
+            onChange={setItem('user')}
             input={<OutlinedInput label={label} />}
           >
             {users.map((user: User, idx: number) => (
