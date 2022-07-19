@@ -28,9 +28,24 @@ namespace split_it.Controllers
                 ExpiryDate = expiry,
                 LastSeen = DateTime.Now,
                 MfaCode = "1", // TODO: implement this lol
-                hasPassedMfa = false,
+                hasPassedMfa = true,
                 UserId = userId
             });
+        }
+
+        /// <summary>Show currently logged in user data</summary>
+        [HttpGet("me")]
+        public UserDto Me()
+        {
+            var curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
+            return new UserDto
+            {
+                Id = curUser.Id,
+                FirstName = curUser.FirstName,
+                LastName = curUser.LastName,
+                Email = curUser.Email,
+                MfaEnabled = curUser.MfaEnabled,
+            };
         }
 
         /// <summary>Register new user</summary>

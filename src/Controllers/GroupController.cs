@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using split_it.Authentication;
 using split_it.Exceptions.Http;
 using split_it.Models;
+using split_it.Services;
 
 namespace split_it.Controllers
 {
@@ -15,10 +14,12 @@ namespace split_it.Controllers
     public class GroupController : ControllerBase
     {
         DatabaseContext db;
+        NotificationService notificationService;
 
-        public GroupController(DatabaseContext _db)
+        public GroupController(DatabaseContext _db, NotificationService _notificationService)
         {
             db = _db;
+            notificationService = _notificationService;
         }
 
         /// <summary>Get Group</summary>
@@ -28,7 +29,6 @@ namespace split_it.Controllers
         [HttpGet("{groupId:Guid}")]
         public GroupDto Get(Guid groupId)
         {
-
             Group group = db.Groups.Where(x => x.Id == groupId).FirstOrDefault();
 
             if (group == null)
@@ -67,6 +67,7 @@ namespace split_it.Controllers
             return new Group
             {
                 Id = Guid.Empty,
+                Name = groupDto.Name,
                 Owner = owner,
                 Members = members.GroupBy(x => x.Id).Select(x => x.FirstOrDefault()).ToList(), // delete duplicates if any trading bigah oh for code readability
             };
@@ -75,12 +76,27 @@ namespace split_it.Controllers
         /// <summary>Create a Group</summary>
         /// <remarks>Use this route to create a group. Supply member guids to create group. See the GroupDto</remarks>
         /// <response code="404">Not found. When the supplied user guid is not found.</response>
+        /// <response code="400">Group name is left empty</response>
         [HttpPost]
         public GroupDto Create(GroupDto groupDto)
         {
+            if (string.IsNullOrEmpty(groupDto.Name))
+                throw new HttpBadRequest("Group name cannot be empty");
+
             Group newGroup = MakeGroup(groupDto);
-            db.Groups.Add(newGroup);
+            db.Groups.Add(newGroup).Reload();
             db.SaveChanges();
+
+            foreach (var member in newGroup.Members)
+            {
+                notificationService.Add(new Notification
+                {
+                    UserId = member.Id,
+                    Domain = "group",
+                    ResourceId = newGroup.Id,
+                    Message = $"{newGroup.Owner.FirstName} added you to the group '{newGroup.Name}'"
+                });
+            }
 
             return newGroup.ConvertToDto();
         }
@@ -102,6 +118,9 @@ namespace split_it.Controllers
                 throw new HttpForbiddenRequest($"Permission Denied. Cannot edit group that you are not the owner of.");
 
             Group updatedGroup = MakeGroup(groupDto);
+
+            // update name if changed
+            group.Name = string.IsNullOrEmpty(groupDto.Name) ? group.Name : updatedGroup.Name;
 
             // update original group in database
             group.Members = updatedGroup.Members;

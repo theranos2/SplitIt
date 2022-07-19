@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import InputField from '../../InputForm/InputFields';
-import { UserSelector } from '../../InputForm/UserSelector';
 import GroupFormProps from './props';
 
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -12,9 +11,13 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+import { UserSelector } from 'components/InputForm/UserSelector';
+import { useState } from 'react';
+import { UserDto } from 'api';
 
 export const GroupForm = (props: GroupFormProps) => {
-  const { title, inputs, fields, set, submit, cancel } = props;
+  const { title, inputs, fields, set, submit, cancel, setSelectedUsers } = props;
+
   const theme = createTheme();
 
   return (
@@ -34,14 +37,7 @@ export const GroupForm = (props: GroupFormProps) => {
               switch (field.type) {
                 case 'users':
                   return (
-                    <UserSelector
-                      key={`user-${idx}`}
-                      name={field.name}
-                      label={field.label}
-                      inputs={inputs}
-                      set={set}
-                      err={field.err}
-                    />
+                    <UserSelector setSelectedUsers={setSelectedUsers} />
                   );
                 default:
                   return (

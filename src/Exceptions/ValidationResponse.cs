@@ -17,7 +17,7 @@ namespace split_it.Exceptions
 
                 var responseObj = new
                 {
-                    Message = "One or more validation errors occurred.",
+                    //Message = "One or more validation errors occurred.",
                     Errors = errors,
                 };
 

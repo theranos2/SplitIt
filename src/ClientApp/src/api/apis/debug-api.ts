@@ -16,112 +16,22 @@ import { Configuration } from '../configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
-import { LoginDto } from '../models';
-import { RegisterDto } from '../models';
-import { TokenDto } from '../models';
-import { UserDto } from '../models';
+import { Bill } from '../models';
+import { Notification } from '../models';
+import { User } from '../models';
 /**
- * AccountApi - axios parameter creator
+ * DebugApi - axios parameter creator
  * @export
  */
-export const AccountApiAxiosParamCreator = function (configuration?: Configuration) {
+export const DebugApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Login using credentials
-         * @param {LoginDto} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountLoginPost: async (body?: LoginDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/Account/login`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Token required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-                    ? await configuration.apiKey("Token")
-                    : await configuration.apiKey;
-                localVarHeaderParameter["Token"] = localVarApiKeyValue;
-            }
-
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            const query = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                query.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.params) {
-                query.set(key, options.params[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(query)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiAccountLogoutPost: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/Account/logout`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Token required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-                    ? await configuration.apiKey("Token")
-                    : await configuration.apiKey;
-                localVarHeaderParameter["Token"] = localVarApiKeyValue;
-            }
-
-            const query = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                query.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.params) {
-                query.set(key, options.params[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(query)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Show currently logged in user data
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiAccountMeGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/Account/me`;
+        apiDebugBillsGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Debug/bills`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -158,24 +68,18 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @param {string} mfaString 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountMfaMfaStringPost: async (mfaString: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'mfaString' is not null or undefined
-            if (mfaString === null || mfaString === undefined) {
-                throw new RequiredError('mfaString','Required parameter mfaString was null or undefined when calling apiAccountMfaMfaStringPost.');
-            }
-            const localVarPath = `/api/Account/mfa/{mfaString}`
-                .replace(`{${"mfaString"}}`, encodeURIComponent(String(mfaString)));
+        apiDebugCreateGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Debug/create`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -205,20 +109,18 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @summary Register new user
-         * @param {RegisterDto} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiAccountRegisterPost: async (body?: RegisterDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/Account/register`;
+        apiDebugNotificationsGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Debug/notifications`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -230,7 +132,46 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
                 localVarHeaderParameter["Token"] = localVarApiKeyValue;
             }
 
-            localVarHeaderParameter['Content-Type'] = 'application/json';
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiDebugUsersGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Debug/users`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Token required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("Token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["Token"] = localVarApiKeyValue;
+            }
 
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
@@ -242,8 +183,6 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
             localVarUrlObj.search = (new URLSearchParams(query)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
-            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -254,20 +193,18 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
 };
 
 /**
- * AccountApi - functional programming interface
+ * DebugApi - functional programming interface
  * @export
  */
-export const AccountApiFp = function(configuration?: Configuration) {
+export const DebugApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Login using credentials
-         * @param {LoginDto} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountLoginPost(body?: LoginDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<TokenDto>>> {
-            const localVarAxiosArgs = await AccountApiAxiosParamCreator(configuration).apiAccountLoginPost(body, options);
+        async apiDebugBillsGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<Bill>>>> {
+            const localVarAxiosArgs = await DebugApiAxiosParamCreator(configuration).apiDebugBillsGet(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -278,8 +215,8 @@ export const AccountApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountLogoutPost(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
-            const localVarAxiosArgs = await AccountApiAxiosParamCreator(configuration).apiAccountLogoutPost(options);
+        async apiDebugCreateGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Bill>>> {
+            const localVarAxiosArgs = await DebugApiAxiosParamCreator(configuration).apiDebugCreateGet(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -287,12 +224,11 @@ export const AccountApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @summary Show currently logged in user data
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountMeGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<UserDto>>> {
-            const localVarAxiosArgs = await AccountApiAxiosParamCreator(configuration).apiAccountMeGet(options);
+        async apiDebugNotificationsGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<Notification>>>> {
+            const localVarAxiosArgs = await DebugApiAxiosParamCreator(configuration).apiDebugNotificationsGet(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -300,26 +236,11 @@ export const AccountApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} mfaString 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountMfaMfaStringPost(mfaString: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<TokenDto>>> {
-            const localVarAxiosArgs = await AccountApiAxiosParamCreator(configuration).apiAccountMfaMfaStringPost(mfaString, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @summary Register new user
-         * @param {RegisterDto} [body] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiAccountRegisterPost(body?: RegisterDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<TokenDto>>> {
-            const localVarAxiosArgs = await AccountApiAxiosParamCreator(configuration).apiAccountRegisterPost(body, options);
+        async apiDebugUsersGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<User>>>> {
+            const localVarAxiosArgs = await DebugApiAxiosParamCreator(configuration).apiDebugUsersGet(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -329,116 +250,87 @@ export const AccountApiFp = function(configuration?: Configuration) {
 };
 
 /**
- * AccountApi - factory interface
+ * DebugApi - factory interface
  * @export
  */
-export const AccountApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+export const DebugApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     return {
         /**
          * 
-         * @summary Login using credentials
-         * @param {LoginDto} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountLoginPost(body?: LoginDto, options?: AxiosRequestConfig): Promise<AxiosResponse<TokenDto>> {
-            return AccountApiFp(configuration).apiAccountLoginPost(body, options).then((request) => request(axios, basePath));
+        async apiDebugBillsGet(options?: AxiosRequestConfig): Promise<AxiosResponse<Array<Bill>>> {
+            return DebugApiFp(configuration).apiDebugBillsGet(options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountLogoutPost(options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
-            return AccountApiFp(configuration).apiAccountLogoutPost(options).then((request) => request(axios, basePath));
+        async apiDebugCreateGet(options?: AxiosRequestConfig): Promise<AxiosResponse<Bill>> {
+            return DebugApiFp(configuration).apiDebugCreateGet(options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary Show currently logged in user data
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountMeGet(options?: AxiosRequestConfig): Promise<AxiosResponse<UserDto>> {
-            return AccountApiFp(configuration).apiAccountMeGet(options).then((request) => request(axios, basePath));
+        async apiDebugNotificationsGet(options?: AxiosRequestConfig): Promise<AxiosResponse<Array<Notification>>> {
+            return DebugApiFp(configuration).apiDebugNotificationsGet(options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {string} mfaString 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiAccountMfaMfaStringPost(mfaString: string, options?: AxiosRequestConfig): Promise<AxiosResponse<TokenDto>> {
-            return AccountApiFp(configuration).apiAccountMfaMfaStringPost(mfaString, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Register new user
-         * @param {RegisterDto} [body] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiAccountRegisterPost(body?: RegisterDto, options?: AxiosRequestConfig): Promise<AxiosResponse<TokenDto>> {
-            return AccountApiFp(configuration).apiAccountRegisterPost(body, options).then((request) => request(axios, basePath));
+        async apiDebugUsersGet(options?: AxiosRequestConfig): Promise<AxiosResponse<Array<User>>> {
+            return DebugApiFp(configuration).apiDebugUsersGet(options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * AccountApi - object-oriented interface
+ * DebugApi - object-oriented interface
  * @export
- * @class AccountApi
+ * @class DebugApi
  * @extends {BaseAPI}
  */
-export class AccountApi extends BaseAPI {
+export class DebugApi extends BaseAPI {
     /**
      * 
-     * @summary Login using credentials
-     * @param {LoginDto} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AccountApi
+     * @memberof DebugApi
      */
-    public async apiAccountLoginPost(body?: LoginDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<TokenDto>> {
-        return AccountApiFp(this.configuration).apiAccountLoginPost(body, options).then((request) => request(this.axios, this.basePath));
+    public async apiDebugBillsGet(options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<Bill>>> {
+        return DebugApiFp(this.configuration).apiDebugBillsGet(options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AccountApi
+     * @memberof DebugApi
      */
-    public async apiAccountLogoutPost(options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
-        return AccountApiFp(this.configuration).apiAccountLogoutPost(options).then((request) => request(this.axios, this.basePath));
+    public async apiDebugCreateGet(options?: AxiosRequestConfig) : Promise<AxiosResponse<Bill>> {
+        return DebugApiFp(this.configuration).apiDebugCreateGet(options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 
-     * @summary Show currently logged in user data
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AccountApi
+     * @memberof DebugApi
      */
-    public async apiAccountMeGet(options?: AxiosRequestConfig) : Promise<AxiosResponse<UserDto>> {
-        return AccountApiFp(this.configuration).apiAccountMeGet(options).then((request) => request(this.axios, this.basePath));
+    public async apiDebugNotificationsGet(options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<Notification>>> {
+        return DebugApiFp(this.configuration).apiDebugNotificationsGet(options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 
-     * @param {string} mfaString 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof AccountApi
+     * @memberof DebugApi
      */
-    public async apiAccountMfaMfaStringPost(mfaString: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<TokenDto>> {
-        return AccountApiFp(this.configuration).apiAccountMfaMfaStringPost(mfaString, options).then((request) => request(this.axios, this.basePath));
-    }
-    /**
-     * 
-     * @summary Register new user
-     * @param {RegisterDto} [body] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AccountApi
-     */
-    public async apiAccountRegisterPost(body?: RegisterDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<TokenDto>> {
-        return AccountApiFp(this.configuration).apiAccountRegisterPost(body, options).then((request) => request(this.axios, this.basePath));
+    public async apiDebugUsersGet(options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<User>>> {
+        return DebugApiFp(this.configuration).apiDebugUsersGet(options).then((request) => request(this.axios, this.basePath));
     }
 }

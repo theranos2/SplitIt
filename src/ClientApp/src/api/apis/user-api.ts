@@ -16,7 +16,7 @@ import { Configuration } from '../configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
-import { UserDto } from '../models';
+import { UserInfoDto } from '../models';
 import { UserSort } from '../models';
 /**
  * UserApi - axios parameter creator
@@ -165,7 +165,7 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUserGet(sortBy?: UserSort, email?: string, firstname?: string, lastname?: string, take?: number, skip?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<UserDto>>>> {
+        async apiUserGet(sortBy?: UserSort, email?: string, firstname?: string, lastname?: string, take?: number, skip?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<UserInfoDto>>>> {
             const localVarAxiosArgs = await UserApiAxiosParamCreator(configuration).apiUserGet(sortBy, email, firstname, lastname, take, skip, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
@@ -179,7 +179,7 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUserUserIdGet(userId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<UserDto>>> {
+        async apiUserUserIdGet(userId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<UserInfoDto>>> {
             const localVarAxiosArgs = await UserApiAxiosParamCreator(configuration).apiUserUserIdGet(userId, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
@@ -207,7 +207,7 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUserGet(sortBy?: UserSort, email?: string, firstname?: string, lastname?: string, take?: number, skip?: number, options?: AxiosRequestConfig): Promise<AxiosResponse<Array<UserDto>>> {
+        async apiUserGet(sortBy?: UserSort, email?: string, firstname?: string, lastname?: string, take?: number, skip?: number, options?: AxiosRequestConfig): Promise<AxiosResponse<Array<UserInfoDto>>> {
             return UserApiFp(configuration).apiUserGet(sortBy, email, firstname, lastname, take, skip, options).then((request) => request(axios, basePath));
         },
         /**
@@ -217,7 +217,7 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiUserUserIdGet(userId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<UserDto>> {
+        async apiUserUserIdGet(userId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<UserInfoDto>> {
             return UserApiFp(configuration).apiUserUserIdGet(userId, options).then((request) => request(axios, basePath));
         },
     };
@@ -243,7 +243,7 @@ export class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public async apiUserGet(sortBy?: UserSort, email?: string, firstname?: string, lastname?: string, take?: number, skip?: number, options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<UserDto>>> {
+    public async apiUserGet(sortBy?: UserSort, email?: string, firstname?: string, lastname?: string, take?: number, skip?: number, options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<UserInfoDto>>> {
         return UserApiFp(this.configuration).apiUserGet(sortBy, email, firstname, lastname, take, skip, options).then((request) => request(this.axios, this.basePath));
     }
     /**
@@ -254,7 +254,7 @@ export class UserApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public async apiUserUserIdGet(userId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<UserDto>> {
+    public async apiUserUserIdGet(userId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<UserInfoDto>> {
         return UserApiFp(this.configuration).apiUserUserIdGet(userId, options).then((request) => request(this.axios, this.basePath));
     }
 }
