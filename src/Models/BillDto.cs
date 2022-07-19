@@ -4,6 +4,23 @@ using System.ComponentModel.DataAnnotations;
 
 namespace split_it.Models
 {
+    // For output only
+    public class SimpleBillDto
+    {
+        public Guid Id { get; set; }
+        public DateTime Created { get; set; }
+        public UserInfoDto Owner { get; set; }
+        public double Total { get; set; }
+        public string Title { get; set; }
+        public bool IsSettled { get; set; }
+    }
+
+    // For output only
+    public class DetailedBillDto : SimpleBillDto
+    {
+        public ICollection<ShareDto> Shares { get; set; }
+        public ICollection<ItemDto> OverallItems { get; set; }
+    }
     public class BillSimpleDtoIn
     {
         [Required]
@@ -77,6 +94,10 @@ namespace split_it.Models
 
         public Guid Id { get; set; }
         public Guid OwnerId { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
         [Required]
         public ICollection<Guid> MemberIds { get; set; }
     }
