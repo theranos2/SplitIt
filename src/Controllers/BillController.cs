@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using split_it.Authentication;
@@ -12,6 +13,7 @@ using split_it.Services;
 namespace split_it.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class BillController : ControllerBase
     {
@@ -199,14 +201,16 @@ namespace split_it.Controllers
             return bill.ConvertToDto();
         }
 
-        /// <summary>Edit a bill</summary>
-        /// <remarks>Use this route to edit a bill. Quite similar to the create bill. To edit just do the same.</remarks>
-        /// <response code="404">Not found. When the supplied user guid is not found.</response>
-        /// <response code="400">Bad request. When supply share or item</response>
-        [HttpGet("getmany")]
-        public IEnumerable<Bill> GetMany(BillFilter filter)
+        /// <summary>Find bills</summary>
+        /// <remarks>Use this route to search bills.</remarks>
+        [HttpGet]
+        public IEnumerable<SimpleBillDto> GetMany([FromQuery] BillFilter filter)
         {
-            IQueryable<Bill> query = db.Bills.AsQueryable<Bill>();
+            User curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
+
+            IQueryable<Bill> query = db.Bills.AsQueryable<Bill>()
+                // Show only bills you're a part of
+                .Where(bill => bill.Owner.Id == curUser.Id || bill.Shares.Where(share => share.Payer.Id == curUser.Id).Any());
 
             if (filter.BillOwner != Guid.Empty)
                 query = query.Where(x => x.Owner.Id == filter.BillOwner);
@@ -214,13 +218,32 @@ namespace split_it.Controllers
             if (filter.BillMembers != null)
                 query = query.Where(x => x.Shares.Any(x => filter.BillMembers.Contains(x.Id)));
 
-            return query.Where(x =>
-                    new DateTimeOffset(x.Created).ToUnixTimeSeconds() <= filter.EndTime &&
-                    new DateTimeOffset(x.Created).ToUnixTimeSeconds() >= filter.StartTime &&
-                    x.Total <= filter.EndAmount &&
-                    x.Total >= filter.StartAmount &&
-                    x.Title.ToLower().Contains(filter.Title.ToLower()) &&
-                    x.isSettled == filter.isSettled).Skip(filter.Offset).Take(filter.Limit);
+            return query
+                .Where(bill =>
+                    bill.Created >= DateTime.UnixEpoch.AddSeconds(filter.StartTime) &&
+                    bill.Created <= DateTime.UnixEpoch.AddSeconds(filter.EndTime) &&
+                    bill.Total <= filter.MaxAmount &&
+                    bill.Total >= filter.MinAmount &&
+                    bill.Title.ToLower().Contains(filter.Title.ToLower()) &&
+                    bill.isSettled == filter.isSettled)
+                .Include(bill => bill.Owner)
+                .OrderBy(bill => bill.Created)
+                .Skip(filter.Offset)
+                .Take(filter.Limit)
+                .Select(bill => new SimpleBillDto
+                {
+                    Id = bill.Id,
+                    Created = bill.Created,
+                    Owner = new UserInfoDto
+                    {
+                        Id = bill.Owner.Id,
+                        FirstName = bill.Owner.FirstName,
+                        LastName = bill.Owner.LastName,
+                    },
+                    Total = bill.Total,
+                    Title = bill.Title,
+                    IsSettled = bill.isSettled,
+                });
         }
 
         [HttpPost("reject/{bill_id:Guid}")]
