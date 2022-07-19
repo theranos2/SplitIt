@@ -19,21 +19,17 @@ import BillFormProps, { Steps } from './props';
 export const BillForm = (props: BillFormProps) => {
   const { title, inputs, fields, set, submit, cancel } = props;
 
-  const steps: Steps[] = fields.map((f, idx) => {
+  const steps: Steps[] = fields.map((f) => {
     switch (f.type) {
       case 'date':
         return {
           label: 'Choose the timeframe',
           element: <DateSelector start={f.dates.start} end={f.dates.end} set={set} />
         };
-      case 'span':
+      case 'price':
         return {
           label: '',
-          element: (
-            <Alert key={`alert-${idx}`} severity="info">
-              {f.content}
-            </Alert>
-          )
+          element: <PriceDisplay price={inputs.price} set={set('price')} disabled={f.disabled} />
         };
       case 'users':
         return {
@@ -60,11 +56,6 @@ export const BillForm = (props: BillFormProps) => {
               err={f.err}
             />
           )
-        };
-      case 'price':
-        return {
-          label: '',
-          element: <PriceDisplay price={inputs.price} set={set('price')} disabled={f.disabled} />
         };
       default:
         return {
