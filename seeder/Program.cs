@@ -23,6 +23,8 @@ namespace seeder
             using var ctx = new DatabaseContext(ctxOpts);
             ctx.Database.EnsureCreated();
             UserSeeder.Seed(ctx);
+            BillSeeder.Seed(ctx);
+            NotificationSeeder.Seed(ctx);
             ctx.SaveChanges();
         }
     }
