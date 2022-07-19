@@ -2,7 +2,6 @@ import React from 'react';
 
 import OutlinedInput from '@mui/material/OutlinedInput';
 import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';

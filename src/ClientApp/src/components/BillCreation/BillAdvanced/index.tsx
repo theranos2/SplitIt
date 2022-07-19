@@ -12,11 +12,16 @@ const BillAdvanced = () => {
   });
 
   const set = (name: string) => (input: any) => {
-    // should be event<???> | Array<number> | Array<Item>
     switch (name) {
-      case 'users':
       case 'items':
-        setInputs((old: InputProps) => ({ ...old, [name]: input }));
+        setInputs((old: InputProps) => ({ ...old, items: input }));
+        setInputs((old: InputProps) => ({
+          ...old,
+          price: old.items.reduce((i, j) => i + j.price, 0)
+        }));
+        break;
+      case 'users':
+        setInputs((old: InputProps) => ({ ...old, users: input }));
         break;
       default:
         setInputs((old: InputProps) => ({ ...old, [name]: input.target.value }));

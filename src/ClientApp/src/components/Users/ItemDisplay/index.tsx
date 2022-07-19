@@ -24,6 +24,9 @@ const ItemsDisplay = (props: ItemDisplayProps) => {
               <Typography component="div" variant="h5">
                 {item.name}
               </Typography>
+              <Typography variant="subtitle1" color="text.secondary" component="div">
+                ${item.price}.00
+              </Typography>
             </CardContent>
           </Box>
           <Grid container justifyContent="flex-end">
