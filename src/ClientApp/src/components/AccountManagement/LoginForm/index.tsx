@@ -1,8 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Context } from 'utility/Context';
-import { ContextProps } from 'utility/Context/props';
 
 import InputField from '../../InputForm/InputFields';
 import { DateSelector } from '../../InputForm/DateSelector';
@@ -18,21 +16,13 @@ import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 
 export const LoginForm = (props: LoginFormProps) => {
-  const context = React.useContext<ContextProps | null>(Context);
   const { title, inputs, fields, set, submit, cancel } = props;
   const [error, setError] = React.useState('');
   const theme = createTheme();
 
   const form_submit = async (event: any) => {
     const res = await submit.func(event);
-
-    if (res?.error) {
-      context?.logIn(false);
-      setError(res.msg);
-    } else {
-      context?.logIn(true);
-      setError('');
-    }
+    res?.error ? setError(res.msg) : setError('');
   };
 
   return (
