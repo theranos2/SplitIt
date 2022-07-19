@@ -8,11 +8,11 @@ namespace split_it.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class DegubController : ControllerBase
+    public class DebugController : ControllerBase
     {
         DatabaseContext db;
 
-        public DegubController(DatabaseContext _db)
+        public DebugController(DatabaseContext _db)
         {
             db = _db;
         }
