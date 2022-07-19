@@ -33,6 +33,21 @@ namespace split_it.Controllers
             });
         }
 
+        /// <summary>Show currently logged in user data</summary>
+        [HttpGet("me")]
+        public UserDto Me()
+        {
+            var curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
+            return new UserDto
+            {
+                Id = curUser.Id,
+                FirstName = curUser.FirstName,
+                LastName = curUser.LastName,
+                Email = curUser.Email,
+                MfaEnabled = curUser.MfaEnabled,
+            };
+        }
+
         /// <summary>Register new user</summary>
         /// <response code="400">Email already in use</response>
         [AllowAnonymous]
