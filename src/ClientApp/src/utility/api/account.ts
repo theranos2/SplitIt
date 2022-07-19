@@ -1,14 +1,14 @@
 import { request } from './api';
-import { set_token } from '../config';
 
 /* Refactor login & signup to the same function? */
 export const signup = async (inputs: Record<string, any>) => {
   const res = await request('POST', 'Account/register', inputs);
 
-  if (res?.status) {
-    return { error: true, msg: res.title };
-  } else {
-    set_token(res?.token);
+  console.log(res);
+
+  if (res?.error) return res;
+  else {
+    localStorage.setItem('token', res?.token);
     return { error: false };
   }
 };
@@ -16,10 +16,11 @@ export const signup = async (inputs: Record<string, any>) => {
 export const login = async (inputs: Record<string, any>) => {
   const res = await request('POST', 'Account/login', inputs);
 
-  if (res?.status) {
-    return { error: true, msg: res.title };
-  } else {
-    set_token(res?.token);
+  console.log(res);
+
+  if (res?.error) return res;
+  else {
+    localStorage.setItem('token', res?.token);
     return { error: false };
   }
 };
@@ -27,10 +28,9 @@ export const login = async (inputs: Record<string, any>) => {
 export const logout = async () => {
   const res = await request('POST', 'Account/logout');
 
-  if (res?.status) {
-    return { error: true, msg: res.title };
-  } else {
-    set_token('');
+  if (res?.error) return res;
+  else {
+    localStorage.removeItem('token');
     return { error: false };
   }
 };

@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import CardMembershipRoundedIcon from '@mui/icons-material/CardMembershipRounded';
@@ -15,10 +16,10 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsMenu from '../Notifications/NotificationsMenu';
 import IconLink from './IconLink';
-import { token } from 'utility/config';
+import { Context } from '../../utility/Context';
 
-const links =
-  token !== ''
+const links = (loggedIn: boolean | undefined) =>
+  loggedIn
     ? [
         { href: '/bill/create', icon: <AddBusinessRoundedIcon /> },
         { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
@@ -31,6 +32,8 @@ const links =
     : [{ href: '/login', icon: <AccountCircle /> }];
 
 const TopNavigation = () => {
+  const context = React.useContext(Context);
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -47,7 +50,7 @@ const TopNavigation = () => {
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            {links.map((link, idx) =>
+            {links(context?.loggedIn).map((link, idx) =>
               link.href === 'notif' ? (
                 <NotificationsMenu key={`menu-link-${idx}`} />
               ) : (
