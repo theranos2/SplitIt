@@ -21,6 +21,20 @@ namespace split_it.Models
         public ICollection<ShareDto> Shares { get; set; }
         public ICollection<ItemDto> OverallItems { get; set; }
     }
+    public class BillSimpleDtoIn
+    {
+        [Required]
+        [MaxLength(100)]
+        public string Title { get; set; }
+
+        [Required]
+        [MinLength(1)]
+        public List<Guid> UserIds { get; set; }
+
+        [Required]
+        [Range(1, 1000)]
+        public double Amount { get; set; }
+    }
 
     public class BillDto
     {
@@ -33,6 +47,7 @@ namespace split_it.Models
         public double Total { get; set; }
 
         [Required]
+        [MaxLength(100)]
         public string Title { get; set; }
 
         [Required]

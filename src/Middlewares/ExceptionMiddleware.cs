@@ -1,12 +1,22 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using split_it.Exceptions.Http;
 
 namespace split_it.Middlewares
 {
+    public class ProblemDetailsExt
+    {
+        [JsonPropertyName("Errors")]
+        public List<string> Errors { get; set; }
+
+        [JsonIgnore]
+        public int? Status { get; set; }
+
+    }
     public sealed class ExceptionMiddleware : IMiddleware
     {
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -28,17 +38,17 @@ namespace split_it.Middlewares
             }
         }
 
-        private static ProblemDetails GenerateProblemDetails(HttpContext context, HttpStatusCode code, string message)
+        private static ProblemDetailsExt GenerateProblemDetails(HttpContext context, HttpStatusCode code, string message)
         {
-            return new ProblemDetails
+            return new ProblemDetailsExt
             {
                 Status = (int)code,
-                Title = message,
-                Instance = context.Request.Path
+                Errors = new List<string> { message },
+                //Instance = context.Request.Path
             };
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, ProblemDetails problemDetails, Exception exception)
+        private static Task HandleExceptionAsync(HttpContext context, ProblemDetailsExt problemDetails, Exception exception)
         {
             if (context.Response.HasStarted)
             {

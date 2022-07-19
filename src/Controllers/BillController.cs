@@ -118,7 +118,7 @@ namespace split_it.Controllers
         /// <summary>Create Bill</summary>
         /// <remarks>Use this route to create a bill.</remarks>
         /// <response code="404">Not found. When the supplied user guid is not found.</response>
-        /// <response code="400">Bad request. When supply share or item</response>
+        /// <response code="400">Bad request. When not supply share or item</response>
         [HttpPost]
         public BillDto Create(BillDto billDto)
         {
@@ -155,6 +155,71 @@ namespace split_it.Controllers
             return newBill.ConvertToDto();
         }
 
+        /// <summary>Create Bill Simple</summary>
+        /// <remarks>Use this route to create a simple bill.</remarks>
+        /// <response code="404">Not found. When the supplied user guid is not found.</response>
+        [HttpPost("simple")]
+        public BillDto CreateSimple(BillSimpleDtoIn billDto)
+        {
+            User curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
+
+            billDto.UserIds.Add(curUser.Id); // add owner too
+            billDto.UserIds = billDto.UserIds.Distinct().ToList(); // remove duplicates
+            foreach (var userId in billDto.UserIds)
+            {
+                User user = db.Users.Where(x => x.Id == userId).FirstOrDefault();
+                if (user == null)
+                    throw new HttpNotFound($"Cannot find user: {user.Id}");
+            }
+
+            // equal share  
+            double eachAmount = billDto.Amount / billDto.UserIds.Count();
+            // round see share round in bill create
+            eachAmount = Math.Round(Math.Ceiling(eachAmount / 0.01) * 0.01, 2);
+
+            List<Share> shares = new List<Share>();
+            foreach (var userId in billDto.UserIds)
+            {
+                shares.Add(
+                    new Share
+                    {
+                        hasPaid = (userId == curUser.Id) ? true : false,
+                        hasRejected = false,
+                        Id = Guid.Empty,
+                        Items = new List<Item> {
+                            new Item{
+                                Id = Guid.Empty,
+                                Name = "",
+                                Price = eachAmount
+                            }
+                        },
+                        Payer = db.Users.Where(x => x.Id == userId).FirstOrDefault(),
+                        Total = eachAmount
+                    }
+                );
+
+            }
+
+            // create new bill
+            Bill newBill = new Bill
+            {
+                Created = DateTime.Now,
+                Id = Guid.Empty,
+                isSettled = false,
+                OverallItems = null,
+                Owner = curUser,
+                Shares = shares,
+                Title = billDto.Title,
+            };
+
+            newBill.Total = Math.Round(newBill.Shares.Sum(x => x.Total), 2);
+
+            db.Bills.Add(newBill);
+            db.SaveChanges();
+
+            return newBill.ConvertToDto();
+        }
+
         /// <summary>Edit a bill</summary>
         /// <remarks>Use this route to edit a bill. Quite similar to the create bill. To edit just do the same.</remarks>
         /// <response code="404">Not found. When the supplied user guid is not found.</response>
@@ -178,8 +243,7 @@ namespace split_it.Controllers
                 throw new HttpForbiddenRequest($"Permission Denied. Cannot edit bill that is not yours.");
 
             if (bill.Owner.Id != curUser.Id)
-                throw new HttpForbidden($"Permission Denied. Cannot edit bill that is not yours.");
-
+                throw new HttpForbiddenRequest($"Permission Denied. Cannot edit bill that is not yours.");
 
             bill.Title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(billDto.Title.Trim().ToLower());
             //bill.OverallItems = billDto.OverallItems; //TODO
