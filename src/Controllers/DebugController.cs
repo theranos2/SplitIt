@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using split_it.Authentication;
-using split_it.Exceptions.Http;
 using split_it.Models;
 
 namespace split_it.Controllers
@@ -25,7 +21,7 @@ namespace split_it.Controllers
         ////DEBUGING METHODS////
         ////////////////////////
 
-        [HttpGet("/create")]
+        [HttpGet("create")]
         public Bill Creet()
         {
             var bob = db.Users.Where(x => x.Email == "bob@dylan.com").FirstOrDefault();
@@ -99,7 +95,7 @@ namespace split_it.Controllers
         }
 
         // Example how to return nested objects
-        [HttpGet("/bills")]
+        [HttpGet("bills")]
         public IEnumerable<Bill> Getslosts()
         {
             return db.Bills
@@ -110,10 +106,16 @@ namespace split_it.Controllers
                 .ThenInclude(share => share.Items).ToList();
         }
 
-        [HttpGet("/users")]
+        [HttpGet("users")]
         public IEnumerable<User> GetUsers()
         {
             return db.Users.ToList();
+        }
+
+        [HttpGet("notifications")]
+        public List<Notification> AllNotifications()
+        {
+            return db.Notifications.ToList();
         }
 
     }
