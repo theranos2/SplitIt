@@ -150,8 +150,9 @@ namespace split_it
         public ShareDto ConvertToDto()
         {
 
-            return new ShareDto{
-                hasRejected =  this.hasRejected,
+            return new ShareDto
+            {
+                hasRejected = this.hasRejected,
 
                 hasPaid = this.hasPaid,
                 PayerId = this.Payer.Id,
@@ -167,7 +168,8 @@ namespace split_it
                 hasPaid = shareDto.hasPaid,
 
                 hasRejected = shareDto.hasRejected,
-                Payer = new User{
+                Payer = new User
+                {
 
                     Id = shareDto.PayerId
                 },
@@ -182,12 +184,14 @@ namespace split_it
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+        public string Name { get; set; }
         public User Owner { get; set; }
         public ICollection<User> Members { get; set; }
 
         public GroupDto ConvertToDto()
         {
-            return new GroupDto{
+            return new GroupDto
+            {
                 Id = this.Id,
                 OwnerId = this.Owner.Id,
                 MemberIds = Members.Select(x => x.Id).ToList()
