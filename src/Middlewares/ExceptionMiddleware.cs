@@ -4,7 +4,6 @@ using System.Net;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using split_it.Exceptions.Http;
 
 namespace split_it.Middlewares
@@ -44,7 +43,7 @@ namespace split_it.Middlewares
             return new ProblemDetailsExt
             {
                 Status = (int)code,
-                Errors = new List <string>{message},
+                Errors = new List<string> { message },
                 //Instance = context.Request.Path
             };
         }
