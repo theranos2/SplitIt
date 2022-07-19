@@ -10,6 +10,7 @@ import { token } from 'utility/config';
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = React.useState<Notification[]>([]);
+  //   const [hideRead, setHideRead] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     (async () => {
@@ -25,6 +26,11 @@ const NotificationsPage = () => {
 
   return (
     <>
+      {/* <Box style={{ cursor: 'pointer' }}>
+        <Button onClick={() => setHideRead(false)}>All</Button>
+        <Button onClick={() => setHideRead(true)}>Unread</Button>
+      </Box> */}
+
       {notifications.map((n) => (
         <NotificationDisplay key={`notification-${n.id}`} notification={n} />
       ))}

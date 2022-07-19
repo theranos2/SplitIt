@@ -21,9 +21,8 @@ const links =
     ? [
         { href: '/bill/create', icon: <AddBusinessRoundedIcon /> },
         { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
-        { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
         { href: '/notifications', icon: <NotificationsIcon /> },
-        // { href: 'notif', icon: <NotificationsMenu /> },
+        { href: 'notif', icon: <NotificationsMenu /> },
         { href: '/logout', icon: <ExitToAppIcon /> }
       ]
     : [{ href: '/login', icon: <AccountCircle /> }];
@@ -45,12 +44,14 @@ const TopNavigation = () => {
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            {links.map((link, idx) =>
-              link.href === 'notif' ? (
-                <NotificationsMenu key={`menu-link-${idx}`} />
-              ) : (
+            {links.map(
+              (link, idx) => (
+                //   link.href === 'notif' ? (
+                //     <NotificationsMenu key={`menu-link-${idx}`} />
+                //   ) : (
                 <IconLink key={`menu-link-${idx}`} href={link.href} icon={link.icon} />
               )
+              //   )
             )}
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
