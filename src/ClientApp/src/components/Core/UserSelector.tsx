@@ -48,6 +48,7 @@ export const UserSelector = (props: UserSelectorProps) => {
           <Chip
             label={makeLabel(option)}
             {...getProps({ index })}
+            key={`${option.id}-${getProps({ index }).key}`}
             disabled={fixedUser ? option.id === fixedUser.id : false}
           />
         ))
