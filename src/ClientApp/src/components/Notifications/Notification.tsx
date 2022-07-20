@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
-import { Avatar, Box, Paper, Grid, Typography, Container } from '@mui/material';
+import { Avatar, Box, Paper, Grid, Typography } from '@mui/material';
 import { Notification } from 'api';
 
 const NotificationDisplay = (props: { notification: Notification }) => {
@@ -23,7 +23,6 @@ const NotificationDisplay = (props: { notification: Notification }) => {
       ? `/${notification.domain}/${notification.resourceId}`
       : '/notifications';
 
-  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   return (
     <Box sx={{ flexGrow: 1, overflow: 'hidden', px: 3 }}>
       <StyledPaper

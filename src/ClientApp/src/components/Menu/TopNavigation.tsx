@@ -12,12 +12,10 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import GroupsIcon from '@mui/icons-material/Groups';
 
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsMenu from '../Notifications/NotificationsMenu';
 import IconLink from './IconLink';
-import DropDownMenu from 'components/Notifications/DropDownMenu';
 // import { token } from 'utility/config';
-const token = 'TEMP TOKEN';
+const token = window.localStorage.getItem('token');
 
 const links =
   token !== ''

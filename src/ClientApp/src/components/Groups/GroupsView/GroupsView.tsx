@@ -20,13 +20,8 @@ const rows = [
 ];
 
 export default function GroupsView() {
-  const [selectedRow, setSelectedRow] = React.useState({});
-  console.log({ selectedRow });
-
   const handleRowClick = (row: any) => {
-    const id = row.id;
-    // open a bill view page using bill id
-    // window.location.href = '/groups/view/' + id;
+    console.log(row);
   };
 
   return (

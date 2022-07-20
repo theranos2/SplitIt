@@ -12,8 +12,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import { UserSelector } from 'components/InputForm/UserSelector';
-import { useState } from 'react';
-import { UserDto } from 'api';
 
 export const GroupForm = (props: GroupFormProps) => {
   const { title, inputs, fields, set, submit, cancel, setSelectedUsers } = props;

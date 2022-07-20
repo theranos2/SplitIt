@@ -2,10 +2,7 @@ import React, { useState } from 'react';
 import { GroupForm } from '../GroupForm';
 import { InputProps } from '../props';
 
-import { request } from 'utility/api/api';
 import { UserDto } from 'api/models';
-import { token } from 'utility/config';
-import { GroupApi } from 'api';
 
 const GroupCreate = () => {
   const [inputs, setInputs] = React.useState<InputProps>({ name: '', users: [] });
@@ -21,10 +18,6 @@ const GroupCreate = () => {
     event.preventDefault();
 
     console.log(selectedUsers);
-    const api = new GroupApi({ apiKey: token });
-
-    const memberIdsx = selectedUsers.map((x) => x.id ?? '');
-    const resp = await api.apiGroupPost({ name: inputs.name, memberIds: memberIdsx });
   };
 
   return (

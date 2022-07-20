@@ -5,24 +5,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
 import { autocompleteClasses } from '@mui/material/Autocomplete';
 import { UserSelectorProps } from './props';
-import { User } from '../InputFormProps';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import InputLabel from '@mui/material/InputLabel';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import Alert from '@mui/material/Alert';
-import { UserApi, UserDto, UserSort } from 'api';
-import { Checkbox, List, ListItem, ListItemButton, TextField } from '@mui/material';
 import { token } from 'utility/config';
-import InputField from '../InputFields';
-import Autocomplete from '@mui/material/Autocomplete';
+import { UserApi, UserDto } from 'api';
 
 const Root = styled('div')(
   ({ theme }) => `
@@ -208,6 +192,7 @@ export const UserSelector = (props: UserSelectorProps) => {
         <Label {...getInputLabelProps()}>Members</Label>
         <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
           {value.map((option: UserDto, index: number) => (
+            // eslint-disable-next-line react/jsx-key
             <StyledTag
               label={option.firstName + ' ' + option.lastName}
               {...getTagProps({ index })}
@@ -219,6 +204,7 @@ export const UserSelector = (props: UserSelectorProps) => {
       {groupedOptions.length > 0 ? (
         <Listbox {...getListboxProps()}>
           {(groupedOptions as typeof users).map((option, index) => (
+            // eslint-disable-next-line react/jsx-key
             <li {...getOptionProps({ option, index })}>
               <span>{option.firstName + ' ' + option.lastName}</span>
               <CheckIcon fontSize="small" />
