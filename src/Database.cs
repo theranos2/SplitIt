@@ -184,6 +184,7 @@ namespace split_it
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+        public string Name { get; set; }
         public User Owner { get; set; }
         public ICollection<User> Members { get; set; }
 
@@ -192,6 +193,7 @@ namespace split_it
             return new GroupDto
             {
                 Id = this.Id,
+                Name = this.Name,
                 OwnerId = this.Owner.Id,
                 MemberIds = Members.Select(x => x.Id).ToList()
             };

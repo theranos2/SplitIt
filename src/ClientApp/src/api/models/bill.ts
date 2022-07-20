@@ -11,6 +11,7 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { FileAttachment } from './file-attachment';
 import { Item } from './item';
 import { Share } from './share';
 import { User } from './user';
@@ -50,6 +51,12 @@ export interface Bill {
      * @memberof Bill
      */
     title?: string | null;
+    /**
+     * 
+     * @type {Array<FileAttachment>}
+     * @memberof Bill
+     */
+    attachments?: Array<FileAttachment> | null;
     /**
      * 
      * @type {Array<Share>}

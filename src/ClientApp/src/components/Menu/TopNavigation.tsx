@@ -25,7 +25,6 @@ const links = (loggedIn: boolean | undefined) =>
         { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
         { href: '/groups', icon: <GroupsIcon /> },
         { href: '/notifications', icon: <NotificationsIcon /> },
-        // { href: 'notif', icon: <NotificationsMenu /> },
         { href: '/logout', icon: <ExitToAppIcon /> }
       ]
     : [{ href: '/login', icon: <AccountCircle /> }];
@@ -50,7 +49,7 @@ const TopNavigation = () => {
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             {links(context?.loggedIn).map((link, idx) =>
-              link.href === 'notif' ? (
+              link.href === '/notifications' ? (
                 <NotificationsMenu key={`menu-link-${idx}`} />
               ) : (
                 <IconLink key={`menu-link-${idx}`} href={link.href} icon={link.icon} />

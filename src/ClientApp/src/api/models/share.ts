@@ -36,7 +36,7 @@ export interface Share {
      * @type {boolean}
      * @memberof Share
      */
-    hasAccepted?: boolean;
+    hasRejected?: boolean;
     /**
      * 
      * @type {number}

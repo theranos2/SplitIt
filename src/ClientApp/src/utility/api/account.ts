@@ -4,8 +4,6 @@ import { request } from './api';
 export const signup = async (inputs: Record<string, any>) => {
   const res = await request('POST', 'Account/register', inputs);
 
-  console.log(res);
-
   if (res?.error) return res;
   else {
     localStorage.setItem('token', res?.token);
@@ -15,8 +13,6 @@ export const signup = async (inputs: Record<string, any>) => {
 
 export const login = async (inputs: Record<string, any>) => {
   const res = await request('POST', 'Account/login', inputs);
-
-  console.log(res);
 
   if (res?.error) return res;
   else {

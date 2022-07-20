@@ -13,7 +13,6 @@ import EditIcon from '@mui/icons-material/Edit';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-// import Box from '@mui/material/Box';
 
 const BillDetailed = () => {
   const bill_id = parseInt((useParams().bill_id ?? ':0').slice(1));
@@ -47,9 +46,6 @@ const BillDetailed = () => {
       ) : (
         <></>
       )}
-      {/* <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-        <Box sx={{ flex: '1 1 auto' }} />
-      </Box> */}
       <IconLink href={'/bill/view'} icon={'Back'} />
     </Container>
   );

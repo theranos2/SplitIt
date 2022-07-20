@@ -1,7 +1,7 @@
 import { ButtonEventHandler, ErrorType } from '../InputFormProps';
 import { User } from '../InputFormProps';
 
-export interface UserSelectorProps {
+export default interface UserSelectorProps {
   name: string;
   label: string;
   users: User[];

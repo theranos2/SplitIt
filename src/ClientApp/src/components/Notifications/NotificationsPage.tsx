@@ -1,29 +1,32 @@
 import React from 'react';
-
-import { request } from 'utility/api/api';
-import Notification from './NotificationProps';
 import NotificationDisplay from './Notification';
+import { NotificationsApi, Notification } from 'api';
 
 const NotificationsPage = () => {
-  const [notifications, AddNotifications] = React.useState<Array<Notification>>([]);
+  const [notifications, setNotifications] = React.useState<Notification[]>([]);
+  //   const [hideRead, setHideRead] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     (async () => {
-      const NewNotifications = await request('GET', '/notifications/:user_id');
-      NewNotifications && AddNotifications(NewNotifications as Notification[]);
+      const api = new NotificationsApi({ apiKey: window.localStorage.getItem('token') ?? '' });
+      const result = await api.apiNotificationsGet();
+      const NewNotifications = result.data;
+      NewNotifications && setNotifications([...notifications, ...NewNotifications]);
     })();
-  }, []);
 
-  const clicked = (n: Notification) => {
-    n.seen || request('PUT', 'notification/:id/seen');
-    // go to the relevant link maybe?
-  };
+    // Temp test with local data
+  }, []);
 
   return (
     <>
-      {notifications.map((n) => {
-        <NotificationDisplay key={`notification-${n.id}`} notification={n} clicked={clicked} />;
-      })}
+      {/* <Box style={{ cursor: 'pointer' }}>
+        <Button onClick={() => setHideRead(false)}>All</Button>
+        <Button onClick={() => setHideRead(true)}>Unread</Button>
+      </Box> */}
+
+      {notifications.map((n) => (
+        <NotificationDisplay key={`notification-${n.id}`} notification={n} />
+      ))}
     </>
   );
 };

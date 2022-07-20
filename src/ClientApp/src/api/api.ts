@@ -12,5 +12,8 @@
  * Do not edit the class manually.
  */export * from './apis/account-api';
 export * from './apis/bill-api';
+export * from './apis/debug-api';
+export * from './apis/group-api';
+export * from './apis/notifications-api';
 export * from './apis/user-api';
 

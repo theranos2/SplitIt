@@ -84,5 +84,101 @@
             }
           ]
         }
-    ]
+    ],
+    "notifications": [
+      {
+        "id": "1",
+        "userId": "1",
+        "resourceId": "1",
+        "message": "notif 1",
+        "domain": "bill/view"
+      },
+      {
+        "id": "2",
+        "userId": "1",
+        "resourceId": "2",
+        "message": "notif 2",
+        "domain": "bill/view"
+      },
+      {
+        "id": "3",
+        "userId": "1",
+        "resourceId": "2",
+        "message": "unread notif1",
+        "domain": "bill/view"
+      },
+      {
+        "id": "4",
+        "userId": "1",
+        "resourceId": "2",
+        "message": "unread notif2",
+        "domain": "bill/view"
+      },
+      {
+        "id": "5",
+        "userId": "1",
+        "resourceId": "2",
+        "message": "unread notif3",
+        "domain": "bill/view"
+      },
+      {
+        "id": "6",
+        "userId": "1",
+        "resourceId": "2",
+        "message": "notif3",
+        "domain": "bill/view"
+      },
+      {
+        "id": "7",
+        "userId": "1",
+        "resourceId": "2",
+        "message": "notif4",
+        "domain": "bill/view"
+      },
+      {
+        "id": "8",
+        "userId": "1",
+        "resourceId": "2",
+        "message": "unread notif4",
+        "domain": "bill/view"
+      },
+      {
+        "id": "9",
+        "userId": "1",
+        "resourceId": "2",
+        "message": "unread notif5",
+        "domain": "bill/view"
+      },
+      {
+        "id": "10",
+        "userId": "10",
+        "resourceId": "3",
+        "message": "unread notif6",
+        "domain": "bill/view"
+      },
+      {
+        "id": "11",
+        "userId": "11",
+        "resourceId": "3",
+        "message": "notif5",
+        "domain": "bill/view"
+      },
+      {
+        "id": "12",
+        "userId": "12",
+        "resourceId": "3",
+        "message": "notif6"
+      },
+      {
+        "id": "13",
+        "userId": "13",
+        "message": "notif7",
+        "domain": "bill/view"
+      },
+      {
+        "id": "14",
+        "userId": "14",
+        "message": "notif8"
+      }
+    ]    
 }

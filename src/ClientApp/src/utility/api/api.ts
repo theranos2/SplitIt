@@ -10,8 +10,8 @@ export const request: RequestType = async (method, path, data = '') => {
       method: method,
       headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json'
-        // Token: localStorage.getItem('token') ?? ''
+        Accept: 'application/json',
+        Token: localStorage.getItem('token') ?? ''
       },
       body: data === '' ? null : JSON.stringify(data)
     });

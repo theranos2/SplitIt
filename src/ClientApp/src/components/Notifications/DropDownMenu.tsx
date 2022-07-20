@@ -1,36 +1,50 @@
-import React from 'react';
+import { Notification } from 'api';
+import { Menu, MenuItem, Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 
-// import NotificationsIcon from '@mui/icons-material/Notifications';
-import ListItemText from '@mui/material/ListItemText';
-import MenuList from '@mui/material/MenuList';
-import MenuItem from '@mui/material/MenuItem';
-import Paper from '@mui/material/Paper';
-
-interface notification {
-  title: string;
+interface DropDownMenuProps {
+  notifications: Notification[];
+  anchorEl: Element | null;
+  open: boolean;
+  handleClose: (event: any) => void;
 }
 
-const DropDownMenu = () => {
-  // const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  // const open = Boolean(anchorEl);
-
-  // const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-  // const handleClose = () => setAnchorEl(null);
-
-  const notifications: Array<notification> = [{ title: 'yo' }];
+const DropDownMenu = (props: DropDownMenuProps) => {
+  const { notifications, anchorEl, open, handleClose } = props;
 
   return (
-    <Paper sx={{ width: 320 }}>
-      <MenuList dense>
-        <MenuItem>
-          {notifications.map((notification: notification, idx: number) => (
-            <ListItemText key={`notification-${idx}`}>{notification.title}</ListItemText>
-          ))}
+    <Menu
+      id="basic-menu"
+      anchorEl={anchorEl}
+      open={open}
+      onClose={handleClose}
+      MenuListProps={{
+        'aria-labelledby': 'basic-button'
+      }}
+      PaperProps={{
+        style: {
+          width: 300
+        }
+      }}
+    >
+      <MenuItem onClick={handleClose} style={{ justifyContent: 'space-between' }}>
+        <Typography noWrap variant="h5" color={'black'} fontWeight={'bold'}>
+          Notifications
+        </Typography>
+        <Link to={`/notifications`} style={{ textDecoration: 'none' }}>
+          <Typography noWrap variant="body1" fontWeight={'bold'}>
+            see all
+          </Typography>
+        </Link>
+      </MenuItem>
+      {notifications.map((n: Notification, idx: number) => (
+        <MenuItem key={`notification-${idx}`} onClick={handleClose}>
+          <Link to={`/${n.domain}/${n.resourceId}`} style={{ textDecoration: 'none' }}>
+            {n.message}
+          </Link>
         </MenuItem>
-      </MenuList>
-    </Paper>
+      ))}
+    </Menu>
   );
 };
 
