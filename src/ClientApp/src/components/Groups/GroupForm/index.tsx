@@ -1,10 +1,11 @@
 import { LoadingButton } from '@mui/lab';
-import { Alert, Autocomplete, Button, Chip, IconButton, Stack, TextField } from '@mui/material';
+import { Alert, Button, IconButton, Stack, TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { AccountApi, GroupApi, UserApi, UserInfoDto } from 'api';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useToken } from 'utility/hooks';
+import { UserSelector } from 'components/Core';
 
 export const GroupForm = () => {
   const [users, setUsers] = useState<UserInfoDto[]>([])
@@ -29,8 +30,6 @@ export const GroupForm = () => {
       setMembers([curUserRef]);
     })()
   }, [])
-
-  const makeLabel = (user: UserInfoDto) => `${user.firstName} ${user.lastName}`;
 
   const getUsers = async () => {
     const api = new UserApi({ apiKey: useToken() ?? '' })
@@ -77,29 +76,13 @@ export const GroupForm = () => {
       <TextField label="Group name" onChange={(event) => setGroupName(event.target.value)} />
       {!owner
       ? <LoadingButton loading variant="text" />
-      : <Autocomplete
-          multiple
-          filterSelectedOptions
-          onChange={(_, value) => {
-            setMembers([
-              owner,
-              ...value.filter(u => u.id !== owner.id)
-            ])
-          }}
-          value={members}
+      : <UserSelector
+          onChange={setMembers}
+          values={members}
           options={users}
-          getOptionLabel={makeLabel}
-          renderInput={(params) => <TextField {...params} label="Members" />}
-          renderTags={(values, getProps) => (
-            values.map((option, index) => (
-              <Chip
-                label={makeLabel(option) + ' (You)'}
-                {...getProps({ index })}
-                disabled={option.id === owner.id}
-              />
-            ))
-          )}
-        />}
+          fixedUser={owner}
+        />
+      }
       {!submitted
         ? <LoadingButton
             disabled={!!validationError}
