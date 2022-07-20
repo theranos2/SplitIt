@@ -3,18 +3,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Notification, NotificationsApi } from 'api';
 import DropDownMenu from './DropDownMenu';
 
-import data from './data.json';
-import {
-  Badge,
-  Button,
-  Menu,
-  MenuItem,
-  MenuList,
-  Paper,
-  ListItemText,
-  IconButton
-} from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Badge, IconButton } from '@mui/material';
 import { token } from 'utility/config';
 
 const NotificationsMenu = () => {
@@ -39,8 +28,6 @@ const NotificationsMenu = () => {
 
     // Temp test with local data
   }, [anchorEl]);
-
-
 
   return (
     <>

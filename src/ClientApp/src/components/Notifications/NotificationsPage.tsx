@@ -1,7 +1,4 @@
 import React from 'react';
-import { Box, Button, Container } from '@mui/material';
-import { request } from 'utility/api/api';
-import data from './data.json';
 import NotificationDisplay from './Notification';
 import { NotificationsApi, Notification } from 'api';
 

@@ -1,27 +1,13 @@
-import React from 'react';
-
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Notification } from 'api';
 
-import data from './data.json';
-import {
-  Badge,
-  Button,
-  Menu,
-  MenuItem,
-  MenuList,
-  Paper,
-  ListItemText,
-  IconButton,
-  Typography
-} from '@mui/material';
+import { Menu, MenuItem, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 interface DropDownMenuProps {
   notifications: Notification[];
   anchorEl: Element | null;
   open: boolean;
-  handleClose: Function;
+  handleClose: () => void;
 }
 
 const DropDownMenu = (props: DropDownMenuProps) => {

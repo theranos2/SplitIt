@@ -1,39 +1,18 @@
 import * as React from 'react';
-import {
-  useAutocomplete,
-  AutocompleteGetTagProps,
-} from '@mui/base/AutocompleteUnstyled';
+import { useAutocomplete, AutocompleteGetTagProps } from '@mui/base/AutocompleteUnstyled';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
 import { autocompleteClasses } from '@mui/material/Autocomplete';
 import { UserSelectorProps } from './props';
-import { User } from '../InputFormProps';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import InputLabel from '@mui/material/InputLabel';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import Alert from '@mui/material/Alert';
-import { UserApi, UserDto, UserSort } from 'api';
-import { Checkbox, List, ListItem, ListItemButton, TextField } from '@mui/material';
 import { token } from 'utility/config';
-import InputField from '../InputFields';
-import Autocomplete from '@mui/material/Autocomplete';
+import { UserApi, UserDto } from 'api';
 
 const Root = styled('div')(
   ({ theme }) => `
-  color: ${
-    theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,.85)'
-  };
+  color: ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,.85)'};
   font-size: 14px;
-`,
+`
 );
 
 const Label = styled('label')`
@@ -63,9 +42,7 @@ const InputWrapper = styled('div')(
 
   & input {
     background-color: ${theme.palette.mode === 'dark' ? '#141414' : '#fff'};
-    color: ${
-      theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,.85)'
-    };
+    color: ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,.85)'};
     height: 30px;
     box-sizing: border-box;
     padding: 4px 6px;
@@ -76,7 +53,7 @@ const InputWrapper = styled('div')(
     margin: 0;
     outline: 0;
   }
-`,
+`
 );
 
 interface TagProps extends ReturnType<AutocompleteGetTagProps> {
@@ -100,9 +77,7 @@ const StyledTag = styled(Tag)<TagProps>(
   height: 24px;
   margin: 2px;
   line-height: 22px;
-  background-color: ${
-    theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : '#fafafa'
-  };
+  background-color: ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : '#fafafa'};
   border: 1px solid ${theme.palette.mode === 'dark' ? '#303030' : '#e8e8e8'};
   border-radius: 2px;
   box-sizing: content-box;
@@ -126,7 +101,7 @@ const StyledTag = styled(Tag)<TagProps>(
     cursor: pointer;
     padding: 4px;
   }
-`,
+`
 );
 
 const Listbox = styled('ul')(
@@ -173,19 +148,19 @@ const Listbox = styled('ul')(
       color: currentColor;
     }
   }
-`,
+`
 );
 
-export const UserSelector = (props: UserSelectorProps) =>  {
-  const {setSelectedUsers} = props;
+export const UserSelector = (props: UserSelectorProps) => {
+  const { setSelectedUsers } = props;
   const [users, SetUsers] = React.useState<UserDto[]>([]);
 
   React.useEffect(() => {
-    const api = new UserApi({apiKey: token});
+    const api = new UserApi({ apiKey: token });
     (async () => {
       const resp = await api.apiUserGet();
       SetUsers(resp.data);
-    })()
+    })();
   }, []);
 
   const {
@@ -198,18 +173,18 @@ export const UserSelector = (props: UserSelectorProps) =>  {
     groupedOptions,
     value,
     focused,
-    setAnchorEl,
+    setAnchorEl
   } = useAutocomplete({
     id: 'customized-hook-demo',
     defaultValue: [],
     multiple: true,
     options: users,
-    getOptionLabel: (option) => option.firstName + " " + option.lastName,
+    getOptionLabel: (option) => option.firstName + ' ' + option.lastName
   });
-  
+
   React.useEffect(() => {
     setSelectedUsers(value);
-  }, [value])
+  }, [value]);
 
   return (
     <Root>
@@ -217,7 +192,11 @@ export const UserSelector = (props: UserSelectorProps) =>  {
         <Label {...getInputLabelProps()}>Members</Label>
         <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
           {value.map((option: UserDto, index: number) => (
-            <StyledTag label={option.firstName + " " + option.lastName} {...getTagProps({ index })} />
+            // eslint-disable-next-line react/jsx-key
+            <StyledTag
+              label={option.firstName + ' ' + option.lastName}
+              {...getTagProps({ index })}
+            />
           ))}
           <input {...getInputProps()} />
         </InputWrapper>
@@ -225,8 +204,9 @@ export const UserSelector = (props: UserSelectorProps) =>  {
       {groupedOptions.length > 0 ? (
         <Listbox {...getListboxProps()}>
           {(groupedOptions as typeof users).map((option, index) => (
+            // eslint-disable-next-line react/jsx-key
             <li {...getOptionProps({ option, index })}>
-              <span>{option.firstName + " " + option.lastName}</span>
+              <span>{option.firstName + ' ' + option.lastName}</span>
               <CheckIcon fontSize="small" />
             </li>
           ))}
@@ -234,4 +214,4 @@ export const UserSelector = (props: UserSelectorProps) =>  {
       ) : null}
     </Root>
   );
-}
+};
