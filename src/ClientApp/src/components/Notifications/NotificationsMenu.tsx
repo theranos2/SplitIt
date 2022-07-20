@@ -40,8 +40,6 @@ const NotificationsMenu = () => {
     // Temp test with local data
   }, [anchorEl]);
 
-
-
   return (
     <>
       {/* <Badge badgeContent={10} color="error" overlap="circular">

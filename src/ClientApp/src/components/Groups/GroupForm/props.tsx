@@ -8,5 +8,5 @@ export default interface GroupFormProps {
   submit: SubmitProps;
   cancel: CancelProps;
   fields: Array<Record<string, any>>; // TODO: should be the actual types
-  setSelectedUsers: (users: UserDto[]) => void
+  setSelectedUsers: (users: UserDto[]) => void;
 }

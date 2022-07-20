@@ -9,7 +9,7 @@ import { GroupApi } from 'api';
 
 const GroupCreate = () => {
   const [inputs, setInputs] = React.useState<InputProps>({ name: '', users: [] });
-  const [ selectedUsers, setSelectedUsers ] = useState<UserDto[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<UserDto[]>([]);
 
   const set = (name: string) => (input: any) => {
     name === 'users'
@@ -21,10 +21,10 @@ const GroupCreate = () => {
     event.preventDefault();
 
     console.log(selectedUsers);
-    const api = new GroupApi({apiKey: token});
-    
-    let memberIdsx = selectedUsers.map(x =>  x.id ?? "");
-    const resp = await api.apiGroupPost({name: inputs.name, memberIds: memberIdsx});
+    const api = new GroupApi({ apiKey: token });
+
+    const memberIdsx = selectedUsers.map((x) => x.id ?? '');
+    const resp = await api.apiGroupPost({ name: inputs.name, memberIds: memberIdsx });
   };
 
   return (

@@ -36,9 +36,7 @@ export const GroupForm = (props: GroupFormProps) => {
             {fields.map((field, idx) => {
               switch (field.type) {
                 case 'users':
-                  return (
-                    <UserSelector setSelectedUsers={setSelectedUsers} />
-                  );
+                  return <UserSelector setSelectedUsers={setSelectedUsers} />;
                 default:
                   return (
                     <InputField
