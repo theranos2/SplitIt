@@ -7,8 +7,8 @@ const GroupCreate = () => {
       spacing={3}
       direction="row"
       sx={{
-        alignItems: "center",
-        justifyContent: "center",
+        alignItems: 'center',
+        justifyContent: 'center',
         margin: 8
       }}
     >
