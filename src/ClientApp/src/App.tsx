@@ -20,6 +20,7 @@ import GroupCreate from 'components/Groups/GroupCreate/GroupCreate';
 import GroupsView from 'components/Groups/GroupsView/GroupsView';
 import { AuthContext } from 'utility/hooks/useAuth';
 import { useState } from 'react';
+import { Logout } from 'components/AccountManagement/Logout';
 
 const App = () => {
   const [token, setToken] = useState(window.localStorage.getItem('token') ?? '');
@@ -28,13 +29,14 @@ const App = () => {
       <BrowserRouter>
         <TopNavigation />
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-          </Route>
+          {/* <Route element={<ProtectedRoute />}> */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          {/* </Route> */}
 
           <Route element={<PrivateRoute />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/logout" element={<Logout />} />
             <Route path="/bill/view:bill_id" element={<BillsAll />} />
             <Route path="/bill/view" element={<BillsAll />} />
             <Route path="/bill/create" element={<BillCreate />} />
