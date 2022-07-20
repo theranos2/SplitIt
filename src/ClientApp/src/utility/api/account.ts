@@ -1,5 +1,6 @@
 import { request } from './api';
 import { set_token } from '../config';
+import { useAuthContext } from 'utility/hooks/useAuth';
 
 /* Refactor login & signup to the same function? */
 export const signup = async (inputs: Record<string, any>) => {
@@ -20,6 +21,8 @@ export const login = async (inputs: Record<string, any>) => {
     return { error: true, msg: res.title };
   } else {
     set_token(res?.token);
+    const { setToken } = useAuthContext();
+    setToken(res?.token);
     return { error: false };
   }
 };
