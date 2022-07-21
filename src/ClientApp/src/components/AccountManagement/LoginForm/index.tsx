@@ -14,15 +14,20 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
+import { useAuthContext } from 'utility/hooks/useAuth';
 
 export const LoginForm = (props: LoginFormProps) => {
   const { title, inputs, fields, set, submit, cancel } = props;
   const [error, setError] = React.useState('');
   const theme = createTheme();
+  const { setToken } = useAuthContext();
 
   const form_submit = async (event: any) => {
     const res = await submit.func(event);
     res?.error ? setError(res.msg) : setError('');
+    if (!res?.error) {
+      setToken(window.localStorage.getItem('token') ?? '');
+    }
   };
 
   return (

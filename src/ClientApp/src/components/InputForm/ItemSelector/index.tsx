@@ -98,7 +98,7 @@ export const ItemSelector = (props: ItemSelectorProps) => {
               >
                 {inputs['users'].map((user: User, idx: number) => (
                   <MenuItem key={`menuitem-user-${idx}`} value={user.id}>
-                    {user.name}
+                    {user.firstName} {user.lastName}
                   </MenuItem>
                 ))}
               </Select>

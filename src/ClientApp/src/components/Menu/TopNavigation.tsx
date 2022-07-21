@@ -11,26 +11,22 @@ import Toolbar from '@mui/material/Toolbar';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import GroupsIcon from '@mui/icons-material/Groups';
-
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import NotificationsMenu from '../Notifications/NotificationsMenu';
 import IconLink from './IconLink';
-import DropDownMenu from 'components/Notifications/DropDownMenu';
-// import { token } from 'utility/config';
-const token = 'TEMP TOKEN';
-
-const links =
-  token !== ''
-    ? [
-        { href: '/bill/create', icon: <AddBusinessRoundedIcon /> },
-        { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
-        { href: '/groups', icon: <GroupsIcon /> },
-        { href: 'notif', icon: <NotificationsMenu /> },
-        { href: '/logout', icon: <ExitToAppIcon /> }
-      ]
-    : [{ href: '/login', icon: <AccountCircle /> }];
+import { useAuthContext } from 'utility/hooks/useAuth';
 
 const TopNavigation = () => {
+  const { token } = useAuthContext();
+  const links =
+    token !== ''
+      ? [
+          { href: '/bill/create', icon: <AddBusinessRoundedIcon /> },
+          { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
+          { href: '/groups', icon: <GroupsIcon /> },
+          { href: 'notif', icon: <NotificationsMenu /> },
+          { href: '/logout', icon: <ExitToAppIcon /> }
+        ]
+      : [{ href: '/login', icon: <AccountCircle /> }];
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">

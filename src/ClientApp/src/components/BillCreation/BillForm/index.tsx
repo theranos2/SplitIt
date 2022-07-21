@@ -55,11 +55,10 @@ export const BillForm = (props: BillFormProps) => {
                   return (
                     <UserSelector
                       key={`user-${idx}`}
-                      name={field.name}
-                      label={field.label}
-                      inputs={inputs}
-                      set={set}
-                      err={field.err}
+                      // TODO: fix this form up
+                      setSelectedUsers={(val) => {
+                        console.log(val);
+                      }}
                     />
                   );
                 case 'items':
