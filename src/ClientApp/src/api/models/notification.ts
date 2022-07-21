@@ -52,5 +52,5 @@ export interface Notification {
      * @type {Date}
      * @memberof Notification
      */
-    createdAt: Date;
+    createdAt?: Date;
 }

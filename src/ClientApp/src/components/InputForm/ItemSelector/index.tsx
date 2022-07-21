@@ -73,6 +73,7 @@ export const ItemSelector = (props: ItemSelectorProps) => {
                 type="number"
                 InputLabelProps={{ shrink: true }}
               />
+<<<<<<< HEAD
             </Grid>
           </Grid>
           <Select
@@ -93,6 +94,31 @@ export const ItemSelector = (props: ItemSelectorProps) => {
         </FormControl>
       </Box>
       <Button onClick={addItem}>Add item</Button>
+=======
+              <InputLabel id={`select-${name}-inputlabel`}>Add {label}</InputLabel>
+              <Select
+                labelId={`select-${name}-label`}
+                id={`select-${name}-id`}
+                value={inputs['users']}
+                label="Choose users"
+                onChange={setItem(name)}
+                input={<OutlinedInput label={label} />}
+              >
+                {inputs['users'].map((user: User, idx: number) => (
+                  <MenuItem key={`menuitem-user-${idx}`} value={user.id}>
+                    {user.firstName} {user.lastName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={cancel}>Close</Button>
+          <Button onClick={submit}>Confirm</Button>
+        </DialogActions>
+      </Dialog>
+>>>>>>> main
       {err.cond ? <Alert severity="warning">{err.msg}</Alert> : <></>}
       <ItemDisplay items={items} removeItem={removeItem} />
     </>

@@ -1,10 +1,5 @@
-import { ButtonEventHandler, ErrorType } from '../InputFormProps';
-import { User } from '../InputFormProps';
+import { UserDto } from 'api/models';
 
-export default interface UserSelectorProps {
-  name: string;
-  label: string;
-  users: User[];
-  setUsers: ButtonEventHandler;
-  err: ErrorType;
+export interface UserSelectorProps {
+  setSelectedUsers: (users: UserDto[]) => void;
 }

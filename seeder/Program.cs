@@ -24,6 +24,7 @@ namespace seeder
             ctx.Database.EnsureCreated();
             UserSeeder.Seed(ctx);
             BillSeeder.Seed(ctx);
+            GroupSeeder.Seed(ctx);
             NotificationSeeder.Seed(ctx);
             ctx.SaveChanges();
         }

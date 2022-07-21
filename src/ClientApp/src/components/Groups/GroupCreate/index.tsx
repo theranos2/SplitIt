@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import { Stack } from '@mui/material';
 import { GroupForm } from '../GroupForm';
+<<<<<<< HEAD:src/ClientApp/src/components/Groups/GroupCreate/index.tsx
 import { InputProps } from '../GroupProps';
 
 import { UserDto } from 'api/models';
@@ -25,29 +26,22 @@ const GroupCreate = () => {
     await api.apiGroupPost({ name: inputs.name, memberIds: memberIdsx });
   };
 
+=======
+
+const GroupCreate = () => {
+>>>>>>> main:src/ClientApp/src/components/Groups/GroupCreate/GroupCreate.tsx
   return (
-    <GroupForm
-      setSelectedUsers={setSelectedUsers}
-      title="Create a group"
-      inputs={inputs}
-      submit={{ href: '/', func: submit }}
-      set={set}
-      cancel={{ href: '/groups', msg: 'Cancel' }}
-      fields={[
-        {
-          name: 'name',
-          label: 'Name',
-          type: 'text',
-          err: { cond: inputs.name.length > 20, msg: 'Name is too long.' }
-        },
-        {
-          name: 'users',
-          label: 'Users',
-          type: 'users',
-          err: { cond: inputs.users === [], msg: "You haven't added any users." }
-        }
-      ]}
-    />
+    <Stack
+      spacing={3}
+      direction="row"
+      sx={{
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: 8
+      }}
+    >
+      <GroupForm />
+    </Stack>
   );
 };
 

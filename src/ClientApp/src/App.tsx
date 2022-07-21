@@ -1,7 +1,6 @@
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import './App.css';
 
-import ProtectedRoute from 'components/Routes/RouteProtected';
 import PrivateRoute from 'components/Routes/RoutePrivate';
 
 import Login from 'components/AccountManagement/Login';
@@ -22,19 +21,28 @@ import TopNavigation from 'components/Menu/TopNavigation';
 import NotFound from 'components/NotFound';
 import HomePage from 'components/HomePage';
 import GroupIndex from 'components/Groups/GroupIndex';
+<<<<<<< HEAD
 import GroupCreate from 'components/Groups/GroupCreate';
 import GroupsView from 'components/Groups/GroupsView/';
+=======
+import GroupCreate from 'components/Groups/GroupCreate/GroupCreate';
+import GroupsView from 'components/Groups/GroupsView/GroupsView';
+import { AuthContext } from 'utility/hooks/useAuth';
+import { useState } from 'react';
+import { Logout } from 'components/AccountManagement/Logout';
+>>>>>>> main
 
 const App = () => {
+  const [token, setToken] = React.useState(window.localStorage.getItem('token') ?? '');
   return (
-    <BrowserRouter>
-      <TopNavigation />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route element={<ProtectedRoute />}>
+    <AuthContext.Provider value={{ token, setToken }}>
+      <BrowserRouter>
+        <TopNavigation />
+        <Routes>
+          {/* <Route element={<ProtectedRoute />}> */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-        </Route>
+          {/* </Route> */}
 
         <Route element={<PrivateRoute />}>
           <Route path="/bill/view/:bill_id" element={<BillDetailed />} />
@@ -53,10 +61,11 @@ const App = () => {
           <Route path="/logout" element={<Logout />} />
         </Route>
 
-        {/* 404 - Not Found route */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+          {/* 404 - Not Found route */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthContext.Provider>
   );
 };
 

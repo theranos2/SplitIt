@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Avatar, Box, Paper, Grid, Typography } from '@mui/material';
@@ -23,7 +23,6 @@ const NotificationDisplay = (props: { notification: Notification }) => {
       ? `/${notification.domain}/${notification.resourceId}`
       : '/notifications';
 
-  // let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   return (
     <Box sx={{ flexGrow: 1, overflow: 'hidden', px: 3 }}>
       <StyledPaper
@@ -49,7 +48,7 @@ const NotificationDisplay = (props: { notification: Notification }) => {
                 {notification.message}
               </Typography>
               <Typography noWrap variant="caption" color={'#2196f3'} fontWeight={'bold'}>
-                {getNotifAge(notification.createdAt.toLocaleString(), currDate)}
+                {getNotifAge(notification?.createdAt?.toLocaleString(), currDate)}
               </Typography>
             </Grid>
           </Grid>
@@ -59,7 +58,7 @@ const NotificationDisplay = (props: { notification: Notification }) => {
   );
 };
 
-const getNotifAge = (notifDate: string, now: Date): string => {
+const getNotifAge = (notifDate: string | undefined, now: Date): string => {
   if (!notifDate) return 'no date';
 
   const s: Date = new Date(notifDate);

@@ -1,62 +1,203 @@
-import UserSelectorProps from './props';
-import { User } from '../InputFormProps';
-import UserDisplay from 'components/Users/UserDisplay';
-import database from 'utility/database/database.json';
+import * as React from 'react';
+import { useAutocomplete, AutocompleteGetTagProps } from '@mui/base/AutocompleteUnstyled';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import { styled } from '@mui/material/styles';
+import { autocompleteClasses } from '@mui/material/Autocomplete';
+import { UserSelectorProps } from './props';
+import { UserApi, UserDto } from 'api';
 
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import Alert from '@mui/material/Alert';
+const Root = styled('div')(
+  ({ theme }) => `
+  color: ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,.85)'};
+  font-size: 14px;
+`
+);
+
+const Label = styled('label')`
+  padding: 0 0 4px;
+  line-height: 1.5;
+  display: block;
+`;
+
+const InputWrapper = styled('div')(
+  ({ theme }) => `
+  width: 300px;
+  border: 1px solid ${theme.palette.mode === 'dark' ? '#434343' : '#d9d9d9'};
+  background-color: ${theme.palette.mode === 'dark' ? '#141414' : '#fff'};
+  border-radius: 4px;
+  padding: 1px;
+  display: flex;
+  flex-wrap: wrap;
+  &:hover {
+    border-color: ${theme.palette.mode === 'dark' ? '#177ddc' : '#40a9ff'};
+  }
+  &.focused {
+    border-color: ${theme.palette.mode === 'dark' ? '#177ddc' : '#40a9ff'};
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  }
+  & input {
+    background-color: ${theme.palette.mode === 'dark' ? '#141414' : '#fff'};
+    color: ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.65)' : 'rgba(0,0,0,.85)'};
+    height: 30px;
+    box-sizing: border-box;
+    padding: 4px 6px;
+    width: 0;
+    min-width: 30px;
+    flex-grow: 1;
+    border: 0;
+    margin: 0;
+    outline: 0;
+  }
+`
+);
+
+interface TagProps extends ReturnType<AutocompleteGetTagProps> {
+  label: string;
+}
+
+function Tag(props: TagProps) {
+  const { label, onDelete, ...other } = props;
+  return (
+    <div {...other}>
+      <span>{label}</span>
+      <CloseIcon onClick={onDelete} />
+    </div>
+  );
+}
+
+const StyledTag = styled(Tag)<TagProps>(
+  ({ theme }) => `
+  display: flex;
+  align-items: center;
+  height: 24px;
+  margin: 2px;
+  line-height: 22px;
+  background-color: ${theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.08)' : '#fafafa'};
+  border: 1px solid ${theme.palette.mode === 'dark' ? '#303030' : '#e8e8e8'};
+  border-radius: 2px;
+  box-sizing: content-box;
+  padding: 0 4px 0 10px;
+  outline: 0;
+  overflow: hidden;
+  &:focus {
+    border-color: ${theme.palette.mode === 'dark' ? '#177ddc' : '#40a9ff'};
+    background-color: ${theme.palette.mode === 'dark' ? '#003b57' : '#e6f7ff'};
+  }
+  & span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  & svg {
+    font-size: 12px;
+    cursor: pointer;
+    padding: 4px;
+  }
+`
+);
+
+const Listbox = styled('ul')(
+  ({ theme }) => `
+  width: 300px;
+  margin: 2px 0 0;
+  padding: 0;
+  position: absolute;
+  list-style: none;
+  background-color: ${theme.palette.mode === 'dark' ? '#141414' : '#fff'};
+  overflow: auto;
+  max-height: 250px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  & li {
+    padding: 5px 12px;
+    display: flex;
+    & span {
+      flex-grow: 1;
+    }
+    & svg {
+      color: transparent;
+    }
+  }
+  & li[aria-selected='true'] {
+    background-color: ${theme.palette.mode === 'dark' ? '#2b2b2b' : '#fafafa'};
+    font-weight: 600;
+    & svg {
+      color: #1890ff;
+    }
+  }
+  & li.${autocompleteClasses.focused} {
+    background-color: ${theme.palette.mode === 'dark' ? '#003b57' : '#e6f7ff'};
+    cursor: pointer;
+    & svg {
+      color: currentColor;
+    }
+  }
+`
+);
 
 export const UserSelector = (props: UserSelectorProps) => {
-  const { name, label, users, setUsers, err } = props;
+  const { setSelectedUsers } = props;
+  const [users, SetUsers] = React.useState<UserDto[]>([]);
 
-  const new_users: User[] = database.users;
-  const addUser = (event: any) => setUsers([...users, new_users[event.target.value]]);
-  const removeUser = (uid: User) => setUsers(users.filter((user: User) => user !== uid));
+  React.useEffect(() => {
+    const api = new UserApi({ apiKey: window.localStorage.getItem('token') ?? '' });
+    (async () => {
+      const resp = await api.apiUserGet();
+      SetUsers(resp.data);
+    })();
+  }, []);
 
-  /* TODO: actually fetch the users from the backend, rather than hardcode them */
-  // React.useEffect(() => {
-  //     const getUsers = () => {
-  //         // users =
-  //         // await request('/api/users/')
-  //             // .then((res) => res.users)
-  //             // .then
-  //     }
+  const {
+    getRootProps,
+    getInputLabelProps,
+    getInputProps,
+    getTagProps,
+    getListboxProps,
+    getOptionProps,
+    groupedOptions,
+    value,
+    focused,
+    setAnchorEl
+  } = useAutocomplete({
+    id: 'customized-hook-demo',
+    defaultValue: [],
+    multiple: true,
+    options: users,
+    getOptionLabel: (option) => option.firstName + ' ' + option.lastName
+  });
 
-  //     getUsers();
-  // }, [NewUsers]);
+  React.useEffect(() => {
+    setSelectedUsers(value);
+  }, [value]);
 
   return (
-    <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
-      <FormControl sx={{ m: 1, width: '100%' }}>
-        <InputLabel id={`select-${name}-inputlabel`}>Add {label}</InputLabel>
-        <Select
-          labelId={`select-${name}-label`}
-          id={`select-${name}-id`}
-          value={users}
-          onChange={addUser}
-          input={<OutlinedInput label={label} />}
-        >
-          {new_users
-            .filter((user) => !users.some((u) => u.id === user.id))
-            .map((user, idx) => (
-              <MenuItem
-                key={`menuitem-add-usr-${idx}`}
-                value={new_users.findIndex((u) => u.id === user.id)}
-              >
-                {user.name}
-              </MenuItem>
-            ))}
-        </Select>
-      </FormControl>
-      {err.cond ? <Alert severity="warning">{err.msg}</Alert> : <></>}
-      <UserDisplay users={users} removeUser={removeUser} />
-    </Box>
+    <Root>
+      <div {...getRootProps()}>
+        <Label {...getInputLabelProps()}>Members</Label>
+        <InputWrapper ref={setAnchorEl} className={focused ? 'focused' : ''}>
+          {value.map((option: UserDto, index: number) => (
+            // eslint-disable-next-line react/jsx-key
+            <StyledTag
+              label={option.firstName + ' ' + option.lastName}
+              {...getTagProps({ index })}
+            />
+          ))}
+          <input {...getInputProps()} />
+        </InputWrapper>
+      </div>
+      {groupedOptions.length > 0 ? (
+        <Listbox {...getListboxProps()}>
+          {(groupedOptions as typeof users).map((option, index) => (
+            // eslint-disable-next-line react/jsx-key
+            <li {...getOptionProps({ option, index })}>
+              <span>{option.firstName + ' ' + option.lastName}</span>
+              <CheckIcon fontSize="small" />
+            </li>
+          ))}
+        </Listbox>
+      ) : null}
+    </Root>
   );
 };
-
-// based on https://mui.com/material-ui/react-select/

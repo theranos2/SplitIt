@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using split_it.Authentication;
 using split_it.Exceptions.Http;
 using split_it.Models;
@@ -10,6 +12,7 @@ using split_it.Services;
 namespace split_it.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class GroupController : ControllerBase
     {
@@ -44,6 +47,43 @@ namespace split_it.Controllers
                 throw new HttpForbiddenRequest($"Permission Denied. Cannot view group that you are not apart of.");
 
             return group.ConvertToDto();
+        }
+
+        /// <summary>
+        /// Get list of groups that the currently authorised user is a part of
+        /// </summary>
+        /// <response code="400">Negative take, skip values</response>
+        [HttpGet]
+        public List<SimpleGroupDto> GetMany(
+            [FromQuery(Name = "take")] int take = 10,
+            [FromQuery(Name = "skip")] int skip = 0
+        )
+        {
+            if (take < 0 || skip < 0)
+                throw new HttpBadRequest("Query parameters must be non-negative");
+
+            var curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
+            if (curUser == null)
+                throw new HttpBadRequest("Wtf its null????");
+
+
+            var qb = db.Groups
+                .Include(group => group.Owner)
+                .Include(group => group.Members)
+                .Where(group =>
+                    group.Owner.Id == curUser.Id ||
+                    group.Members
+                        .Where(member => member.Id == curUser.Id)
+                        .Any()
+                ) // Only show group user is a part of
+                .AsQueryable();
+
+            return qb
+                .OrderBy(group => group.Name)
+                .Skip(skip)
+                .Take(take)
+                .Select(SimpleGroupDto.FromEntity)
+                .ToList();
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
