@@ -48,7 +48,7 @@ const NotificationDisplay = (props: { notification: Notification }) => {
                 {notification.message}
               </Typography>
               <Typography noWrap variant="caption" color={'#2196f3'} fontWeight={'bold'}>
-                {getNotifAge(notification.createdAt.toLocaleString(), currDate)}
+                {getNotifAge(notification?.createdAt?.toLocaleString(), currDate)}
               </Typography>
             </Grid>
           </Grid>
@@ -58,7 +58,7 @@ const NotificationDisplay = (props: { notification: Notification }) => {
   );
 };
 
-const getNotifAge = (notifDate: string, now: Date): string => {
+const getNotifAge = (notifDate: string | undefined, now: Date): string => {
   if (!notifDate) return 'no date';
 
   const s: Date = new Date(notifDate);
