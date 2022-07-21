@@ -92,14 +92,14 @@ namespace split_it.Controllers
         /// <response code="403">Permission denied. Only the members of the bill can view the bill.</response>
         /// <response code="404">Not found. When the supplied bill guid is not found.</response>
         [HttpGet("{bill_id:Guid}")]
-        public BillDto Get(Guid bill_id)
+        public DetailedBillDto Get(Guid bill_id)
         {
             Bill bill = db.Bills.Where(x => x.Id == bill_id)
                 .Include(bill => bill.Owner)
-                .Include(bill => bill.Shares)
-                .ThenInclude(share => share.Payer)
-                .Include(share => share.Shares)
-                .ThenInclude(share => share.Items).FirstOrDefault();
+                .Include(bill => bill.Shares).ThenInclude(share => share.Payer)
+                .Include(bill => bill.Shares).ThenInclude(share => share.Items)
+                .Include(share => share.OverallItems)
+                .FirstOrDefault();
 
             if (bill == null)
                 throw new HttpNotFound($"Cannot find bill: {bill_id}");
@@ -112,7 +112,7 @@ namespace split_it.Controllers
             if (bill.Owner.Id != curUserId && !found)
                 throw new HttpForbiddenRequest($"Permission Denied. Cannot view bill that you are not apart of.");
 
-            return bill.ConvertToDto();
+            return DetailedBillDto.FromEntity(bill);
         }
 
         /// <summary>Create Bill</summary>
