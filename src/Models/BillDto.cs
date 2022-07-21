@@ -101,4 +101,33 @@ namespace split_it.Models
         [Required]
         public ICollection<Guid> MemberIds { get; set; }
     }
+
+    public class SimpleGroupDto
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public UserInfoDto Owner { get; set; }
+        public int MemberCount { get; set; }
+
+        public static SimpleGroupDto FromEntity(Group group)
+        {
+            return new SimpleGroupDto
+            {
+                Id = group.Id,
+                Name = group.Name,
+                Owner = new UserInfoDto
+                {
+                    Id = group.Owner.Id,
+                    FirstName = group.Owner.FirstName,
+                    LastName = group.Owner.LastName
+                },
+                MemberCount = group.Members.Count
+            };
+        }
+    }
+
+    public class DetailGroupDto : SimpleGroupDto
+    {
+        public ICollection<UserInfoDto> Members { get; set; }
+    }
 }
