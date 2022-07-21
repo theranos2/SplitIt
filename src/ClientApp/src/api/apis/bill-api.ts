@@ -18,6 +18,7 @@ import { Configuration } from '../configuration';
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
 import { BillDto } from '../models';
 import { BillSimpleDtoIn } from '../models';
+import { DetailedBillDto } from '../models';
 import { SimpleBillDto } from '../models';
 /**
  * BillApi - axios parameter creator
@@ -542,7 +543,7 @@ export const BillApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBillBillIdGet(billId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<BillDto>>> {
+        async apiBillBillIdGet(billId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<DetailedBillDto>>> {
             const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiBillBillIdGet(billId, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
@@ -675,7 +676,7 @@ export const BillApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBillBillIdGet(billId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<BillDto>> {
+        async apiBillBillIdGet(billId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<DetailedBillDto>> {
             return BillApiFp(configuration).apiBillBillIdGet(billId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -784,7 +785,7 @@ export class BillApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof BillApi
      */
-    public async apiBillBillIdGet(billId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<BillDto>> {
+    public async apiBillBillIdGet(billId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<DetailedBillDto>> {
         return BillApiFp(this.configuration).apiBillBillIdGet(billId, options).then((request) => request(this.axios, this.basePath));
     }
     /**
