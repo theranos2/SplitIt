@@ -20,6 +20,15 @@ namespace split_it.Models
         public Guid Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public static UserInfoDto FromEntity(User user)
+        {
+            return new UserInfoDto
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+            };
+        }
     }
 
     public class UserFilter

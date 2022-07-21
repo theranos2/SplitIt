@@ -1,9 +1,50 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace split_it.Models
 {
+    // For output only
+    public class DetailedShareDto
+    {
+        public Guid Id { get; set; }
+        public bool HasPaid { get; set; } = false;
+        public bool HasRejected { get; set; } = false;
+        public double Total { get; set; }
+        public UserInfoDto Payer { get; set; }
+        public ICollection<DetailedItemDto> Items { get; set; }
+        public static DetailedShareDto FromEntity(Share share)
+        {
+            return new DetailedShareDto
+            {
+                Id = share.Id,
+                HasPaid = share.hasPaid,
+                HasRejected = share.hasRejected,
+                Total = share.Total,
+                Payer = UserInfoDto.FromEntity(share.Payer),
+                Items = share.Items.Select(DetailedItemDto.FromEntity).ToList(),
+            };
+        }
+    }
+
+    // for output only
+    public class DetailedItemDto
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public double Price { get; set; }
+        public static DetailedItemDto FromEntity(Item item)
+        {
+            return new DetailedItemDto
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Price = item.Price,
+            };
+        }
+    }
+
     // For output only
     public class SimpleBillDto
     {
@@ -13,13 +54,39 @@ namespace split_it.Models
         public double Total { get; set; }
         public string Title { get; set; }
         public bool IsSettled { get; set; }
+        public static SimpleBillDto FromEntity(Bill bill)
+        {
+            return new SimpleBillDto
+            {
+                Id = bill.Id,
+                Created = bill.Created,
+                Owner = UserInfoDto.FromEntity(bill.Owner),
+                Total = bill.Total,
+                Title = bill.Title,
+                IsSettled = bill.isSettled,
+            };
+        }
     }
 
     // For output only
     public class DetailedBillDto : SimpleBillDto
     {
-        public ICollection<ShareDto> Shares { get; set; }
-        public ICollection<ItemDto> OverallItems { get; set; }
+        public ICollection<DetailedShareDto> Shares { get; set; }
+        public ICollection<DetailedItemDto> OverallItems { get; set; }
+        public static new DetailedBillDto FromEntity(Bill bill)
+        {
+            return new DetailedBillDto
+            {
+                Id = bill.Id,
+                Created = bill.Created,
+                Owner = UserInfoDto.FromEntity(bill.Owner),
+                Total = bill.Total,
+                Title = bill.Title,
+                IsSettled = bill.isSettled,
+                Shares = bill.Shares.Select(DetailedShareDto.FromEntity).ToList(),
+                OverallItems = bill.OverallItems.Select(DetailedItemDto.FromEntity).ToList()
+            };
+        }
     }
     public class BillSimpleDtoIn
     {

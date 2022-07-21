@@ -17,12 +17,65 @@ import { Configuration } from '../configuration';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
 import { GroupDto } from '../models';
+import { SimpleGroupDto } from '../models';
 /**
  * GroupApi - axios parameter creator
  * @export
  */
 export const GroupApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @summary Get list of groups that the currently authorised user is a part of
+         * @param {number} [take] 
+         * @param {number} [skip] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiGroupGet: async (take?: number, skip?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Group`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Token required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("Token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["Token"] = localVarApiKeyValue;
+            }
+
+            if (take !== undefined) {
+                localVarQueryParameter['take'] = take;
+            }
+
+            if (skip !== undefined) {
+                localVarQueryParameter['skip'] = skip;
+            }
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * Use this route to get a group. Supply the group guid.
          * @summary Get Group
@@ -181,6 +234,21 @@ export const GroupApiAxiosParamCreator = function (configuration?: Configuration
 export const GroupApiFp = function(configuration?: Configuration) {
     return {
         /**
+         * 
+         * @summary Get list of groups that the currently authorised user is a part of
+         * @param {number} [take] 
+         * @param {number} [skip] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiGroupGet(take?: number, skip?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<SimpleGroupDto>>>> {
+            const localVarAxiosArgs = await GroupApiAxiosParamCreator(configuration).apiGroupGet(take, skip, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
          * Use this route to get a group. Supply the group guid.
          * @summary Get Group
          * @param {string} groupId 
@@ -233,6 +301,17 @@ export const GroupApiFp = function(configuration?: Configuration) {
 export const GroupApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     return {
         /**
+         * 
+         * @summary Get list of groups that the currently authorised user is a part of
+         * @param {number} [take] 
+         * @param {number} [skip] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiGroupGet(take?: number, skip?: number, options?: AxiosRequestConfig): Promise<AxiosResponse<Array<SimpleGroupDto>>> {
+            return GroupApiFp(configuration).apiGroupGet(take, skip, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Use this route to get a group. Supply the group guid.
          * @summary Get Group
          * @param {string} groupId 
@@ -273,6 +352,18 @@ export const GroupApiFactory = function (configuration?: Configuration, basePath
  * @extends {BaseAPI}
  */
 export class GroupApi extends BaseAPI {
+    /**
+     * 
+     * @summary Get list of groups that the currently authorised user is a part of
+     * @param {number} [take] 
+     * @param {number} [skip] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GroupApi
+     */
+    public async apiGroupGet(take?: number, skip?: number, options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<SimpleGroupDto>>> {
+        return GroupApiFp(this.configuration).apiGroupGet(take, skip, options).then((request) => request(this.axios, this.basePath));
+    }
     /**
      * Use this route to get a group. Supply the group guid.
      * @summary Get Group
