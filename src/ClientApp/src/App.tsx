@@ -1,7 +1,6 @@
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import './App.css';
 
-import ProtectedRoute from 'components/Routes/RouteProtected';
 import PrivateRoute from 'components/Routes/RoutePrivate';
 
 import Login from 'components/AccountManagement/Login';
