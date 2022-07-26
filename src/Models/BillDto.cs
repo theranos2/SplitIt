@@ -116,9 +116,6 @@ namespace split_it.Models
         [Required]
         public Guid OwnerId { get; set; }
 
-        [Required]
-        public double Total { get; set; }
-
         /// <summary>Defaults to current time</summary>
         public DateTime Created { get; set; } = DateTime.Now;
 
