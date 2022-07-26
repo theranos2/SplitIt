@@ -13,12 +13,10 @@ namespace seeder
                 Id = Guid.NewGuid(),
                 Owner = UserSeeder.Data[0],
                 Title = "Something",
-                Total = 6.9,
                 Shares = new List<Share>
                 {
                     new Share
                     {
-                        Total = 3,
                         Payer = UserSeeder.Data[1],
                         Items = new List<Item>{
                             new Item
@@ -27,12 +25,9 @@ namespace seeder
                                 Price = 3
                             },
                         },
-                        hasPaid = false,
-                        hasRejected = false,
                     },
                     new Share
                     {
-                        Total = 3.9,
                         Payer = UserSeeder.Data[0],
                         Items = new List<Item>{
                             new Item
@@ -49,20 +44,7 @@ namespace seeder
                     }
                 },
                 Created = DateTime.Now,
-                isSettled = false,
-                OverallItems = new List<Item>
-                {
-                    new Item
-                    {
-                        Name = "Popcorn",
-                        Price = 6
-                    },
-                    new Item
-                    {
-                        Name = "Asshat tax",
-                        Price = 0.9
-                    }
-                },
+                IsSettled = false,
             }
         };
 
