@@ -213,15 +213,12 @@ namespace split_it.Controllers
                 .ThenInclude(share => share.Items).FirstOrDefault();
 
             if (bill == null)
-                throw new HttpNotFound($"Cannot find payer: {bill_id}");
+                throw new HttpNotFound($"Cannot find bill: {bill_id}");
 
             User curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
 
             if (bill.Owner.Id != curUser.Id)
-                throw new HttpForbiddenRequest($"Permission Denied. Cannot edit bill that is not yours.");
-
-            if (bill.Owner.Id != curUser.Id)
-                throw new HttpForbiddenRequest($"Permission Denied. Cannot edit bill that is not yours.");
+                throw new HttpForbiddenRequest("Cannot edit bill that is not yours.");
 
             bill.Title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(billDto.Title.Trim().ToLower());
 
