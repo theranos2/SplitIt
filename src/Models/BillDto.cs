@@ -77,11 +77,26 @@ namespace split_it.Models
         }
     }
 
+    public class AttachmentDto
+    {
+        public Guid Id { get; set; }
+        public string Title { get; set; }
+
+        public static AttachmentDto FromEntity(FileAttachment file)
+        {
+            return new AttachmentDto
+            {
+                Id = file.Id,
+                Title = file.Title,
+            };
+        }
+    }
+
     // For output only
     public class DetailedBillDto : SimpleBillDto
     {
         public ICollection<DetailedShareDto> Shares { get; set; }
-        public ICollection<Guid> Attachments { get; set; }
+        public ICollection<AttachmentDto> Attachments { get; set; }
 
         public static new DetailedBillDto FromEntity(Bill bill)
         {
@@ -94,7 +109,7 @@ namespace split_it.Models
                 Title = bill.Title,
                 IsSettled = bill.IsSettled,
                 Shares = bill.Shares.Select(DetailedShareDto.FromEntity).ToList(),
-                Attachments = bill.Attachments.Select(attachment => attachment.Id).ToList()
+                Attachments = bill.Attachments.Select(AttachmentDto.FromEntity).ToList()
             };
         }
     }

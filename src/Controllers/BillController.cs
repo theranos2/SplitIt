@@ -461,7 +461,7 @@ namespace split_it.Controllers
             file.CopyTo(content);
             var attachment = new FileAttachment
             {
-                Title = file.Name,
+                Title = file.FileName,
                 ContentType = file.ContentType,
                 Content = content.ToArray()
             };
