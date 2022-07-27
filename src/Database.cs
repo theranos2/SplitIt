@@ -69,13 +69,15 @@ namespace split_it
         public DateTime Created { get; set; }
         public User Owner { get; set; }
 
-        /// <summary>Inferred from Sum of total shares</summary>
+        /// <summary>Inferred from Sum of total shares (only the non-rejected ones)</summary>
         [NotMapped]
         public double Total
         {
             get
             {
-                return this.Shares.Sum(share => share.Total);
+                return this.Shares
+                    .Where(share => share.Status != Status.Rejected)
+                    .Sum(share => share.Total);
             }
         }
 
