@@ -81,6 +81,8 @@ namespace split_it.Models
     public class DetailedBillDto : SimpleBillDto
     {
         public ICollection<DetailedShareDto> Shares { get; set; }
+        public ICollection<Guid> Attachments { get; set; }
+
         public static new DetailedBillDto FromEntity(Bill bill)
         {
             return new DetailedBillDto
@@ -92,6 +94,7 @@ namespace split_it.Models
                 Title = bill.Title,
                 IsSettled = bill.IsSettled,
                 Shares = bill.Shares.Select(DetailedShareDto.FromEntity).ToList(),
+                Attachments = bill.Attachments.Select(attachment => attachment.Id).ToList()
             };
         }
     }
