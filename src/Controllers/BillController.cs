@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using split_it.Authentication;
@@ -420,16 +422,73 @@ namespace split_it.Controllers
             return NoContent();
         }
 
-        [HttpPost("{bill_id:Guid}/attachment")]
-        public string AddAttachment(Guid bill_id)
+        [HttpGet("{BillId:Guid}/attachment/{AttachmentId:Guid}")]
+        public IActionResult GetAttachment(Guid BillId, Guid AttachmentId)
         {
-            return "TODO";
+            var curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
+
+            var bill = db.Bills
+                .Where(bill => bill.Id == BillId &&
+                    (bill.Owner.Id == curUser.Id || bill.Shares.Any(share => share.Payer.Id == curUser.Id))
+                )
+                .Include(bill => bill.Attachments)
+                .FirstOrDefault();
+            if (bill == null)
+                throw new HttpNotFound("Bill not found");
+
+            var attachment = bill.Attachments?.Where(attachment => attachment.Id == AttachmentId).FirstOrDefault();
+            if (attachment == null)
+                throw new HttpNotFound("Attachment not found");
+
+            return File(attachment.Content, attachment.ContentType);
         }
 
-        [HttpGet("/api/file/{file_name}")]
-        public string GetFile(string file_name)
+        [HttpPost("{BillId:Guid}/attachment")]
+        public IActionResult AddAttachment(Guid BillId, IFormFile file)
         {
-            return "TODO";
+            var bill = db.Bills.Where(bill => bill.Id == BillId).FirstOrDefault();
+            if (bill == null)
+                throw new HttpNotFound("Bill not found");
+
+            var user = IdentityTools.GetUser(db, HttpContext.User.Identity);
+            if (user == null || user.Id != bill.Owner.Id)
+                throw new HttpForbidden("Cannot add file to bill you do not own");
+
+            using var content = new MemoryStream();
+            file.CopyTo(content);
+            var attachment = new FileAttachment
+            {
+                Title = file.Name,
+                ContentType = file.ContentType,
+                Content = content.ToArray()
+            };
+
+            db.Files.Add(attachment);
+
+            if (bill.Attachments == null)
+                bill.Attachments = new List<FileAttachment> { attachment };
+            else
+                bill.Attachments.Add(attachment);
+            db.SaveChanges();
+
+            return Ok(new { Id = attachment.Id, Title = attachment.Title });
+        }
+
+        [HttpDelete("{BillId:Guid}/attachment/{AttachmentId:Guid}")]
+        public IActionResult DeleteAttachment(Guid BillId, Guid AttachmentId)
+        {
+            var bill = db.Bills.Where(bill => bill.Id == BillId).FirstOrDefault();
+            if (bill == null)
+                throw new HttpNotFound("Bill not found");
+
+            var user = IdentityTools.GetUser(db, HttpContext.User.Identity);
+            if (user == null || user.Id != bill.Owner.Id)
+                throw new HttpForbidden("Cannot remove file from bill you do not own");
+
+            bill.Attachments = bill.Attachments.Where(attachment => attachment.Id != AttachmentId).ToList();
+            db.SaveChanges();
+
+            return NoContent();
         }
     }
 }
