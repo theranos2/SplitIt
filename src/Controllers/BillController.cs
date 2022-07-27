@@ -328,6 +328,7 @@ namespace split_it.Controllers
         /// <response code="404">Bill ID given not found</response>
         /// <response code="400">Rejecting a bill that has been settled</response>
         /// <response code="403">Rejecting a bill you are not a part of</response>
+
         [HttpPost("{bill_id:Guid}/reject")]
         public IActionResult Reject(Guid bill_id)
         {
@@ -339,6 +340,7 @@ namespace split_it.Controllers
         /// <response code="404">Bill ID given not found</response>
         /// <response code="400">Accepting a bill that has been settled or was previously rejected</response>
         /// <response code="403">Accepting a bill you are not a part of</response>
+
         [HttpPost("{bill_id:Guid}/accept")]
         public IActionResult Accept(Guid bill_id)
         {
@@ -429,6 +431,15 @@ namespace split_it.Controllers
         [HttpGet("/api/file/{file_name}")]
         public string GetFile(string file_name)
         {
+            return "TODO";
+        }
+
+        // testing route
+        [AllowAnonymous]
+        [HttpGet("/emails")]
+        public string SENDME()
+        {
+            MailService.SendMail("k.ken@student.unsw.edu.au", "hey there", "Hi");
             return "TODO";
         }
     }

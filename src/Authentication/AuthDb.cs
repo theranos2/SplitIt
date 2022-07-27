@@ -33,7 +33,8 @@ namespace split_it.Authentication
 
     public static class CookiesDb
     {
-        private static SortedDictionary<string, MyCookie> Db = new SortedDictionary<string, MyCookie>();
+        // need to do some killing. else no memory
+        public static SortedDictionary<string, MyCookie> Db = new SortedDictionary<string, MyCookie>();
 
 
         // returns null if not found
@@ -58,7 +59,7 @@ namespace split_it.Authentication
                 Db.Remove(cookieString);
         }
 
-        private static string GenerateUniqueCookieString()
+        public static string GenerateUniqueCookieString()
         {
             string cookieString;
             do
@@ -68,7 +69,7 @@ namespace split_it.Authentication
                     byte[] tokenData = new byte[128];
                     rng.GetBytes(tokenData);
 
-                    cookieString = Convert.ToBase64String(tokenData);
+                    cookieString = Convert.ToBase64String(tokenData).Replace("/", "").Replace("=", "").Replace("+", ""); // url safe lollll
                 }
 
             } while (Db.ContainsKey(cookieString));
