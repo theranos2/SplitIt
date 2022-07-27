@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace split_it.Models
 {
@@ -80,16 +81,26 @@ namespace split_it.Models
     public class AttachmentDto
     {
         public Guid Id { get; set; }
-        public string Title { get; set; }
+        public string Caption { get; set; }
 
         public static AttachmentDto FromEntity(FileAttachment file)
         {
             return new AttachmentDto
             {
                 Id = file.Id,
-                Title = file.Title,
+                Caption = file.Caption,
             };
         }
+    }
+
+    public class FileUploadDto
+    {
+        [Required]
+        public IFormFile File { get; set; }
+
+        /// <summary>Defaults to file name if not provided</summary>
+        [MaxLength(1000)]
+        public string Caption { get; set; } = null;
     }
 
     // For output only

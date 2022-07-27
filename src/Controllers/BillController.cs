@@ -447,7 +447,7 @@ namespace split_it.Controllers
         }
 
         [HttpPost("{BillId:Guid}/attachment")]
-        public IActionResult AddAttachment(Guid BillId, IFormFile file)
+        public IActionResult AddAttachment(Guid BillId, [FromForm] FileUploadDto input)
         {
             var bill = db.Bills.Where(bill => bill.Id == BillId).FirstOrDefault();
             if (bill == null)
@@ -458,19 +458,18 @@ namespace split_it.Controllers
                 throw new HttpForbidden("Cannot add file to bill you do not own");
 
             using var content = new MemoryStream();
-            file.CopyTo(content);
+            input.File.CopyTo(content);
             var attachment = new FileAttachment
             {
-                Title = file.FileName,
-                ContentType = file.ContentType,
+                Caption = string.IsNullOrEmpty(input.Caption) ? input.File.FileName : input.Caption,
+                ContentType = input.File.ContentType,
                 Content = content.ToArray()
             };
 
-            db.Files.Add(attachment);
             bill.Attachments.Add(attachment);
             db.SaveChanges();
 
-            return Ok(new { Id = attachment.Id, Title = attachment.Title });
+            return Ok(new { Id = attachment.Id, Caption = attachment.Caption });
         }
 
         [HttpDelete("{BillId:Guid}/attachment/{AttachmentId:Guid}")]

@@ -50,7 +50,7 @@ namespace split_it
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        public string Title { get; set; }
+        public string Caption { get; set; }
         public string ContentType { get; set; }
         public byte[] Content { get; set; }
     }
