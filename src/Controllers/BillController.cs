@@ -349,6 +349,37 @@ namespace split_it.Controllers
             return NoContent();
         }
 
+        /// <summary>Re-invite user to the bill if they rejected it</summary>
+        /// <response code="404">Bill or User not found</response>
+        /// <response code="403">Reinvite user to bill you do not own</response>
+        /// <response code="400">Reinviting user who is not in bill or user has not rejected the bill</response>
+        [HttpPost("{BillId:Guid}/reinvite/{UserId:Guid}")]
+        public IActionResult Reinvite(Guid BillId, Guid UserId)
+        {
+            var bill = db.Bills.Where(bill => bill.Id == BillId).FirstOrDefault();
+            if (bill == null)
+                throw new HttpNotFound($"Bill ID: {BillId} not found");
+
+            var owner = IdentityTools.GetUser(db, HttpContext.User.Identity);
+            if (owner == null || owner.Id != bill.Owner.Id)
+                throw new HttpForbidden("Cannot reinvite user to bill you do not own");
+
+            var user = db.Users.Where(user => user.Id == UserId).FirstOrDefault();
+            if (user == null)
+                throw new HttpNotFound($"User ID: {UserId} not found");
+
+            var billShare = bill.Shares.Where(share => share.Payer.Id == user.Id).FirstOrDefault();
+            if (billShare == null)
+                throw new HttpBadRequest("Cannot reinvite user who is not in bill");
+
+            if (billShare.Status != Status.Rejected)
+                throw new HttpBadRequest("The user has not rejected the bill");
+
+            billShare.Status = Status.Pending;
+
+            return NoContent();
+        }
+
         [HttpDelete("{bill_id:Guid}")]
         public IActionResult Delete(Guid bill_id)
         {
