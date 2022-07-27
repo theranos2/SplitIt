@@ -90,6 +90,7 @@ namespace split_it.Controllers
                 .Include(bill => bill.Owner)
                 .Include(bill => bill.Shares).ThenInclude(share => share.Payer)
                 .Include(bill => bill.Shares).ThenInclude(share => share.Items)
+                .Include(bill => bill.Attachments)
                 .FirstOrDefault();
 
             if (bill == null)
@@ -212,7 +213,9 @@ namespace split_it.Controllers
                 .Include(bill => bill.Shares)
                 .ThenInclude(share => share.Payer)
                 .Include(d => d.Shares)
-                .ThenInclude(share => share.Items).FirstOrDefault();
+                .ThenInclude(share => share.Items)
+                .Include(bill => bill.Attachments)
+                .FirstOrDefault();
 
             if (bill == null)
                 throw new HttpNotFound($"Cannot find bill: {bill_id}");
@@ -464,11 +467,7 @@ namespace split_it.Controllers
             };
 
             db.Files.Add(attachment);
-
-            if (bill.Attachments == null)
-                bill.Attachments = new List<FileAttachment> { attachment };
-            else
-                bill.Attachments.Add(attachment);
+            bill.Attachments.Add(attachment);
             db.SaveChanges();
 
             return Ok(new { Id = attachment.Id, Title = attachment.Title });
