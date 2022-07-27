@@ -30,7 +30,7 @@ namespace split_it.Controllers
         /// <response code="404">Not found. When the supplied group guid is not found.</response>
         /// <response code="403">Permission denied. Only group members can make see group details.</response>
         [HttpGet("{groupId:Guid}")]
-        public GroupDto Get(Guid groupId)
+        public DetailedGroupDto Get(Guid groupId)
         {
             Group group = db.Groups.Where(x => x.Id == groupId).FirstOrDefault();
 
@@ -46,7 +46,7 @@ namespace split_it.Controllers
             if (group.Owner.Id != curUserId && !found)
                 throw new HttpForbiddenRequest($"Permission Denied. Cannot view group that you are not apart of.");
 
-            return group.ConvertToDto();
+            return DetailedGroupDto.FromEntity(group);
         }
 
         /// <summary>
@@ -86,7 +86,6 @@ namespace split_it.Controllers
                 .ToList();
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)]
         private Group MakeGroup(GroupDto groupDto)
         {
             List<User> members = new List<User>();
@@ -118,7 +117,7 @@ namespace split_it.Controllers
         /// <response code="404">Not found. When the supplied user guid is not found.</response>
         /// <response code="400">Group name is left empty</response>
         [HttpPost]
-        public GroupDto Create(GroupDto groupDto)
+        public DetailedGroupDto Create(GroupDto groupDto)
         {
             if (string.IsNullOrEmpty(groupDto.Name))
                 throw new HttpBadRequest("Group name cannot be empty");
@@ -138,7 +137,7 @@ namespace split_it.Controllers
                 });
             }
 
-            return newGroup.ConvertToDto();
+            return DetailedGroupDto.FromEntity(newGroup);
         }
 
         /// <summary>Edit a Group</summary>
@@ -146,7 +145,7 @@ namespace split_it.Controllers
         /// <response code="403">Permission denied. Only the owner of the group can make changes to the group.</response>
         /// <response code="404">Not found. When the supplied user guid is not found.</response>
         [HttpPut("{groupId:Guid}")]
-        public GroupDto Edit(Guid groupId, GroupDto groupDto)
+        public DetailedGroupDto Edit(Guid groupId, GroupDto groupDto)
         {
             Group group = db.Groups.Where(x => x.Id == groupId).FirstOrDefault();
 
@@ -167,7 +166,7 @@ namespace split_it.Controllers
 
             db.SaveChanges();
 
-            return group.ConvertToDto();
+            return DetailedGroupDto.FromEntity(group);
         }
     }
 }

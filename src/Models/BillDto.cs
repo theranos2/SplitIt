@@ -9,19 +9,26 @@ namespace split_it.Models
     public class DetailedShareDto
     {
         public Guid Id { get; set; }
-        public bool HasPaid { get; set; } = false;
-        public bool HasRejected { get; set; } = false;
-        public double Total { get; set; }
+        public Status Status { get; set; }
+
+        /// <summary>Inferred from sum of items</summary>
+        public double Total
+        {
+            get
+            {
+                return this.Items.Sum(i => i.Price);
+            }
+        }
+
         public UserInfoDto Payer { get; set; }
         public ICollection<DetailedItemDto> Items { get; set; }
+
         public static DetailedShareDto FromEntity(Share share)
         {
             return new DetailedShareDto
             {
                 Id = share.Id,
-                HasPaid = share.hasPaid,
-                HasRejected = share.hasRejected,
-                Total = share.Total,
+                Status = share.Status,
                 Payer = UserInfoDto.FromEntity(share.Payer),
                 Items = share.Items.Select(DetailedItemDto.FromEntity).ToList(),
             };
@@ -34,6 +41,7 @@ namespace split_it.Models
         public Guid Id { get; set; }
         public string Name { get; set; }
         public double Price { get; set; }
+
         public static DetailedItemDto FromEntity(Item item)
         {
             return new DetailedItemDto
@@ -54,6 +62,7 @@ namespace split_it.Models
         public double Total { get; set; }
         public string Title { get; set; }
         public bool IsSettled { get; set; }
+
         public static SimpleBillDto FromEntity(Bill bill)
         {
             return new SimpleBillDto
@@ -63,7 +72,7 @@ namespace split_it.Models
                 Owner = UserInfoDto.FromEntity(bill.Owner),
                 Total = bill.Total,
                 Title = bill.Title,
-                IsSettled = bill.isSettled,
+                IsSettled = bill.IsSettled,
             };
         }
     }
@@ -72,7 +81,6 @@ namespace split_it.Models
     public class DetailedBillDto : SimpleBillDto
     {
         public ICollection<DetailedShareDto> Shares { get; set; }
-        public ICollection<DetailedItemDto> OverallItems { get; set; }
         public static new DetailedBillDto FromEntity(Bill bill)
         {
             return new DetailedBillDto
@@ -82,13 +90,13 @@ namespace split_it.Models
                 Owner = UserInfoDto.FromEntity(bill.Owner),
                 Total = bill.Total,
                 Title = bill.Title,
-                IsSettled = bill.isSettled,
+                IsSettled = bill.IsSettled,
                 Shares = bill.Shares.Select(DetailedShareDto.FromEntity).ToList(),
-                OverallItems = bill.OverallItems.Select(DetailedItemDto.FromEntity).ToList()
             };
         }
     }
-    public class BillSimpleDtoIn
+
+    public class SimpleBillInputDto
     {
         [Required]
         [MaxLength(100)]
@@ -100,52 +108,40 @@ namespace split_it.Models
 
         [Required]
         [Range(1, 1000)]
-        public double Amount { get; set; }
+        public double Total { get; set; }
     }
 
-    public class BillDto
+    public class BillInputDto
     {
-        public Guid Id { get; set; }
-
-        public DateTime Created { get; set; }
-
+        [Required]
         public Guid OwnerId { get; set; }
 
-        public double Total { get; set; }
+        /// <summary>Defaults to current time</summary>
+        public DateTime Created { get; set; } = DateTime.Now;
 
         [Required]
         [MaxLength(100)]
+        [MinLength(3)]
         public string Title { get; set; }
 
         [Required]
-        public ICollection<ShareDto> Shares { get; set; }
-
-        public ICollection<ItemDto> OverallItems { get; set; } // derived from where?
-
-        public bool isSettled { get; set; }
+        [MinLength(1)]
+        public ICollection<ShareInputDto> Shares { get; set; }
     }
 
-    public class ShareDto
+    public class ShareInputDto
     {
-        //public Guid Id { get; set; } // do we need share id?
-        public bool hasPaid { get; set; } = false;
-
-        public bool hasRejected { get; set; } = false;
-
-        public double Total { get; set; }
-
         [Required]
         public Guid PayerId { get; set; }
 
         [Required]
-        public ICollection<ItemDto> Items { get; set; }
+        public ICollection<ItemInputDto> Items { get; set; }
 
-        // Anonymous User
-        public string Email { get; set; }
-        public string Name { get; set; }
+        /// <summary>Defaults to pending</summary>
+        public Status Status { get; set; } = Status.Pending;
     }
 
-    public class ItemDto
+    public class ItemInputDto
     {
         [Required]
         [MaxLength(200)]
@@ -158,7 +154,6 @@ namespace split_it.Models
 
     public class GroupDto
     {
-
         public Guid Id { get; set; }
         public Guid OwnerId { get; set; }
 
@@ -193,8 +188,24 @@ namespace split_it.Models
         }
     }
 
-    public class DetailGroupDto : SimpleGroupDto
+    public class DetailedGroupDto : SimpleGroupDto
     {
         public ICollection<UserInfoDto> Members { get; set; }
+        public static new DetailedGroupDto FromEntity(Group group)
+        {
+            return new DetailedGroupDto
+            {
+                Id = group.Id,
+                Name = group.Name,
+                Owner = new UserInfoDto
+                {
+                    Id = group.Owner.Id,
+                    FirstName = group.Owner.FirstName,
+                    LastName = group.Owner.LastName
+                },
+                MemberCount = group.Members.Count,
+                Members = group.Members.Select(UserInfoDto.FromEntity).ToList(),
+            };
+        }
     }
 }

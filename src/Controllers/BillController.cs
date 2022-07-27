@@ -26,8 +26,7 @@ namespace split_it.Controllers
             notificationService = _notificationService;
         }
 
-        [ApiExplorerSettings(IgnoreApi = true)]
-        private List<Share> ConvertToShares(ICollection<ShareDto> shares)
+        private List<Share> ConvertToShares(ICollection<ShareInputDto> shares)
         {
             List<Share> newShares = new List<Share>();
             foreach (var shareDto in shares)
@@ -39,7 +38,6 @@ namespace split_it.Controllers
                 // owner can modify, owner can specify if they have paid or not.!
                 //shareDto.hasPaid = false;  // done by paying / calling a paying route
                 //shareDto.hasRejected = false; // everytime the owner updates or edit the bill it will resend to those who have rejected 
-                shareDto.Total = 0.0;
 
                 User payer = db.Users.Where(x => x.Id == shareDto.PayerId).FirstOrDefault();
                 if (payer == null)
@@ -53,16 +51,14 @@ namespace split_it.Controllers
                 List<Item> newItems = new List<Item>();
                 foreach (var item in shareDto.Items)
                 {
-                    if (item.Name == null)
-                        item.Name = "";
+                    if (string.IsNullOrEmpty(item.Name))
+                        throw new HttpBadRequest("Item name cannot be empty");
 
                     item.Name = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(item.Name.Trim().ToLower());
-                    shareDto.Total += item.Price; // summing up the share
 
                     // convert itemDto to item
                     newItems.Add(new Item
                     {
-                        Id = Guid.Empty,
                         Name = item.Name,
                         Price = item.Price
                     });
@@ -71,15 +67,9 @@ namespace split_it.Controllers
                 newShares.Add(
                     new Share
                     {
-                        //Id = shareDto.Id,
-                        hasRejected = shareDto.hasRejected,
-                        hasPaid = shareDto.hasPaid,
                         Payer = payer,
                         Items = newItems,
-                        // round to upper 5 cents
-                        // 0.33 -> 0.35
-                        // 1.00 -> 1.00
-                        Total = Math.Round(Math.Ceiling(newItems.Sum(x => x.Price) / 0.01) * 0.01, 2)
+                        Status = shareDto.Status,
                     }
                 );
             }
@@ -98,7 +88,6 @@ namespace split_it.Controllers
                 .Include(bill => bill.Owner)
                 .Include(bill => bill.Shares).ThenInclude(share => share.Payer)
                 .Include(bill => bill.Shares).ThenInclude(share => share.Items)
-                .Include(share => share.OverallItems)
                 .FirstOrDefault();
 
             if (bill == null)
@@ -106,10 +95,10 @@ namespace split_it.Controllers
 
 
             Guid curUserId = IdentityTools.GetUser(db, HttpContext.User.Identity).Id; // check if bill member is requesting the bill
-            bool found = bill.Shares.Any(x => x.Payer.Id == curUserId);
+            bool isMember = bill.Shares.Any(share => share.Payer.Id == curUserId);
 
             // check ownership
-            if (bill.Owner.Id != curUserId && !found)
+            if (bill.Owner.Id != curUserId && !isMember)
                 throw new HttpForbiddenRequest($"Permission Denied. Cannot view bill that you are not apart of.");
 
             return DetailedBillDto.FromEntity(bill);
@@ -120,23 +109,18 @@ namespace split_it.Controllers
         /// <response code="404">Not found. When the supplied user guid is not found.</response>
         /// <response code="400">Bad request. When not supply share or item</response>
         [HttpPost]
-        public BillDto Create(BillDto billDto)
+        public DetailedBillDto Create(BillInputDto billDto)
         {
             User curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
 
             // create new bill
             Bill newBill = new Bill
             {
-                Created = DateTime.Now,
-                Id = Guid.Empty,
-                isSettled = false,
-                OverallItems = null,
-                Owner = curUser, // current user
-                Shares = ConvertToShares(billDto.Shares),
+                Created = billDto.Created,
+                Owner = curUser,
                 Title = billDto.Title,
+                Shares = ConvertToShares(billDto.Shares),
             };
-
-            newBill.Total = Math.Round(newBill.Shares.Sum(x => x.Total), 2);
 
             db.Bills.Add(newBill).Reload();
             db.SaveChanges();
@@ -152,14 +136,14 @@ namespace split_it.Controllers
                 });
             }
 
-            return newBill.ConvertToDto();
+            return DetailedBillDto.FromEntity(newBill);
         }
 
         /// <summary>Create Bill Simple</summary>
         /// <remarks>Use this route to create a simple bill.</remarks>
         /// <response code="404">Not found. When the supplied user guid is not found.</response>
         [HttpPost("simple")]
-        public BillDto CreateSimple(BillSimpleDtoIn billDto)
+        public DetailedBillDto CreateSimple(SimpleBillInputDto billDto)
         {
             User curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
 
@@ -173,7 +157,7 @@ namespace split_it.Controllers
             }
 
             // equal share  
-            double eachAmount = billDto.Amount / billDto.UserIds.Count();
+            double eachAmount = billDto.Total / billDto.UserIds.Count();
             // round see share round in bill create
             eachAmount = Math.Round(Math.Ceiling(eachAmount / 0.01) * 0.01, 2);
 
@@ -183,18 +167,15 @@ namespace split_it.Controllers
                 shares.Add(
                     new Share
                     {
-                        hasPaid = (userId == curUser.Id) ? true : false,
-                        hasRejected = false,
                         Id = Guid.Empty,
                         Items = new List<Item> {
                             new Item{
-                                Id = Guid.Empty,
-                                Name = "",
+                                Name = "Total amount",
                                 Price = eachAmount
                             }
                         },
                         Payer = db.Users.Where(x => x.Id == userId).FirstOrDefault(),
-                        Total = eachAmount
+                        Status = userId == curUser.Id ? Status.Paid : Status.Pending,
                     }
                 );
 
@@ -203,21 +184,18 @@ namespace split_it.Controllers
             // create new bill
             Bill newBill = new Bill
             {
-                Created = DateTime.Now,
                 Id = Guid.Empty,
-                isSettled = false,
-                OverallItems = null,
+                Created = DateTime.Now,
+                IsSettled = false,
                 Owner = curUser,
                 Shares = shares,
                 Title = billDto.Title,
             };
 
-            newBill.Total = Math.Round(newBill.Shares.Sum(x => x.Total), 2);
-
             db.Bills.Add(newBill);
             db.SaveChanges();
 
-            return newBill.ConvertToDto();
+            return DetailedBillDto.FromEntity(newBill);
         }
 
         /// <summary>Edit a bill</summary>
@@ -225,7 +203,7 @@ namespace split_it.Controllers
         /// <response code="404">Not found. When the supplied user guid is not found.</response>
         /// <response code="400">Bad request. When supply share or item</response>
         [HttpPut("{bill_id:Guid}")]
-        public BillDto Edit(Guid bill_id, BillDto billDto)
+        public DetailedBillDto Edit(Guid bill_id, BillInputDto billDto)
         {
             Bill bill = db.Bills
                 .Include(bill => bill.Owner)
@@ -235,18 +213,14 @@ namespace split_it.Controllers
                 .ThenInclude(share => share.Items).FirstOrDefault();
 
             if (bill == null)
-                throw new HttpNotFound($"Cannot find payer: {bill_id}");
+                throw new HttpNotFound($"Cannot find bill: {bill_id}");
 
             User curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
 
             if (bill.Owner.Id != curUser.Id)
-                throw new HttpForbiddenRequest($"Permission Denied. Cannot edit bill that is not yours.");
-
-            if (bill.Owner.Id != curUser.Id)
-                throw new HttpForbiddenRequest($"Permission Denied. Cannot edit bill that is not yours.");
+                throw new HttpForbiddenRequest("Cannot edit bill that is not yours.");
 
             bill.Title = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(billDto.Title.Trim().ToLower());
-            //bill.OverallItems = billDto.OverallItems; //TODO
 
             // delete old shares
             var oldShares = bill.Shares;
@@ -257,12 +231,10 @@ namespace split_it.Controllers
             }
 
             bill.Shares = ConvertToShares(billDto.Shares);
-            bill.Total = Math.Round(bill.Shares.Sum(x => x.Total), 2);
-            bill.isSettled = bill.Shares.All(x => x.hasPaid) ? true : false;
+            bill.IsSettled = bill.Shares.All(share => share.Status == Status.Paid);
             db.SaveChanges();
 
-            // todo needs a mapper? or nah?
-            return bill.ConvertToDto();
+            return DetailedBillDto.FromEntity(bill);
         }
 
         /// <summary>Find bills</summary>
@@ -283,35 +255,30 @@ namespace split_it.Controllers
                 query = query.Where(x => x.Shares.Any(x => filter.BillMembers.Contains(x.Id)));
 
             return query
+                .Include(bill => bill.Owner)
+                .Include(bill => bill.Shares)
+                .ThenInclude(share => share.Items)
                 .Where(bill =>
                     bill.Created >= DateTime.UnixEpoch.AddSeconds(filter.StartTime) &&
                     bill.Created <= DateTime.UnixEpoch.AddSeconds(filter.EndTime) &&
-                    bill.Total <= filter.MaxAmount &&
-                    bill.Total >= filter.MinAmount &&
+                    bill.Shares.Sum(share => share.Items.Sum(item => item.Price)) <= filter.MaxAmount &&
+                    bill.Shares.Sum(share => share.Items.Sum(item => item.Price)) >= filter.MinAmount &&
                     bill.Title.ToLower().Contains(filter.Title.ToLower()) &&
-                    bill.isSettled == filter.isSettled)
-                .Include(bill => bill.Owner)
+                    bill.IsSettled == filter.IsSettled)
                 .OrderBy(bill => bill.Created)
                 .Skip(filter.Offset)
                 .Take(filter.Limit)
-                .Select(bill => new SimpleBillDto
-                {
-                    Id = bill.Id,
-                    Created = bill.Created,
-                    Owner = new UserInfoDto
-                    {
-                        Id = bill.Owner.Id,
-                        FirstName = bill.Owner.FirstName,
-                        LastName = bill.Owner.LastName,
-                    },
-                    Total = bill.Total,
-                    Title = bill.Title,
-                    IsSettled = bill.isSettled,
-                });
+                .Select(SimpleBillDto.FromEntity);
         }
 
-        [HttpPost("reject/{bill_id:Guid}")]
-        public string Reject(Guid bill_id)
+        private enum ResponseAction
+        {
+            Accept,
+            Reject
+        }
+
+        /// <summary>Abstraction of bill accept and reject action</summary>
+        private void BillResponse(Guid billId, ResponseAction action)
         {
             // check if bill exists
             Bill bill = db.Bills
@@ -320,43 +287,98 @@ namespace split_it.Controllers
                 .ThenInclude(share => share.Payer)
                 .Include(d => d.Shares)
                 .ThenInclude(share => share.Items).FirstOrDefault();
-
             if (bill == null)
-                throw new HttpNotFound($"Cannot find payer: {bill_id}");
+                throw new HttpNotFound($"Cannot find bill: {billId}");
 
             var curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
             Guid curUserId = curUser.Id;
             bool found = bill.Shares.Any(x => x.Payer.Id == curUserId);
 
+            var actionString = action == ResponseAction.Accept ? "accept" : "reject";
+
             // check ownership
             if (bill.Owner.Id != curUserId && !found)
-                throw new HttpForbiddenRequest($"Permission Denied. Cannot reject bill that you are not apart of.");
+                throw new HttpForbiddenRequest($"Permission Denied. Cannot {actionString} bill that you are not apart of.");
 
             // check if paid
-            if (bill.isSettled)
-                throw new HttpBadRequest($". Cannot reject bill that has been settled.");
+            if (bill.IsSettled)
+                throw new HttpBadRequest($"Cannot {actionString} bill that has been settled.");
 
-            // logic
-            // if user rejects the bill, they will show as hasRejected
+            if (action == ResponseAction.Accept && bill.Shares.Any(s => s.Payer.Id == curUserId && s.Status == Status.Rejected))
+                throw new HttpBadRequest("Cannot accept a bill that has been rejected");
+
             foreach (Share share in bill.Shares.Where(x => x.Payer.Id == curUserId))
             {
-                share.hasRejected = true;
+                share.Status = action == ResponseAction.Accept
+                    ? Status.Accepted
+                    : Status.Rejected;
             }
 
+            var notifAction = action == ResponseAction.Accept ? "accepted" : "rejected";
             notificationService.Add(new Notification
             {
                 UserId = bill.Owner.Id,
                 Domain = "bill",
                 ResourceId = bill.Id,
-                Message = $"{curUser.FirstName} rejected bill {bill.Title}",
+                Message = $"{curUser.FirstName} {notifAction} bill {bill.Title}",
             });
+        }
 
-            return "Success";
+        /// <response code="204">Bill rejected</response>
+        /// <response code="404">Bill ID given not found</response>
+        /// <response code="400">Rejecting a bill that has been settled</response>
+        /// <response code="403">Rejecting a bill you are not a part of</response>
+        [HttpPost("{bill_id:Guid}/reject")]
+        public IActionResult Reject(Guid bill_id)
+        {
+            BillResponse(bill_id, ResponseAction.Reject);
+            return NoContent();
+        }
 
+        /// <response code="204">Bill accepted</response>
+        /// <response code="404">Bill ID given not found</response>
+        /// <response code="400">Accepting a bill that has been settled or was previously rejected</response>
+        /// <response code="403">Accepting a bill you are not a part of</response>
+        [HttpPost("{bill_id:Guid}/accept")]
+        public IActionResult Accept(Guid bill_id)
+        {
+            BillResponse(bill_id, ResponseAction.Accept);
+            return NoContent();
+        }
+
+        /// <summary>Re-invite user to the bill if they rejected it</summary>
+        /// <response code="404">Bill or User not found</response>
+        /// <response code="403">Reinvite user to bill you do not own</response>
+        /// <response code="400">Reinviting user who is not in bill or user has not rejected the bill</response>
+        [HttpPost("{BillId:Guid}/reinvite/{UserId:Guid}")]
+        public IActionResult Reinvite(Guid BillId, Guid UserId)
+        {
+            var bill = db.Bills.Where(bill => bill.Id == BillId).FirstOrDefault();
+            if (bill == null)
+                throw new HttpNotFound($"Bill ID: {BillId} not found");
+
+            var owner = IdentityTools.GetUser(db, HttpContext.User.Identity);
+            if (owner == null || owner.Id != bill.Owner.Id)
+                throw new HttpForbidden("Cannot reinvite user to bill you do not own");
+
+            var user = db.Users.Where(user => user.Id == UserId).FirstOrDefault();
+            if (user == null)
+                throw new HttpNotFound($"User ID: {UserId} not found");
+
+            var billShare = bill.Shares.Where(share => share.Payer.Id == user.Id).FirstOrDefault();
+            if (billShare == null)
+                throw new HttpBadRequest("Cannot reinvite user who is not in bill");
+
+            if (billShare.Status != Status.Rejected)
+                throw new HttpBadRequest("The user has not rejected the bill");
+
+            billShare.Status = Status.Pending;
+
+            return NoContent();
         }
 
         [HttpDelete("{bill_id:Guid}")]
-        public string Delete(Guid bill_id)
+        public IActionResult Delete(Guid bill_id)
         {
             Bill bill = db.Bills
                 .Include(bill => bill.Owner)
@@ -373,7 +395,7 @@ namespace split_it.Controllers
 
             // check ownership
             if (bill.Owner.Id != curUserId && !found)
-                throw new HttpForbiddenRequest($"Permission Denied. Cannot reject bill that you are not apart of.");
+                throw new HttpForbiddenRequest($"Permission Denied. Cannot delete bill that you are not apart of.");
 
             foreach (Share share in bill.Shares)
             {
@@ -395,11 +417,10 @@ namespace split_it.Controllers
             }
 
             db.Bills.Remove(bill);
-
-            return "Success";
+            return NoContent();
         }
 
-        [HttpPost("attachment/{bill_id:Guid}")]
+        [HttpPost("{bill_id:Guid}/attachment")]
         public string AddAttachment(Guid bill_id)
         {
             return "TODO";
