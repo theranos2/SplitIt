@@ -83,7 +83,7 @@ namespace split_it
         }
 
         public string Title { get; set; }
-        public ICollection<FileAttachment> Attachments { get; set; }
+        public ICollection<FileAttachment> Attachments { get; set; } = new List<FileAttachment> { };
         public ICollection<Share> Shares { get; set; }
         public bool IsSettled { get; set; } = false;
     }
