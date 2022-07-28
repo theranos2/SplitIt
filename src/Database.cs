@@ -16,6 +16,7 @@ namespace split_it
         public DbSet<Group> Groups { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<FileAttachment> Files { get; set; }
+        public DbSet<BankingInfo> BankDetails { get; set; }
 
         public static DbContextOptions<DatabaseContext> DefaultDatabaseOptions = new DbContextOptionsBuilder<DatabaseContext>()
             .UseSqlite("Data Source=database.db")
@@ -163,5 +164,21 @@ namespace split_it
         {
             return HashCode.Combine(Id, Email, FirstName, LastName, Password, MfaEnabled);
         }
+    }
+
+    public class BankingInfo
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public User Owner { get; set; }
+        public byte[] CardNumber { get; set; }
+        public byte[] CardSecret { get; set; }
+        public byte[] CardName { get; set; }
+        public byte[] CardExpiry { get; set; }
+        public byte[] HouseNumber { get; set; }
+        public byte[] StreetName { get; set; }
+        public byte[] State { get; set; }
+        public byte[] Postcode { get; set; }
+        public byte[] Country { get; set; }
     }
 }

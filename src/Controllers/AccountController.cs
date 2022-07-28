@@ -72,7 +72,7 @@ namespace split_it.Controllers
                 Password = Crypto.HashPassword(input.Password),
                 FirstName = input.FirstName,
                 LastName = input.LastName,
-                MfaEnabled = false
+                MfaEnabled = true // TODO change to true to disable confirm email when debugging
             };
 
             db.Users.Add(newUser);
@@ -84,7 +84,7 @@ namespace split_it.Controllers
 
             var tokenDto = new TokenDto
             {
-                Token = MakeToken(user.Id, DateTime.Now.AddHours(12), secret, false)
+                Token = MakeToken(user.Id, DateTime.Now.AddHours(12), secret, true) // TODO change to true to disable confirm email when debugging
             };
 
             string domainName = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
