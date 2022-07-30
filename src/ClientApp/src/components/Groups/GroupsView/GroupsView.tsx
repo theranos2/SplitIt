@@ -6,23 +6,29 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Title from './Title';
 import { Grid, Link, Paper } from '@mui/material';
+import { GroupApi, SimpleGroupDto } from 'api';
+import { token } from 'utility/config';
 
 function createData(id: number, name: string, owner: string, members: string[]) {
   return { id, name, owner, members };
 }
 
-// TODO: Get groups from backend
-const rows = [
-  createData(0, 'Minions fan club', 'Xibo', ['Adam']),
-  createData(1, 'Lorem ipsum', 'Razin', ['Jingcheng', 'Ken']),
-  createData(2, 'Dolor sit amet', 'Xibo', ['Xibo']),
-  createData(3, 'Theranos2', 'Jingcheng', ['Lachlan', 'Razin', 'Ken', 'Xibo', 'Adam'])
-];
-
 export default function GroupsView() {
-  const handleRowClick = (row: any) => {
-    console.log(row);
+  const handleRowClick = (group: any) => {
+    console.log(group);
   };
+
+  const [groups, SetGroups] = React.useState<SimpleGroupDto[]>([]);
+
+  React.useEffect(() => {
+    const api = new GroupApi({ apiKey: token });
+    (async () => {
+      const resp = await api.apiGroupGet();
+      SetGroups(resp.data);
+    })();
+  }, []);
+
+  console.log(groups);
 
   return (
     <Grid item xs={12}>
@@ -34,23 +40,23 @@ export default function GroupsView() {
               <TableRow>
                 <TableCell>Name</TableCell>
                 <TableCell>Owner</TableCell>
-                <TableCell>Members</TableCell>
+                <TableCell>No. members</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {groups.map((group) => (
                 <TableRow
-                  key={row.id}
-                  onClick={() => handleRowClick(row)}
+                  key={group.id}
+                  onClick={() => handleRowClick(group)}
                   sx={{
                     '&.MuiTableRow-root:hover': {
                       cursor: 'pointer'
                     }
                   }}
                 >
-                  <TableCell>{row.name}</TableCell>
-                  <TableCell>{row.owner}</TableCell>
-                  <TableCell>{row.members.join(', ')}</TableCell>
+                  <TableCell>{group.name}</TableCell>
+                  <TableCell>{group.owner?.firstName+' '+group.owner?.lastName}</TableCell>
+                  <TableCell>{group.memberCount}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
