@@ -42,7 +42,7 @@ namespace split_it.Authentication
             // check if fully authenticated. it is fully authenticated when mfa is confirmed
             // TOOD uncomment below
             //if (cookie.hasPassedMfa == false)
-                //return AuthenticateResult.Fail("MFA Not Confirmed");
+            //return AuthenticateResult.Fail("MFA Not Confirmed");
 
             // update last usage time
             // todo if it actually updates origin
