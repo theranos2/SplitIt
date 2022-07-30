@@ -9,7 +9,7 @@ import { CardActionArea } from '@mui/material';
 
 import { Context } from 'utility/Context';
 
-import { Bill } from '../BillViewProps';
+import { Bill } from 'api/models/bill';
 
 interface BillDisplayProps {
   bill: Bill;
@@ -32,10 +32,10 @@ const BillDisplay = (props: BillDisplayProps) => {
           />
           <CardContent sx={{ flexGrow: 1 }}>
             <Typography gutterBottom variant="h5" component="div" align="center">
-              {bill.name}
+              {bill.title}
             </Typography>
             <Typography variant="body2" color="text.secondary" align="center">
-              ${bill.price}.00
+              ${bill.total}.00
             </Typography>
           </CardContent>
         </CardActionArea>

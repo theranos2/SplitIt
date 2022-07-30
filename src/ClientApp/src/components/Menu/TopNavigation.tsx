@@ -12,29 +12,6 @@ import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-<<<<<<< HEAD
-
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import NotificationsMenu from '../Notifications/NotificationsMenu';
-import IconLink from './IconLink';
-import { Context } from '../../utility/Context';
-
-const links = (loggedIn: boolean | undefined) =>
-  loggedIn
-    ? [
-        { href: '/bill/create', icon: <AddBusinessRoundedIcon /> },
-        { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
-        { href: '/groups', icon: <GroupsIcon /> },
-        { href: '/notifications', icon: <NotificationsIcon /> },
-        { href: '/logout', icon: <ExitToAppIcon /> }
-      ]
-    : [{ href: '/login', icon: <AccountCircle /> }];
-
-const TopNavigation = () => {
-  const context = React.useContext(Context);
-
-=======
-import GroupsIcon from '@mui/icons-material/Groups';
 import NotificationsMenu from '../Notifications/NotificationsMenu';
 import IconLink from './IconLink';
 import { useAuthContext } from 'utility/hooks/useAuth';
@@ -51,7 +28,6 @@ const TopNavigation = () => {
           { href: '/logout', icon: <ExitToAppIcon /> }
         ]
       : [{ href: '/login', icon: <AccountCircle /> }];
->>>>>>> main
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -68,7 +44,7 @@ const TopNavigation = () => {
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            {links(context?.loggedIn).map((link, idx) =>
+            {links.map((link, idx) =>
               link.href === '/notifications' ? (
                 <NotificationsMenu key={`menu-link-${idx}`} />
               ) : (

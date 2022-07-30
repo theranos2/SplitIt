@@ -18,7 +18,8 @@ const UserDisplay = (props: UserDisplayProps) => {
       {users.map((user: User, idx: number) => (
         <Card
           key={`user-display-${idx}`}
-          sx={{ display: 'flex', width: '100%', paddingLeft: '10px' }}>
+          sx={{ display: 'flex', width: '100%', paddingLeft: '10px' }}
+        >
           <CardMedia
             component="img"
             sx={{ width: 70 }}
@@ -28,7 +29,7 @@ const UserDisplay = (props: UserDisplayProps) => {
           <Box sx={{ display: 'flex', flexDirection: 'column', paddingBottom: '10px' }}>
             <CardContent sx={{ flex: '1 0 auto' }}>
               <Typography component="div" variant="h5">
-                {user.name}
+                {user.firstName} {user.lastName}
               </Typography>
             </CardContent>
           </Box>

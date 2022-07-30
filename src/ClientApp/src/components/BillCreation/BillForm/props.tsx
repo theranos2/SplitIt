@@ -6,7 +6,7 @@ export default interface BillFormProps {
   set: ButtonSubmission;
   submit: SubmitProps;
   cancel: CancelProps;
-  fields: Array<Record<string, any>>; // TODO: should be the actual types
+  fields: Array<Record<any, any>>;
 }
 
 export interface Steps {

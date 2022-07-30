@@ -8,7 +8,7 @@ const Register = () => {
     firstName: '',
     lastName: '',
     password: '',
-    password2: ''
+    password_confirm: ''
   });
 
   const set = (name: string) => (event: any) =>
@@ -19,7 +19,7 @@ const Register = () => {
 
     if (Object.values(inputs).some((input) => input === '')) {
       return { error: true, msg: 'Inputs cannot be empty.' };
-    } else if (inputs.password !== inputs.password2) {
+    } else if (inputs.password !== inputs.password_confirm) {
       return { error: true, msg: 'Passwords must match.' };
     } else {
       return signup(inputs);
@@ -59,10 +59,10 @@ const Register = () => {
           err: { cond: inputs.password.length > 20, msg: 'Password is too long.' }
         },
         {
-          name: 'password2',
+          name: 'password_confirm',
           label: 'Confirm Password',
           type: 'password',
-          err: { cond: inputs.password2.length > 20, msg: 'Password is too long.' }
+          err: { cond: inputs.password !== inputs.password_confirm, msg: 'Password is too long.' }
         }
       ]}
     />

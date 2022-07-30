@@ -8,9 +8,9 @@
     ],
     "bills": [
         {
-          "id": 1,
-          "name": "Rent money",
-          "price": 900,
+          "id": "a",
+          "title": "Rent money",
+          "total": 900,
           "users": [
             {
               "id": 1,
@@ -27,9 +27,9 @@
           ]
         },
         {
-          "id": 2,
-          "name": "Dinner",
-          "price": 42000000,
+          "id": "b",
+          "title": "Dinner",
+          "total": 42000000,
           "users": [
             {
               "id": 1,
@@ -46,9 +46,9 @@
           ]
         },
         {
-          "id": 3,
-          "name": "Sushi Train",
-          "price": 17000,
+          "id": "c",
+          "title": "Sushi Train",
+          "total": 17000,
           "users": [
             {
               "id": 5,

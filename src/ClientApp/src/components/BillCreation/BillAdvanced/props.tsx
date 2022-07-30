@@ -1,4 +1,5 @@
-import { Item, User } from '../BillCreationProps';
+import { Item } from 'api/models/item';
+import { User } from 'api/models/user';
 
 export default interface InputProps {
   name: string;

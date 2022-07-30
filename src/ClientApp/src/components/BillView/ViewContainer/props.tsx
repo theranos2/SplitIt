@@ -1,4 +1,4 @@
-import { Bill } from '../BillViewProps';
+import { Bill } from 'api/models/bill';
 
 export default interface ViewContainerProps {
   title: string;

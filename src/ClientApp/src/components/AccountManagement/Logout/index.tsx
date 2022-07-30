@@ -1,13 +1,11 @@
-import React from 'react';
+import { useAuthContext } from 'utility/hooks/useAuth';
 import { Navigate } from 'react-router-dom';
-import { Context } from 'utility/Context';
 
-const Logout = () => {
-  const context = React.useContext(Context);
-  context?.logIn(false);
+export const Logout = () => {
+  const { setToken } = useAuthContext();
+
+  setToken('');
   localStorage.removeItem('token');
 
   return <Navigate to="/" replace />;
 };
-
-export default Logout;

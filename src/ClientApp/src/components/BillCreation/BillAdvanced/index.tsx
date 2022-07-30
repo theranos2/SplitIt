@@ -17,7 +17,7 @@ const BillAdvanced = () => {
         setInputs((old: InputProps) => ({ ...old, items: input }));
         setInputs((old: InputProps) => ({
           ...old,
-          price: old.items.reduce((i, j) => i + j.price, 0)
+          price: old.items.reduce((i, j) => (j.price ? i + j.price : i), 0)
         }));
         break;
       case 'users':

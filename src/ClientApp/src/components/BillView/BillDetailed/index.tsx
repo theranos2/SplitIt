@@ -1,11 +1,11 @@
 import { useParams } from 'react-router-dom';
 import database from 'utility/database/database.json';
 
-import UserDisplay from 'components/Users/UserDisplay';
-import ItemDisplay from 'components/Users/ItemDisplay';
+// import UserDisplay from 'components/Users/UserDisplay';
+// import ItemDisplay from 'components/Users/ItemDisplay';
 import IconLink from 'components/Menu/IconLink';
 
-import { Bill } from '../BillViewProps';
+import { Bill } from 'api/models/bill';
 
 import ShareIcon from '@mui/icons-material/Share';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -21,10 +21,10 @@ const BillDetailed = () => {
   return (
     <Container component="main" maxWidth="xs" style={{ textAlign: 'center', paddingTop: '15px' }}>
       <Typography component="h1" variant="h2" align="center" color="text.primary">
-        {bill.name}
+        {bill.title}
       </Typography>
       <Typography variant="h5" align="center" color="text.secondary" paragraph>
-        ${bill.price}.00
+        ${bill.total}.00
       </Typography>
       <IconLink href={`/bill/edit/:${bill_id}`} icon={<EditIcon />} />
       <IconLink href={`/bill/share/:${bill_id}`} icon={<ShareIcon />} />
@@ -34,14 +34,14 @@ const BillDetailed = () => {
       <Typography variant="h5" align="center" paragraph>
         Members
       </Typography>
-      <UserDisplay users={bill.users} removeUser={() => 0} />
-      {bill.items ? (
+      {/* <UserDisplay users={bill.users} removeUser={() => 0} /> */}
+      {bill.shares ? (
         <>
           <LockOutlinedIcon style={{ paddingTop: '20px' }} />
           <Typography variant="h5" align="center" paragraph>
             Items
           </Typography>
-          <ItemDisplay items={bill.items} removeItem={() => 0} />
+          {/* <ItemDisplay items={bill.shares} removeItem={() => 0} /> */}
         </>
       ) : (
         <></>

@@ -24,7 +24,7 @@ export const BillForm = (props: BillFormProps) => {
       case 'date':
         return {
           label: 'Choose the timeframe',
-          element: <DateSelector start={f.dates.start} end={f.dates.end} set={set} />
+          element: <DateSelector start={f.start} end={f.end} set={set} />
         };
       case 'price':
         return {
@@ -82,7 +82,6 @@ export const BillForm = (props: BillFormProps) => {
   const handle_back = () => setActiveStep((prev) => prev - 1);
 
   return (
-<<<<<<< HEAD
     <Box sx={{ width: '100%', paddingTop: '10px' }}>
       <Stepper activeStep={activeStep} alternativeLabel>
         {steps.map((step) => (
@@ -99,90 +98,6 @@ export const BillForm = (props: BillFormProps) => {
           {activeStep === 0 ? (
             <Link to={cancel.href} style={{ textDecoration: 'none' }}>
               <Button>Cancel</Button>
-=======
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box sx={{ marginTop: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            {title}
-          </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }}>
-            {/* onSubmit={submit.func} */}
-            {fields.map((field, idx) => {
-              switch (field.type) {
-                case 'date':
-                  return (
-                    <DateSelector
-                      key={`date-${idx}`}
-                      start={field.dates.start}
-                      end={field.dates.end}
-                      set={set}
-                    />
-                  );
-                case 'span':
-                  return (
-                    <Alert key={`alert-${idx}`} severity="info">
-                      {field.content}
-                    </Alert>
-                  );
-                case 'users':
-                  return (
-                    <UserSelector
-                      key={`user-${idx}`}
-                      // TODO: fix this form up
-                      setSelectedUsers={(val) => {
-                        console.log(val);
-                      }}
-                    />
-                  );
-                case 'items':
-                  return (
-                    <ItemSelector
-                      key={`user-${idx}`}
-                      name={field.name}
-                      label={field.label}
-                      inputs={inputs}
-                      set={set}
-                      err={field.err}
-                    />
-                  );
-                case 'price':
-                  return (
-                    <PriceDisplay
-                      key={`price-${idx}`}
-                      price={inputs.price}
-                      set={set('price')}
-                      disabled={field.disabled}
-                    />
-                  );
-                default:
-                  return (
-                    <InputField
-                      key={`text-${idx}`}
-                      name={field.name}
-                      label={field.label}
-                      type={field.type}
-                      inputs={inputs}
-                      set={set}
-                      err={field.err}
-                    />
-                  );
-              }
-            })}
-            <Link
-              key={`submit-${title}`}
-              to={submit.href}
-              onClick={submit?.func}
-              style={{ textDecoration: 'none' }}
-            >
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 2, mb: 2 }}>
-                Confirm
-              </Button>
->>>>>>> main
             </Link>
           ) : (
             <Button onClick={handle_back} sx={{ mr: 1 }}>

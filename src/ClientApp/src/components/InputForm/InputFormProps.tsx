@@ -20,15 +20,3 @@ export interface ErrorType {
   cond: boolean;
   msg: string;
 }
-
-export interface Item {
-  name: string;
-  id: number;
-  price: number;
-  user: number;
-}
-
-export interface User {
-  name: string;
-  id: number;
-}
