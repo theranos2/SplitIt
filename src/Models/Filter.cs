@@ -18,7 +18,7 @@ namespace split_it.Models
         [FromQuery]
         public int Offset { get; set; } = 0;
         [FromQuery]
-        public bool isSettled { get; set; } = false;
+        public bool IsSettled { get; set; } = false;
         [FromQuery]
         public string Title { get; set; } = "";
         [FromQuery]
