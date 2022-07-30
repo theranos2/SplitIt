@@ -175,6 +175,7 @@ namespace split_it
         public byte[] CardSecret { get; set; }
         public byte[] CardName { get; set; }
         public byte[] CardExpiry { get; set; }
+        public byte[] DoB { get; set; }
         public byte[] HouseNumber { get; set; }
         public byte[] StreetName { get; set; }
         public byte[] State { get; set; }

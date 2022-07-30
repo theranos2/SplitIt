@@ -11,6 +11,7 @@ namespace split_it.Models
         public string CardSecret { get; set; }
         public string CardName { get; set; }
         public DateTime CardExpiry { get; set; }
+        public DateTime DoB { get; set; }
         public string HouseNumber { get; set; }
         public string StreetName { get; set; }
         public string State { get; set; }
@@ -69,6 +70,9 @@ namespace split_it.Models
         [Required]
         public DateTime Expiry { get; set; }
 
+        [Required]
+        public DateTime DoB { get; set; }
+
         public static CardDto FromEntity(BankingInfoDto bankInfo)
         {
             return new CardDto
@@ -76,7 +80,8 @@ namespace split_it.Models
                 Expiry = bankInfo.CardExpiry,
                 Name = bankInfo.CardName,
                 Number = bankInfo.CardNumber,
-                Secret = bankInfo.CardSecret
+                Secret = bankInfo.CardSecret,
+                DoB = bankInfo.DoB
             };
         }
     }

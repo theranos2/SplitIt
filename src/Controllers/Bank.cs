@@ -53,6 +53,7 @@ namespace split_it.Controllers
         private void EncryptInfo(BankingInfo orig, CardDto decrypted)
         {
             orig.CardExpiry = EncyptorService.EncryptString(decrypted.Expiry.ToString(), KEY);
+            orig.DoB = EncyptorService.EncryptString(decrypted.DoB.ToString(), KEY);
             orig.CardName = EncyptorService.EncryptString(decrypted.Name, KEY);
             orig.CardNumber = EncyptorService.EncryptString(decrypted.Number, KEY);
             orig.CardSecret = EncyptorService.EncryptString(decrypted.Secret, KEY);
@@ -74,6 +75,7 @@ namespace split_it.Controllers
             decrypted.Id = orig.Id;
             decrypted.Owner = orig.Owner;
             decrypted.CardExpiry = DateTime.Parse(EncyptorService.DecryptToString(orig.CardExpiry, KEY));
+            decrypted.DoB = DateTime.Parse(EncyptorService.DecryptToString(orig.DoB, KEY));
             decrypted.CardName = EncyptorService.DecryptToString(orig.CardName, KEY);
             decrypted.CardNumber = EncyptorService.DecryptToString(orig.CardNumber, KEY);
             decrypted.CardSecret = EncyptorService.DecryptToString(orig.CardSecret, KEY);
