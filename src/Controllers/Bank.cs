@@ -112,7 +112,7 @@ namespace split_it.Controllers
             BankingInfoDto bankingDto = new BankingInfoDto();
             DecryptInfo(bankInfo, bankingDto);
 
-            return CardDto.FromEntity(ObscureCardInfo(bankingDto));
+            return CardDto.FromEntity(bankingDto);
         }
 
         [HttpPost("card")]
@@ -149,13 +149,13 @@ namespace split_it.Controllers
             EncryptInfo(bankInfoEncrypted, cardDetails);
             db.SaveChanges();
 
-            return CardDto.FromEntity(ObscureCardInfo(new BankingInfoDto
+            return CardDto.FromEntity(new BankingInfoDto
             {
                 CardExpiry = cardDetails.Expiry,
                 CardName = cardDetails.Name,
                 CardNumber = cardDetails.Number,
                 CardSecret = cardDetails.Secret
-            }));
+            });
         }
 
         [HttpGet("address")]

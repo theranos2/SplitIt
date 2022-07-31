@@ -17,20 +17,21 @@ namespace split_it.Controllers
     public class AccountController : ControllerBase
     {
         DatabaseContext db;
+        private const string RESET_TOKEN = "RESET";
         public AccountController(DatabaseContext _db)
         {
             db = _db;
         }
 
-        private string MakeToken(Guid userId, DateTime expiry, string secret = "", bool mfa = true)
+        private string MakeToken(Guid userId, DateTime expiry, string secret = "", bool hasConfirmed = true)
         {
             return CookiesDb.IssueCookie(new MyCookie
             {
                 IssueDate = DateTime.Now,
                 ExpiryDate = expiry,
                 LastSeen = DateTime.Now,
-                MfaCode = secret,
-                hasPassedMfa = mfa,
+                Secret = secret,
+                hasConfirmedEmail = hasConfirmed,
                 UserId = userId
             });
         }
@@ -137,8 +138,8 @@ namespace split_it.Controllers
                 throw new HttpBadRequest("Invalid Token");
 
             // check mfa
-            if (mfaString == cookie.MfaCode)
-                cookie.hasPassedMfa = true;
+            if (mfaString == cookie.Secret)
+                cookie.hasConfirmedEmail = true;
             else
                 throw new HttpBadRequest("Incorrect Mfa Code");
 
@@ -163,15 +164,78 @@ namespace split_it.Controllers
             if (cookie == null)
                 throw new HttpBadRequest("Invalid secret");
 
-            if (cookie.MfaCode != splitted[1])
+            if (cookie.Secret != splitted[1])
                 throw new HttpBadRequest("Invalid secret");
 
-            cookie.hasPassedMfa = true;
+            cookie.hasConfirmedEmail = true;
 
             var user = db.Users.Where(x => x.Id == cookie.UserId).FirstOrDefault();
-            user.MfaEnabled = true;
+            user.MfaEnabled = true; // TODO change name to Email Enabled or something
+            db.SaveChanges();
 
             return Redirect("~/"); // redirect to page root
+        }
+
+        [AllowAnonymous]
+        [HttpPost("forgot-password-submit")]
+        public ActionResult ForgotPasswordSubmit(ForgottenPasswordSubmitDto request)
+        {
+            if(request.Secret == null)
+                throw new HttpBadRequest("Invalid secret");
+
+            var cookie = CookiesDb.Get(request.Secret);
+
+            // Check if it is a reset coookie
+            if(cookie.Secret != RESET_TOKEN)
+                throw new HttpBadRequest("Invalid secret");
+
+            // Check expirry
+            if (DateTime.Now > cookie.ExpiryDate)
+                throw new HttpBadRequest("Expired link. Please issue another one.");
+
+            // Delete cookie
+            CookiesDb.RemoveCookie(request.Secret);
+
+            // Set new password
+            string newPassword = Crypto.HashPassword(request.Password);
+            var user = db.Users.Where(x => x.Id == cookie.UserId).FirstOrDefault();
+            if(user == null)
+                throw new HttpNotFound("User not found. User could have been deleted");
+            user.Password = newPassword;
+            db.SaveChanges();
+
+            return Ok();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("forgot-password")]
+        public ActionResult ForgotPassword(ForgottenPasswordRequestDto request)
+        {
+            if (request.Email == null )
+                throw new HttpBadRequest("Invalid email");
+
+            var user = db.Users.Where(x => x.Email == request.Email).FirstOrDefault();
+            if (user == null)
+                throw new HttpBadRequest("Invalid email");
+            
+            // Generate new token
+            string cookieStr = CookiesDb.IssueCookie(new MyCookie
+            {
+                IssueDate = DateTime.Now,
+                ExpiryDate = DateTime.Now.AddHours(1),
+                LastSeen = DateTime.Now,
+                Secret = RESET_TOKEN,
+                hasConfirmedEmail = user.MfaEnabled,
+                UserId = user.Id
+            });
+
+            // send token
+            string domainName = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+            string mailBody = @$"Here is your Split It! Password Reset link.
+            <a href='{domainName}/reset/{cookieStr}'>Click Here</a> to reset your password.";
+            MailService.SendMail(user.Email, mailBody, "Split It! Password Reset");
+
+            return Ok();
         }
 
         [HttpPost("logout")]

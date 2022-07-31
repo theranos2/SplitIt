@@ -26,9 +26,8 @@ namespace split_it.Authentication
         public DateTime ExpiryDate { get; set; }
         public DateTime LastSeen { get; set; }
         public Guid UserId { get; set; }
-        public string MfaCode { get; set; }
-        public bool hasPassedMfa { get; set; }
-
+        public string Secret { get; set; }
+        public bool hasConfirmedEmail { get; set; }
     }
 
     public static class CookiesDb

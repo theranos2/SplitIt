@@ -17,7 +17,28 @@ namespace split_it.Models
         public string State { get; set; }
         public string Postcode { get; set; }
         public string Country { get; set; }
+    }
 
+
+
+    public class PayReceiptDto
+    {
+        public DateTime PaidDate { get; set; }
+        public double AmountPaid { get; set; }
+        public Guid TransactionId { get; set; }
+
+    }
+    public class PayDto
+    {
+        public bool hasPaid { get; set; }
+        public double GrandTotal
+        {
+            get { return SurchargeTotal + BillTotal; }
+        }
+        public double SurchargeTotal { get; set; }
+        public double BillTotal { get; set; }
+        public string SellerId { get; set; }
+        public string ClientSecret { get; set; }
     }
 
     public class AddressDto
