@@ -16,6 +16,7 @@ function createData(id: number, name: string, owner: string, members: string[]) 
 export default function GroupsView() {
   const handleRowClick = (group: any) => {
     console.log(group);
+    window.location.href = "/groups/view/" + group.id;
   };
 
   const [groups, SetGroups] = React.useState<SimpleGroupDto[]>([]);
@@ -27,8 +28,6 @@ export default function GroupsView() {
       SetGroups(resp.data);
     })();
   }, []);
-
-  console.log(groups);
 
   return (
     <Grid item xs={12}>

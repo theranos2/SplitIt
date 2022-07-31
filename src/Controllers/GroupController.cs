@@ -89,7 +89,7 @@ namespace split_it.Controllers
         private Group MakeGroup(GroupDto groupDto)
         {
             List<User> members = new List<User>();
-            // check members 
+            // check members
             foreach (var memberId in groupDto.MemberIds)
             {
                 User member = db.Users.Where(x => x.Id == memberId).FirstOrDefault();
