@@ -484,8 +484,8 @@ namespace split_it.Controllers
             var requestOptions = new RequestOptions();
             requestOptions.StripeAccount = sellerCustomerId;
 
-            createIntent: // yarrrrr
-            if(intentId == null)
+        createIntent: // yarrrrr
+            if (intentId == null)
             {
                 var service = new PaymentIntentService();
                 try
@@ -503,7 +503,8 @@ namespace split_it.Controllers
                 var service = new PaymentIntentService();
                 try
                 {
-                    var intentUpdateOptions = new PaymentIntentUpdateOptions(){
+                    var intentUpdateOptions = new PaymentIntentUpdateOptions()
+                    {
                         Amount = intentOptions.Amount,
                         Currency = intentOptions.Currency,
                         PaymentMethodTypes = intentOptions.PaymentMethodTypes,
@@ -570,16 +571,17 @@ namespace split_it.Controllers
             var paymentIntent = CreatePaymentIntent(billOwnerStripeId, stripeSurcharge, grandTotal, intentId);
 
             // update our shares with payment intent id
-            foreach(Share share in bill.Shares.Where(x => x.Payer.Id == curUserId))
+            foreach (Share share in bill.Shares.Where(x => x.Payer.Id == curUserId))
             {
                 share.StripePaymentId = paymentIntent.Id;
             }
             db.SaveChanges();
 
-            return new PayDto {
+            return new PayDto
+            {
                 BillTotal = totalBillAmount,
                 SurchargeTotal = totalSurcharge,
-                ClientSecret =  paymentIntent.ClientSecret,
+                ClientSecret = paymentIntent.ClientSecret,
                 SellerId = billOwnerStripeId,
                 hasPaid = false,
             };

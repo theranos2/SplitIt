@@ -180,13 +180,13 @@ namespace split_it.Controllers
         [HttpPost("forgot-password-submit")]
         public ActionResult ForgotPasswordSubmit(ForgottenPasswordSubmitDto request)
         {
-            if(request.Secret == null)
+            if (request.Secret == null)
                 throw new HttpBadRequest("Invalid secret");
 
             var cookie = CookiesDb.Get(request.Secret);
 
             // Check if it is a reset coookie
-            if(cookie.Secret != RESET_TOKEN)
+            if (cookie.Secret != RESET_TOKEN)
                 throw new HttpBadRequest("Invalid secret");
 
             // Check expirry
@@ -199,7 +199,7 @@ namespace split_it.Controllers
             // Set new password
             string newPassword = Crypto.HashPassword(request.Password);
             var user = db.Users.Where(x => x.Id == cookie.UserId).FirstOrDefault();
-            if(user == null)
+            if (user == null)
                 throw new HttpNotFound("User not found. User could have been deleted");
             user.Password = newPassword;
             db.SaveChanges();
@@ -211,13 +211,13 @@ namespace split_it.Controllers
         [HttpPost("forgot-password")]
         public ActionResult ForgotPassword(ForgottenPasswordRequestDto request)
         {
-            if (request.Email == null )
+            if (request.Email == null)
                 throw new HttpBadRequest("Invalid email");
 
             var user = db.Users.Where(x => x.Email == request.Email).FirstOrDefault();
             if (user == null)
                 throw new HttpBadRequest("Invalid email");
-            
+
             // Generate new token
             string cookieStr = CookiesDb.IssueCookie(new MyCookie
             {

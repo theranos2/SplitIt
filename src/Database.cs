@@ -182,7 +182,7 @@ namespace split_it
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        public string StripeCustomerId  { get; set; } = null;
+        public string StripeCustomerId { get; set; } = null;
         public User Owner { get; set; }
         public byte[] CardNumber { get; set; }
         public byte[] CardSecret { get; set; }
