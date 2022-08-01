@@ -61,9 +61,8 @@ const FormSteps = (props: FormStepsProps) => {
             <GroupSelector
               name={f.name}
               label={f.label}
-              items={inputs['items']}
-              setItems={set('items')}
-              users={inputs['users']}
+              items={inputs['group']}
+              setItems={set('group')}
               err={f.err}
             />
           )
