@@ -3,7 +3,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 
 const BillJoin = () => {
-  // const bill_id = parseInt((useParams().bill_id ?? ':0').slice(1));
+  // const bill_id = (useParams().bill_id ?? ':0').slice(1);
 
   return (
     <Container component="main" maxWidth="xs" style={{ textAlign: 'center', paddingTop: '15px' }}>
