@@ -16,6 +16,7 @@ namespace split_it
         public DbSet<Group> Groups { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<FileAttachment> Files { get; set; }
+        public DbSet<BankingInfo> BankDetails { get; set; }
 
         public static DbContextOptions<DatabaseContext> DefaultDatabaseOptions = new DbContextOptionsBuilder<DatabaseContext>()
             .UseSqlite("Data Source=database.db")
@@ -130,6 +131,7 @@ namespace split_it
         }
 
         public User Payer { get; set; }
+        public string StripePaymentId { get; set; } = null;
         public ICollection<Item> Items { get; set; }
     }
 
@@ -146,7 +148,6 @@ namespace split_it
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -174,5 +175,35 @@ namespace split_it
         {
             return HashCode.Combine(Id, Email, FirstName, LastName, Password, MfaEnabled);
         }
+    }
+
+    public class Transaction
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public DateTime Time { get; set; }
+        public User Source { get; set; }
+        public User Destination { get; set; }
+        public Share Share { get; set; }
+        public double GrandTotal { get; set; }
+        public double SurchargeTotal { get; set; }
+    }
+
+    public class BankingInfo
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public string StripeCustomerId { get; set; } = null;
+        public User Owner { get; set; }
+        public byte[] CardNumber { get; set; }
+        public byte[] CardSecret { get; set; }
+        public byte[] CardName { get; set; }
+        public byte[] CardExpiry { get; set; }
+        public byte[] DoB { get; set; }
+        public byte[] HouseNumber { get; set; }
+        public byte[] StreetName { get; set; }
+        public byte[] State { get; set; }
+        public byte[] Postcode { get; set; }
+        public byte[] Country { get; set; }
     }
 }

@@ -2,6 +2,25 @@ using System.ComponentModel.DataAnnotations;
 
 namespace split_it.Models
 {
+    public class ForgottenPasswordRequestDto
+    {
+        [EmailAddress]
+        [Required]
+        public string Email { get; set; }
+
+    }
+
+    public class ForgottenPasswordSubmitDto
+    {
+        [Required]
+        public string Secret { get; set; }
+
+        [MinLength(5)]
+        [MaxLength(32)]
+        [Required]
+        public string Password { get; set; }
+    }
+
     public class LoginDto
     {
         [EmailAddress]

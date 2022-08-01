@@ -34,11 +34,6 @@ namespace seeder
                             {
                                 Name = "Popcorn",
                                 Price = 3
-                            },
-                            new Item
-                            {
-                                Name = "Asshat tax",
-                                Price = 0.9
                             }
                         }
                     }
