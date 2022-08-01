@@ -180,5 +180,31 @@
         "userId": "14",
         "message": "notif8"
       }
-    ]    
+    ],
+    "groups": [
+      {
+        "id": "0",
+        "name": "Minions fan club",
+        "ownerId": "Xibo",
+        "memberIds": ["Adam"]
+      },
+      {
+        "id": "1",
+        "name": "Lorem ipsum",
+        "ownerId": "Razin",
+        "memberIds": ["Jingcheng", "Ken"]
+      },
+      {
+        "id": "2",
+        "name": "Dolor sit amet",
+        "ownerId": "Xibo",
+        "memberIds": ["Xibo"]
+      },
+      {
+        "id": "3",
+        "name": "Theranos2",
+        "ownerId": "Jingcheng",
+        "memberIds": ["Lachlan", "Razin", "Ken", "Xibo", "Adam"]
+      }
+    ]
 }

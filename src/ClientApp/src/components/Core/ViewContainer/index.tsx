@@ -33,7 +33,7 @@ const ViewContainer = (props: ViewContainerProps) => {
         <Container sx={{ py: 0 }} maxWidth="md">
           <Grid container spacing={4}>
             {items.map((item: BillDto | GroupDto) =>
-              item is BillDto ? (
+              item.ownerId ? (
                 <BillDisplay key={`item-${item.id}`} bill={item} />
               ) : (
                 <GroupDisplay key={`item-${item.id}`} group={item} />
