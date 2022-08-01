@@ -488,5 +488,83 @@ namespace split_it.Controllers
 
             return NoContent();
         }
+
+        /// <summary>Get many comments from a bill</summary>
+        [HttpGet("{BillId:Guid}/comments")]
+        public List<CommentDto> GetManyComments(
+            Guid BillId,
+            [FromQuery(Name = "sortBy")] CommentSort sortBy = CommentSort.DATE_DESC,
+            [FromQuery(Name = "take")] int take = 10,
+            [FromQuery(Name = "skip")] int skip = 0,
+            [FromQuery(Name = "content")] string content = ""
+        )
+        {
+            var user = IdentityTools.GetUser(db, HttpContext.User.Identity);
+            var qb = db.Bills
+                .Where(bill =>
+                    (bill.Owner.Id == user.Id || bill.Shares.Any(share => share.Payer.Id == user.Id))
+                    && bill.Id == BillId
+                )
+                .Include(bill => bill.Comments)
+                .SelectMany(bill => bill.Comments);
+
+            if (!string.IsNullOrEmpty(content))
+                qb = qb.Where(comment => comment.Content.ToLower().Contains(content.ToLower()));
+
+            if (sortBy == CommentSort.DATE_ASC)
+                qb = qb.OrderBy(comment => comment.CreatedAt);
+            else
+                qb = qb.OrderByDescending(comment => comment.CreatedAt);
+
+            return qb
+                .Skip(skip)
+                .Take(take)
+                .Select(CommentDto.FromEntity)
+                .ToList();
+        }
+
+        /// <summary>Get one comment from a bill</summary>
+        [HttpGet("{BillId:Guid}/comments/{CommentId:Guid}")]
+        public CommentDto GetOneComment(Guid BillId, Guid CommentId)
+        {
+            var user = IdentityTools.GetUser(db, HttpContext.User.Identity);
+            var comment = db.Bills
+                .Where(bill =>
+                    (bill.Owner.Id == user.Id || bill.Shares.Any(share => share.Payer.Id == user.Id))
+                    && bill.Id == BillId
+                )
+                .Include(bill => bill.Comments)
+                .SelectMany(bill => bill.Comments)
+                .Where(c => c.Id == CommentId)
+                .Select(CommentDto.FromEntity)
+                .FirstOrDefault();
+            if (comment == null)
+                throw new HttpNotFound($"Comment with ID: {CommentId} not found");
+            return comment;
+        }
+
+        /// <summary>Create a comment on a bill</summary>
+        [HttpPost("{BillId:Guid}/comments")]
+        public CommentDto CreateOneComment(Guid BillId, [FromBody] CommentInputDto input)
+        {
+            var user = IdentityTools.GetUser(db, HttpContext.User.Identity);
+            var bill = db.Bills.Where(bill =>
+                (bill.Owner.Id == user.Id || bill.Shares.Any(share => share.Payer.Id == user.Id))
+                && bill.Id == BillId
+            ).FirstOrDefault();
+            if (bill == null)
+                throw new HttpBadRequest($"Bill requested not found or you are not part of it");
+
+            var comment = new Comment
+            {
+                Commenter = user,
+                Content = input.Content,
+            };
+            bill.Comments.Add(comment);
+            db.SaveChanges();
+
+            return CommentDto.FromEntity(comment);
+        }
+
     }
 }

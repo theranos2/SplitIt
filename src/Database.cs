@@ -85,7 +85,17 @@ namespace split_it
         public string Title { get; set; }
         public ICollection<FileAttachment> Attachments { get; set; } = new List<FileAttachment> { };
         public ICollection<Share> Shares { get; set; }
+        public ICollection<Comment> Comments { get; set; } = new List<Comment> { };
         public bool IsSettled { get; set; } = false;
+    }
+
+    public class Comment
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public User Commenter { get; set; }
+        public string Content { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 
     public class Item
