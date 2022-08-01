@@ -5,12 +5,14 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 
-import BillDisplay from '../../BillView/BillDisplay';
+import BillDisplay from 'components/BillView/BillDisplay';
+import GroupDisplay from 'components/Groups/GroupDisplay';
+import { BillDto, GroupDto } from 'api';
 
 import ViewContainerProps from './props';
 
 const ViewContainer = (props: ViewContainerProps) => {
-  const { title, description, bills } = props;
+  const { title, description, items } = props;
   const theme = createTheme();
 
   return (
@@ -30,9 +32,13 @@ const ViewContainer = (props: ViewContainerProps) => {
         </Box>
         <Container sx={{ py: 0 }} maxWidth="md">
           <Grid container spacing={4}>
-            {bills?.map((bill) => (
-              <BillDisplay key={`item-${bill.id}`} bill={bill} />
-            ))}
+            {items.map((item: BillDto | GroupDto) =>
+              item is BillDto ? (
+                <BillDisplay key={`item-${item.id}`} bill={item} />
+              ) : (
+                <GroupDisplay key={`item-${item.id}`} group={item} />
+              )
+            )}
           </Grid>
         </Container>
       </main>

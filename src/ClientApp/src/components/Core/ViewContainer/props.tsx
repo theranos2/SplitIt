@@ -1,7 +1,7 @@
-import { Bill } from 'api/models/bill';
+import { BillDto, GroupDto } from 'api';
 
 export default interface ViewContainerProps {
   title: string;
   description: string;
-  bills?: Bill[];
+  items: BillDto[] | GroupDto[];
 }
