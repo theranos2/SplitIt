@@ -1,4 +1,4 @@
-import { ButtonEventHandler } from '../BillCreationProps';
+import { ButtonEventHandler } from '../../BillCreation/BillCreationProps';
 
 export default interface PriceProps {
   price: number;
