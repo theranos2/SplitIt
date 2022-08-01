@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace split_it.Models
 {
@@ -77,10 +78,37 @@ namespace split_it.Models
         }
     }
 
+    public class AttachmentDto
+    {
+        public Guid Id { get; set; }
+        public string Caption { get; set; }
+
+        public static AttachmentDto FromEntity(FileAttachment file)
+        {
+            return new AttachmentDto
+            {
+                Id = file.Id,
+                Caption = file.Caption,
+            };
+        }
+    }
+
+    public class FileUploadDto
+    {
+        [Required]
+        public IFormFile File { get; set; }
+
+        /// <summary>Defaults to file name if not provided</summary>
+        [MaxLength(1000)]
+        public string Caption { get; set; } = null;
+    }
+
     // For output only
     public class DetailedBillDto : SimpleBillDto
     {
         public ICollection<DetailedShareDto> Shares { get; set; }
+        public ICollection<AttachmentDto> Attachments { get; set; }
+
         public static new DetailedBillDto FromEntity(Bill bill)
         {
             return new DetailedBillDto
@@ -92,6 +120,7 @@ namespace split_it.Models
                 Title = bill.Title,
                 IsSettled = bill.IsSettled,
                 Shares = bill.Shares.Select(DetailedShareDto.FromEntity).ToList(),
+                Attachments = bill.Attachments.Select(AttachmentDto.FromEntity).ToList()
             };
         }
     }

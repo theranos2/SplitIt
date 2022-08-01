@@ -51,8 +51,9 @@ namespace split_it
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        public string Filename { get; set; }
-        public string Extension { get; set; }
+        public string Caption { get; set; }
+        public string ContentType { get; set; }
+        public byte[] Content { get; set; }
     }
 
     public enum Status
@@ -83,9 +84,19 @@ namespace split_it
         }
 
         public string Title { get; set; }
-        public List<FileAttachment> Attachments { get; set; }
+        public ICollection<FileAttachment> Attachments { get; set; } = new List<FileAttachment> { };
         public ICollection<Share> Shares { get; set; }
+        public ICollection<Comment> Comments { get; set; } = new List<Comment> { };
         public bool IsSettled { get; set; } = false;
+    }
+
+    public class Comment
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public User Commenter { get; set; }
+        public string Content { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 
     public class Item

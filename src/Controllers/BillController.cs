@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using split_it.Authentication;
@@ -89,6 +91,7 @@ namespace split_it.Controllers
                 .Include(bill => bill.Owner)
                 .Include(bill => bill.Shares).ThenInclude(share => share.Payer)
                 .Include(bill => bill.Shares).ThenInclude(share => share.Items)
+                .Include(bill => bill.Attachments)
                 .FirstOrDefault();
 
             if (bill == null)
@@ -215,7 +218,9 @@ namespace split_it.Controllers
                 .Include(bill => bill.Shares)
                 .ThenInclude(share => share.Payer)
                 .Include(d => d.Shares)
-                .ThenInclude(share => share.Items).FirstOrDefault();
+                .ThenInclude(share => share.Items)
+                .Include(bill => bill.Attachments)
+                .FirstOrDefault();
 
             if (bill == null)
                 throw new HttpNotFound($"Cannot find bill: {bill_id}");
@@ -428,17 +433,53 @@ namespace split_it.Controllers
             return NoContent();
         }
 
-        [HttpPost("{bill_id:Guid}/attachment")]
-        public string AddAttachment(Guid bill_id)
+        [HttpGet("{BillId:Guid}/attachment/{AttachmentId:Guid}")]
+        public IActionResult GetAttachment(Guid BillId, Guid AttachmentId)
         {
-            return "TODO";
+            var curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
+
+            var bill = db.Bills
+                .Where(bill => bill.Id == BillId &&
+                    (bill.Owner.Id == curUser.Id || bill.Shares.Any(share => share.Payer.Id == curUser.Id))
+                )
+                .Include(bill => bill.Attachments)
+                .FirstOrDefault();
+            if (bill == null)
+                throw new HttpNotFound("Bill not found");
+
+            var attachment = bill.Attachments?.Where(attachment => attachment.Id == AttachmentId).FirstOrDefault();
+            if (attachment == null)
+                throw new HttpNotFound("Attachment not found");
+
+            return File(attachment.Content, attachment.ContentType);
         }
 
-        [HttpGet("/api/file/{file_name}")]
-        public string GetFile(string file_name)
+        [HttpPost("{BillId:Guid}/attachment")]
+        public IActionResult AddAttachment(Guid BillId, [FromForm] FileUploadDto input)
         {
-            return "TODO";
+            var bill = db.Bills.Where(bill => bill.Id == BillId).FirstOrDefault();
+            if (bill == null)
+                throw new HttpNotFound("Bill not found");
+
+            var user = IdentityTools.GetUser(db, HttpContext.User.Identity);
+            if (user == null || user.Id != bill.Owner.Id)
+                throw new HttpForbidden("Cannot add file to bill you do not own");
+
+            using var content = new MemoryStream();
+            input.File.CopyTo(content);
+            var attachment = new FileAttachment
+            {
+                Caption = string.IsNullOrEmpty(input.Caption) ? input.File.FileName : input.Caption,
+                ContentType = input.File.ContentType,
+                Content = content.ToArray()
+            };
+
+            bill.Attachments.Add(attachment);
+            db.SaveChanges();
+
+            return Ok(new { Id = attachment.Id, Caption = attachment.Caption });
         }
+
 
 
         /// <summary>If the user has the bill id they can join it. This makes sharing by link and QR possible</summary>
@@ -465,8 +506,24 @@ namespace split_it.Controllers
                 }
             });
 
+        [HttpDelete("{BillId:Guid}/attachment/{AttachmentId:Guid}")]
+        public IActionResult DeleteAttachment(Guid BillId, Guid AttachmentId)
+        {
+            var bill = db.Bills.Where(bill => bill.Id == BillId).FirstOrDefault();
+            if (bill == null)
+                throw new HttpNotFound("Bill not found");
+
+            var user = IdentityTools.GetUser(db, HttpContext.User.Identity);
+            if (user == null || user.Id != bill.Owner.Id)
+                throw new HttpForbidden("Cannot remove file from bill you do not own");
+
+            bill.Attachments = bill.Attachments.Where(attachment => attachment.Id != AttachmentId).ToList();
+            db.SaveChanges();
+
+
             return NoContent();
         }
+
 
         private PaymentIntent CreatePaymentIntent(string sellerCustomerId, double appSurcharge, double grandTotal, string intentId = null)
         {
@@ -607,5 +664,84 @@ namespace split_it.Controllers
             // throws error if paid
             throw new NotImplementedException();
         }
+
+        /// <summary>Get many comments from a bill</summary>
+        [HttpGet("{BillId:Guid}/comments")]
+        public List<CommentDto> GetManyComments(
+            Guid BillId,
+            [FromQuery(Name = "sortBy")] CommentSort sortBy = CommentSort.DATE_DESC,
+            [FromQuery(Name = "take")] int take = 10,
+            [FromQuery(Name = "skip")] int skip = 0,
+            [FromQuery(Name = "content")] string content = ""
+        )
+        {
+            var user = IdentityTools.GetUser(db, HttpContext.User.Identity);
+            var qb = db.Bills
+                .Where(bill =>
+                    (bill.Owner.Id == user.Id || bill.Shares.Any(share => share.Payer.Id == user.Id))
+                    && bill.Id == BillId
+                )
+                .Include(bill => bill.Comments)
+                .SelectMany(bill => bill.Comments);
+
+            if (!string.IsNullOrEmpty(content))
+                qb = qb.Where(comment => comment.Content.ToLower().Contains(content.ToLower()));
+
+            if (sortBy == CommentSort.DATE_ASC)
+                qb = qb.OrderBy(comment => comment.CreatedAt);
+            else
+                qb = qb.OrderByDescending(comment => comment.CreatedAt);
+
+            return qb
+                .Skip(skip)
+                .Take(take)
+                .Select(CommentDto.FromEntity)
+                .ToList();
+        }
+
+        /// <summary>Get one comment from a bill</summary>
+        [HttpGet("{BillId:Guid}/comments/{CommentId:Guid}")]
+        public CommentDto GetOneComment(Guid BillId, Guid CommentId)
+        {
+            var user = IdentityTools.GetUser(db, HttpContext.User.Identity);
+            var comment = db.Bills
+                .Where(bill =>
+                    (bill.Owner.Id == user.Id || bill.Shares.Any(share => share.Payer.Id == user.Id))
+                    && bill.Id == BillId
+                )
+                .Include(bill => bill.Comments)
+                .SelectMany(bill => bill.Comments)
+                .Where(c => c.Id == CommentId)
+                .Select(CommentDto.FromEntity)
+                .FirstOrDefault();
+            if (comment == null)
+                throw new HttpNotFound($"Comment with ID: {CommentId} not found");
+            return comment;
+        }
+
+        /// <summary>Create a comment on a bill</summary>
+        [HttpPost("{BillId:Guid}/comments")]
+        public CommentDto CreateOneComment(Guid BillId, [FromBody] CommentInputDto input)
+        {
+            var user = IdentityTools.GetUser(db, HttpContext.User.Identity);
+            var bill = db.Bills.Where(bill =>
+                (bill.Owner.Id == user.Id || bill.Shares.Any(share => share.Payer.Id == user.Id))
+                && bill.Id == BillId
+            ).FirstOrDefault();
+            if (bill == null)
+                throw new HttpBadRequest($"Bill requested not found or you are not part of it");
+
+            var comment = new Comment
+            {
+                Commenter = user,
+                Content = input.Content,
+            };
+            bill.Comments.Add(comment);
+            db.SaveChanges();
+
+            return CommentDto.FromEntity(comment);
+        }
+
+
     }
 }
