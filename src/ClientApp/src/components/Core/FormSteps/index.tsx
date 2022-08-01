@@ -10,8 +10,8 @@ import Step from '@mui/material/Step';
 import Box from '@mui/material/Box';
 
 import InputField from 'components/InputForm/InputFields';
+import { UserSelector } from 'components/Core/UserSelector';
 import { DateSelector } from 'components/InputForm/DateSelector';
-import { UserSelector } from 'components/InputForm/UserSelector';
 import { ItemSelector } from 'components/InputForm/ItemSelector';
 import { PriceDisplay } from 'components/InputForm/PriceDisplay';
 
@@ -35,7 +35,9 @@ const FormSteps = (props: FormStepsProps) => {
       case 'users':
         return {
           label: f.menu_label,
-          element: <UserSelector users={inputs['users']} setUsers={set('users')} err={f.err} />
+          element: (
+            <UserSelector values={inputs['users']} onChange={set('users')} options={f.users} />
+          )
         };
       case 'items':
         return {
@@ -59,7 +61,7 @@ const FormSteps = (props: FormStepsProps) => {
               name={f.name}
               label={f.label}
               type={f.type}
-              inputs={inputs[f.name ?? '']}
+              inputs={inputs[f.name]}
               set={set(f.name)}
               err={f.err}
             />

@@ -1,8 +1,8 @@
-import { Item, User } from 'components/Core/Entities';
+import { UserDto, ItemDto } from 'api';
 
 export interface InputProps {
   name: string;
-  users: User[]; // an array of user-ids
-  items?: Item[];
+  users: UserDto[]; // an array of user-ids
+  items?: ItemDto[];
   price: number;
 }
