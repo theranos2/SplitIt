@@ -42,9 +42,17 @@ namespace split_it.Controllers
                 //shareDto.hasPaid = false;  // done by paying / calling a paying route
                 //shareDto.hasRejected = false; // everytime the owner updates or edit the bill it will resend to those who have rejected 
 
-                User payer = db.Users.Where(x => x.Id == shareDto.PayerId).FirstOrDefault();
-                if (payer == null)
-                    throw new HttpNotFound($"Cannot find payer: {shareDto.PayerId}");
+                User payer;
+                if (shareDto.PayerId == Guid.Empty)
+                {
+                    payer = null; // anon pay
+                }
+                else
+                {
+                    payer = db.Users.Where(x => x.Id == shareDto.PayerId).FirstOrDefault();
+                    if (payer == null)
+                        throw new HttpNotFound($"Cannot find payer: {shareDto.PayerId}");
+                }
 
                 // items cannot be empty
                 if (shareDto.Items == null || shareDto.Items.Count <= 0)
@@ -602,6 +610,80 @@ namespace split_it.Controllers
             if (bill.Owner.Id != curUserId && !isMember)
                 throw new HttpForbiddenRequest($"Permission Denied. Cannot view bill that you are not apart of.");
 
+            // check if owner has set up his bank details
+            var bankDetails = db.BankDetails.Where(x => x.Owner.Id == bill.Owner.Id).FirstOrDefault();
+            if (bankDetails == null || bankDetails.StripeCustomerId == null)
+                throw new HttpNotFound("Bill owner has setup their bank details yet. Please tell your bill owner to setup their bank details to pay them.");
+
+            string billOwnerStripeId = bankDetails.StripeCustomerId;
+
+            // if one is not paid all is not paid.
+            // because if pay 1 pay all
+            // user can only pay without sign if user field is null when they are anon
+            var payDto = CalcBill(bill, curUserId);
+
+            // check payment process
+            string intentId = bill.Shares.Where(x => x.Payer.Id == curUserId).FirstOrDefault().StripePaymentId;
+            if (!string.IsNullOrEmpty(intentId))
+            {
+                // confirm with stripe
+                var service = new PaymentIntentService();
+                try
+                {
+                    var intent = service.Get(intentId);
+                    string stripeIntentId = "LOL";
+                    if (intent.Status == "processing" || intent.Status == "succeeded")
+                    {
+                        var status = PaymentStatus.Processing;
+                        if (intent.Status == "succeeded")
+                        {
+                            status = PaymentStatus.Paid;
+                            // mark all shares as paid
+                            foreach (Share share in bill.Shares.Where(x => x.Payer.Id == curUserId))
+                            {
+                                share.Status = Status.Paid;
+                            }
+                            db.SaveChanges();
+                        }
+                        return new PayDto
+                        {
+                            BillTotal = payDto.BillTotal,
+                            SplitItSurcharge = payDto.SplitItSurcharge,
+                            StripeSurcharge = payDto.StripeSurcharge,
+                            TransactionId = stripeIntentId,
+                            PaymentStatus = status
+                        };
+                    }
+                }
+                catch (StripeException e)
+                {
+                    Console.WriteLine(e.Message);
+                    throw new HttpInternalServerError("Sumting went wong");
+                }
+
+            }
+
+            // check if previous payment requested
+            // if null then we create new intent
+            // if existing we update
+            var paymentIntent = CreatePaymentIntent(billOwnerStripeId, payDto.SplitItSurcharge, payDto.GrandTotal, intentId);
+
+            // update our shares with payment intent id
+            foreach (Share share in bill.Shares.Where(x => x.Payer.Id == curUserId))
+            {
+                share.StripePaymentId = paymentIntent.Id;
+            }
+            db.SaveChanges();
+
+            payDto.ClientSecret = paymentIntent.ClientSecret;
+            payDto.SellerId = billOwnerStripeId;
+            payDto.PaymentStatus = PaymentStatus.Unpaid;
+
+            return payDto;
+        }
+
+        private PayDto CalcBill(Bill bill, Guid curUserId)
+        {
             // get total amount owed by current user in this bill
             double totalBillAmount = bill.Shares.Where(x => x.Payer.Id == curUserId).Sum(x => x.Total);
             totalBillAmount = Math.Round(Math.Ceiling(totalBillAmount / 0.01) * 0.01, 2); // round to the upper bound smallest cent
@@ -618,33 +700,11 @@ namespace split_it.Controllers
             // grand total
             double grandTotal = totalBillAmount + totalSurcharge;
 
-            // check if owner has set up his bank details
-            var bankDetails = db.BankDetails.Where(x => x.Owner.Id == bill.Owner.Id).FirstOrDefault();
-            if (bankDetails == null || bankDetails.StripeCustomerId == null)
-                throw new HttpNotFound("Bill owner has setup their bank details yet. Please tell your bill owner to setup their bank details to pay them.");
-
-            string billOwnerStripeId = bankDetails.StripeCustomerId;
-
-            // check if previous payment requested
-            // if null then we create new intent
-            // if existing we update
-            string intentId = bill.Shares.Where(x => x.Payer.Id == curUserId).FirstOrDefault().StripePaymentId;
-            var paymentIntent = CreatePaymentIntent(billOwnerStripeId, stripeSurcharge, grandTotal, intentId);
-
-            // update our shares with payment intent id
-            foreach (Share share in bill.Shares.Where(x => x.Payer.Id == curUserId))
-            {
-                share.StripePaymentId = paymentIntent.Id;
-            }
-            db.SaveChanges();
-
             return new PayDto
             {
                 BillTotal = totalBillAmount,
-                SurchargeTotal = totalSurcharge,
-                ClientSecret = paymentIntent.ClientSecret,
-                SellerId = billOwnerStripeId,
-                hasPaid = false,
+                SplitItSurcharge = splititSurcharge,
+                StripeSurcharge = stripeSurcharge,
             };
         }
 
@@ -659,14 +719,6 @@ namespace split_it.Controllers
             const double STRIPE_RATE = 1.75; // 1.75%. This is worse than the Mafia skimming the casino.
             const double STRIPE_CHARGE_PER_TRANSACTATION = 0.30; // 30 cents per transact
             return Math.Round(((amount * STRIPE_RATE) / 100) + STRIPE_CHARGE_PER_TRANSACTATION, 2);
-        }
-
-        [HttpPost("{bill_id:Guid}/pay")]
-        public PayReceiptDto Pay(Guid bill_id)
-        {
-            // invokes a payment panel
-            // throws error if paid
-            throw new NotImplementedException();
         }
 
         /// <summary>Get many comments from a bill</summary>

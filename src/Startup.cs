@@ -32,6 +32,7 @@ namespace split_it
         public void ConfigureServices(IServiceCollection services)
         {
 
+            StripeConfiguration.ApiKey = "sk_test_51LRAp0LRaQPWk3cf2gGKPMZ0ehrefwxPuEcQUBRTlulQdjXtK0pYiABLXQzWes6qPiQ0lfFy0xB09MX8RksDgNQx00IDlfFR7a";
             // Use our custom validation response
             services.AddControllersWithViews(options => options.Filters.Add(typeof(ValidationResponse)))
                 .AddJsonOptions(options =>
