@@ -16,6 +16,7 @@ using split_it.Exceptions;
 using split_it.Middlewares;
 using split_it.Services;
 using split_it.Utils;
+using Stripe;
 
 namespace split_it
 {

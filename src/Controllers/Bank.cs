@@ -7,7 +7,6 @@ using split_it.Authentication;
 using split_it.Exceptions.Http;
 using split_it.Models;
 using Stripe;
-using Stripe;
 
 namespace split_it.Controllers
 {
