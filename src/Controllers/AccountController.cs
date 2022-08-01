@@ -87,7 +87,7 @@ namespace split_it.Controllers
             {
                 Token = MakeToken(user.Id, DateTime.Now.AddHours(12), secret, true) // TODO change to true to disable confirm email when debugging
             };
-            
+
             // wrapped because of xUnit test keeps failing, due to no mock httpcontext.
             try
             {
@@ -96,7 +96,7 @@ namespace split_it.Controllers
                 <a href='{domainName}/confirm/{tokenDto.Token}KEK{secret}'>Click Here</a> to confim your account.";
                 MailService.SendMail(newUser.Email, mailBody, "Split It New Account");
             }
-            catch{}
+            catch { }
 
 
             return tokenDto;
