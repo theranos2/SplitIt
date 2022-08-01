@@ -14,31 +14,19 @@
 /**
  * 
  * @export
- * @interface FileAttachment
+ * @interface AttachmentDto
  */
-export interface FileAttachment {
+export interface AttachmentDto {
     /**
      * 
      * @type {string}
-     * @memberof FileAttachment
+     * @memberof AttachmentDto
      */
     id?: string;
     /**
      * 
      * @type {string}
-     * @memberof FileAttachment
+     * @memberof AttachmentDto
      */
     caption?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof FileAttachment
-     */
-    contentType?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof FileAttachment
-     */
-    content?: string | null;
 }

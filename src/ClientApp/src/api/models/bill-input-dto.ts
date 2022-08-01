@@ -11,34 +11,35 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { ShareInputDto } from './share-input-dto';
 /**
  * 
  * @export
- * @interface FileAttachment
+ * @interface BillInputDto
  */
-export interface FileAttachment {
+export interface BillInputDto {
     /**
      * 
      * @type {string}
-     * @memberof FileAttachment
+     * @memberof BillInputDto
      */
-    id?: string;
+    ownerId: string;
+    /**
+     * Defaults to current time
+     * @type {Date}
+     * @memberof BillInputDto
+     */
+    created?: Date;
     /**
      * 
      * @type {string}
-     * @memberof FileAttachment
+     * @memberof BillInputDto
      */
-    caption?: string | null;
+    title: string;
     /**
      * 
-     * @type {string}
-     * @memberof FileAttachment
+     * @type {Array<ShareInputDto>}
+     * @memberof BillInputDto
      */
-    contentType?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof FileAttachment
-     */
-    content?: string | null;
+    shares: Array<ShareInputDto>;
 }

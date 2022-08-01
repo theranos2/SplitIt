@@ -14,31 +14,25 @@
 /**
  * 
  * @export
- * @interface FileAttachment
+ * @interface SimpleBillInputDto
  */
-export interface FileAttachment {
+export interface SimpleBillInputDto {
     /**
      * 
      * @type {string}
-     * @memberof FileAttachment
+     * @memberof SimpleBillInputDto
      */
-    id?: string;
+    title: string;
     /**
      * 
-     * @type {string}
-     * @memberof FileAttachment
+     * @type {Array<string>}
+     * @memberof SimpleBillInputDto
      */
-    caption?: string | null;
+    userIds: Array<string>;
     /**
      * 
-     * @type {string}
-     * @memberof FileAttachment
+     * @type {number}
+     * @memberof SimpleBillInputDto
      */
-    contentType?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof FileAttachment
-     */
-    content?: string | null;
+    total: number;
 }

@@ -9,11 +9,8 @@ import { Grid, Link, Paper } from '@mui/material';
 import { GroupApi, SimpleGroupDto } from 'api';
 import { token } from 'utility/config';
 
-function createData(id: number, name: string, owner: string, members: string[]) {
-  return { id, name, owner, members };
-}
-
 export default function GroupsView() {
+  // Clicking on a row directs user to a detailed group view page
   const handleRowClick = (group: any) => {
     console.log(group);
     window.location.href = "/groups/view/" + group.id;

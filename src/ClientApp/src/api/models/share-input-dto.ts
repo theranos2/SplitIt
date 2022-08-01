@@ -11,34 +11,30 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { ItemInputDto } from './item-input-dto';
+import { Status } from './status';
 /**
  * 
  * @export
- * @interface FileAttachment
+ * @interface ShareInputDto
  */
-export interface FileAttachment {
+export interface ShareInputDto {
     /**
      * 
      * @type {string}
-     * @memberof FileAttachment
+     * @memberof ShareInputDto
      */
-    id?: string;
+    payerId: string;
     /**
      * 
-     * @type {string}
-     * @memberof FileAttachment
+     * @type {Array<ItemInputDto>}
+     * @memberof ShareInputDto
      */
-    caption?: string | null;
+    items: Array<ItemInputDto>;
     /**
      * 
-     * @type {string}
-     * @memberof FileAttachment
+     * @type {Status}
+     * @memberof ShareInputDto
      */
-    contentType?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof FileAttachment
-     */
-    content?: string | null;
+    status?: Status;
 }

@@ -16,6 +16,7 @@ import { Configuration } from '../configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
+import { DetailedGroupDto } from '../models';
 import { GroupDto } from '../models';
 import { SimpleGroupDto } from '../models';
 /**
@@ -255,7 +256,7 @@ export const GroupApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiGroupGroupIdGet(groupId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<GroupDto>>> {
+        async apiGroupGroupIdGet(groupId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<DetailedGroupDto>>> {
             const localVarAxiosArgs = await GroupApiAxiosParamCreator(configuration).apiGroupGroupIdGet(groupId, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
@@ -270,7 +271,7 @@ export const GroupApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiGroupGroupIdPut(groupId: string, body?: GroupDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<GroupDto>>> {
+        async apiGroupGroupIdPut(groupId: string, body?: GroupDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<DetailedGroupDto>>> {
             const localVarAxiosArgs = await GroupApiAxiosParamCreator(configuration).apiGroupGroupIdPut(groupId, body, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
@@ -284,7 +285,7 @@ export const GroupApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiGroupPost(body?: GroupDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<GroupDto>>> {
+        async apiGroupPost(body?: GroupDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<DetailedGroupDto>>> {
             const localVarAxiosArgs = await GroupApiAxiosParamCreator(configuration).apiGroupPost(body, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
@@ -318,7 +319,7 @@ export const GroupApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiGroupGroupIdGet(groupId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<GroupDto>> {
+        async apiGroupGroupIdGet(groupId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<DetailedGroupDto>> {
             return GroupApiFp(configuration).apiGroupGroupIdGet(groupId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -329,7 +330,7 @@ export const GroupApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiGroupGroupIdPut(groupId: string, body?: GroupDto, options?: AxiosRequestConfig): Promise<AxiosResponse<GroupDto>> {
+        async apiGroupGroupIdPut(groupId: string, body?: GroupDto, options?: AxiosRequestConfig): Promise<AxiosResponse<DetailedGroupDto>> {
             return GroupApiFp(configuration).apiGroupGroupIdPut(groupId, body, options).then((request) => request(axios, basePath));
         },
         /**
@@ -339,7 +340,7 @@ export const GroupApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiGroupPost(body?: GroupDto, options?: AxiosRequestConfig): Promise<AxiosResponse<GroupDto>> {
+        async apiGroupPost(body?: GroupDto, options?: AxiosRequestConfig): Promise<AxiosResponse<DetailedGroupDto>> {
             return GroupApiFp(configuration).apiGroupPost(body, options).then((request) => request(axios, basePath));
         },
     };
@@ -372,7 +373,7 @@ export class GroupApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof GroupApi
      */
-    public async apiGroupGroupIdGet(groupId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<GroupDto>> {
+    public async apiGroupGroupIdGet(groupId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<DetailedGroupDto>> {
         return GroupApiFp(this.configuration).apiGroupGroupIdGet(groupId, options).then((request) => request(this.axios, this.basePath));
     }
     /**
@@ -384,7 +385,7 @@ export class GroupApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof GroupApi
      */
-    public async apiGroupGroupIdPut(groupId: string, body?: GroupDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<GroupDto>> {
+    public async apiGroupGroupIdPut(groupId: string, body?: GroupDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<DetailedGroupDto>> {
         return GroupApiFp(this.configuration).apiGroupGroupIdPut(groupId, body, options).then((request) => request(this.axios, this.basePath));
     }
     /**
@@ -395,7 +396,7 @@ export class GroupApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof GroupApi
      */
-    public async apiGroupPost(body?: GroupDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<GroupDto>> {
+    public async apiGroupPost(body?: GroupDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<DetailedGroupDto>> {
         return GroupApiFp(this.configuration).apiGroupPost(body, options).then((request) => request(this.axios, this.basePath));
     }
 }
