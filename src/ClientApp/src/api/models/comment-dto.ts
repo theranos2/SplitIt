@@ -11,34 +11,29 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { UserInfoDto } from './user-info-dto';
 /**
  * 
  * @export
- * @interface FileAttachment
+ * @interface CommentDto
  */
-export interface FileAttachment {
+export interface CommentDto {
     /**
      * 
      * @type {string}
-     * @memberof FileAttachment
+     * @memberof CommentDto
      */
     id?: string;
     /**
      * 
-     * @type {string}
-     * @memberof FileAttachment
+     * @type {UserInfoDto}
+     * @memberof CommentDto
      */
-    caption?: string | null;
+    commenter?: UserInfoDto;
     /**
      * 
      * @type {string}
-     * @memberof FileAttachment
-     */
-    contentType?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof FileAttachment
+     * @memberof CommentDto
      */
     content?: string | null;
 }

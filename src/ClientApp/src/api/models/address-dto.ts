@@ -14,31 +14,37 @@
 /**
  * 
  * @export
- * @interface FileAttachment
+ * @interface AddressDto
  */
-export interface FileAttachment {
+export interface AddressDto {
     /**
      * 
      * @type {string}
-     * @memberof FileAttachment
+     * @memberof AddressDto
      */
-    id?: string;
+    houseNumber: string;
     /**
      * 
      * @type {string}
-     * @memberof FileAttachment
+     * @memberof AddressDto
      */
-    caption?: string | null;
+    streetName: string;
     /**
      * 
      * @type {string}
-     * @memberof FileAttachment
+     * @memberof AddressDto
      */
-    contentType?: string | null;
+    state: string;
     /**
      * 
      * @type {string}
-     * @memberof FileAttachment
+     * @memberof AddressDto
      */
-    content?: string | null;
+    postcode: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof AddressDto
+     */
+    country: string;
 }

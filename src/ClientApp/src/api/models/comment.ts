@@ -11,49 +11,35 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { Item } from './item';
-import { Status } from './status';
 import { User } from './user';
 /**
  * 
  * @export
- * @interface Share
+ * @interface Comment
  */
-export interface Share {
+export interface Comment {
     /**
      * 
      * @type {string}
-     * @memberof Share
+     * @memberof Comment
      */
     id?: string;
     /**
      * 
-     * @type {Status}
-     * @memberof Share
-     */
-    status?: Status;
-    /**
-     * Inferred from sum of items
-     * @type {number}
-     * @memberof Share
-     */
-    total?: number;
-    /**
-     * 
      * @type {User}
-     * @memberof Share
+     * @memberof Comment
      */
-    payer?: User;
+    commenter?: User;
     /**
      * 
      * @type {string}
-     * @memberof Share
+     * @memberof Comment
      */
-    stripePaymentId?: string | null;
+    content?: string | null;
     /**
      * 
-     * @type {Array<Item>}
-     * @memberof Share
+     * @type {Date}
+     * @memberof Comment
      */
-    items?: Array<Item> | null;
+    createdAt?: Date;
 }

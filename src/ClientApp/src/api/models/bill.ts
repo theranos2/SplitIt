@@ -11,8 +11,8 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { Comment } from './comment';
 import { FileAttachment } from './file-attachment';
-import { Item } from './item';
 import { Share } from './share';
 import { User } from './user';
 /**
@@ -40,7 +40,7 @@ export interface Bill {
      */
     owner?: User;
     /**
-     * 
+     * Inferred from Sum of total shares (only the non-rejected ones)
      * @type {number}
      * @memberof Bill
      */
@@ -65,10 +65,10 @@ export interface Bill {
     shares?: Array<Share> | null;
     /**
      * 
-     * @type {Array<Item>}
+     * @type {Array<Comment>}
      * @memberof Bill
      */
-    overallItems?: Array<Item> | null;
+    comments?: Array<Comment> | null;
     /**
      * 
      * @type {boolean}

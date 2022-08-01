@@ -14,31 +14,37 @@
 /**
  * 
  * @export
- * @interface FileAttachment
+ * @interface CardDto
  */
-export interface FileAttachment {
+export interface CardDto {
     /**
      * 
      * @type {string}
-     * @memberof FileAttachment
+     * @memberof CardDto
      */
-    id?: string;
+    number: string;
     /**
      * 
      * @type {string}
-     * @memberof FileAttachment
+     * @memberof CardDto
      */
-    caption?: string | null;
+    secret: string;
     /**
      * 
      * @type {string}
-     * @memberof FileAttachment
+     * @memberof CardDto
      */
-    contentType?: string | null;
+    name: string;
     /**
      * 
-     * @type {string}
-     * @memberof FileAttachment
+     * @type {Date}
+     * @memberof CardDto
      */
-    content?: string | null;
+    expiry: Date;
+    /**
+     * 
+     * @type {Date}
+     * @memberof CardDto
+     */
+    doB: Date;
 }

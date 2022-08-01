@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 import { DetailedItemDto } from './detailed-item-dto';
+import { Status } from './status';
 import { UserInfoDto } from './user-info-dto';
 /**
  * 
@@ -27,18 +28,12 @@ export interface DetailedShareDto {
     id?: string;
     /**
      * 
-     * @type {boolean}
+     * @type {Status}
      * @memberof DetailedShareDto
      */
-    hasPaid?: boolean;
+    status?: Status;
     /**
-     * 
-     * @type {boolean}
-     * @memberof DetailedShareDto
-     */
-    hasRejected?: boolean;
-    /**
-     * 
+     * Inferred from sum of items
      * @type {number}
      * @memberof DetailedShareDto
      */

@@ -16,81 +16,21 @@ import { Configuration } from '../configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
-import { DetailedGroupDto } from '../models';
-import { GroupDto } from '../models';
-import { SimpleGroupDto } from '../models';
+import { AddressDto } from '../models';
+import { CardDto } from '../models';
 /**
- * GroupApi - axios parameter creator
+ * BankApi - axios parameter creator
  * @export
  */
-export const GroupApiAxiosParamCreator = function (configuration?: Configuration) {
+export const BankApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Get list of groups that the currently authorised user is a part of
-         * @param {number} [take] 
-         * @param {number} [skip] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiGroupGet: async (take?: number, skip?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/Group`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Token required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-                    ? await configuration.apiKey("Token")
-                    : await configuration.apiKey;
-                localVarHeaderParameter["Token"] = localVarApiKeyValue;
-            }
-
-            if (take !== undefined) {
-                localVarQueryParameter['take'] = take;
-            }
-
-            if (skip !== undefined) {
-                localVarQueryParameter['skip'] = skip;
-            }
-
-            const query = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                query.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.params) {
-                query.set(key, options.params[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(query)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Use this route to get a group. Supply the group guid.
-         * @summary Get Group
-         * @param {string} groupId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiGroupGroupIdGet: async (groupId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'groupId' is not null or undefined
-            if (groupId === null || groupId === undefined) {
-                throw new RequiredError('groupId','Required parameter groupId was null or undefined when calling apiGroupGroupIdGet.');
-            }
-            const localVarPath = `/api/Group/{groupId}`
-                .replace(`{${"groupId"}}`, encodeURIComponent(String(groupId)));
+        apiBankAddressGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Bank/address`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -126,27 +66,20 @@ export const GroupApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Use this route to edit a group. You must be the group owner to edit (remove/add) users. To edit group simply supply the new list of member guids. Example: To add a user to a group simply APPEND that user guid to the member guid list and call this route using that parameter. Keyword \"append\", if not append, your new group will be user that user.
-         * @summary Edit a Group
-         * @param {string} groupId 
-         * @param {GroupDto} [body] 
+         * 
+         * @param {AddressDto} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiGroupGroupIdPut: async (groupId: string, body?: GroupDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'groupId' is not null or undefined
-            if (groupId === null || groupId === undefined) {
-                throw new RequiredError('groupId','Required parameter groupId was null or undefined when calling apiGroupGroupIdPut.');
-            }
-            const localVarPath = `/api/Group/{groupId}`
-                .replace(`{${"groupId"}}`, encodeURIComponent(String(groupId)));
+        apiBankAddressPost: async (body?: AddressDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Bank/address`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
             if (configuration) {
                 baseOptions = configuration.baseOptions;
             }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'PUT', ...baseOptions, ...options};
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -179,14 +112,54 @@ export const GroupApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * Use this route to create a group. Supply member guids to create group. See the GroupDto
-         * @summary Create a Group
-         * @param {GroupDto} [body] 
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiGroupPost: async (body?: GroupDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/Group`;
+        apiBankCardGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Bank/card`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Token required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("Token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["Token"] = localVarApiKeyValue;
+            }
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {CardDto} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBankCardPost: async (body?: CardDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Bank/card`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -229,64 +202,56 @@ export const GroupApiAxiosParamCreator = function (configuration?: Configuration
 };
 
 /**
- * GroupApi - functional programming interface
+ * BankApi - functional programming interface
  * @export
  */
-export const GroupApiFp = function(configuration?: Configuration) {
+export const BankApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @summary Get list of groups that the currently authorised user is a part of
-         * @param {number} [take] 
-         * @param {number} [skip] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiGroupGet(take?: number, skip?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<SimpleGroupDto>>>> {
-            const localVarAxiosArgs = await GroupApiAxiosParamCreator(configuration).apiGroupGet(take, skip, options);
+        async apiBankAddressGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<AddressDto>>> {
+            const localVarAxiosArgs = await BankApiAxiosParamCreator(configuration).apiBankAddressGet(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
             };
         },
         /**
-         * Use this route to get a group. Supply the group guid.
-         * @summary Get Group
-         * @param {string} groupId 
+         * 
+         * @param {AddressDto} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiGroupGroupIdGet(groupId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<DetailedGroupDto>>> {
-            const localVarAxiosArgs = await GroupApiAxiosParamCreator(configuration).apiGroupGroupIdGet(groupId, options);
+        async apiBankAddressPost(body?: AddressDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<AddressDto>>> {
+            const localVarAxiosArgs = await BankApiAxiosParamCreator(configuration).apiBankAddressPost(body, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
             };
         },
         /**
-         * Use this route to edit a group. You must be the group owner to edit (remove/add) users. To edit group simply supply the new list of member guids. Example: To add a user to a group simply APPEND that user guid to the member guid list and call this route using that parameter. Keyword \"append\", if not append, your new group will be user that user.
-         * @summary Edit a Group
-         * @param {string} groupId 
-         * @param {GroupDto} [body] 
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiGroupGroupIdPut(groupId: string, body?: GroupDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<DetailedGroupDto>>> {
-            const localVarAxiosArgs = await GroupApiAxiosParamCreator(configuration).apiGroupGroupIdPut(groupId, body, options);
+        async apiBankCardGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<CardDto>>> {
+            const localVarAxiosArgs = await BankApiAxiosParamCreator(configuration).apiBankCardGet(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
             };
         },
         /**
-         * Use this route to create a group. Supply member guids to create group. See the GroupDto
-         * @summary Create a Group
-         * @param {GroupDto} [body] 
+         * 
+         * @param {CardDto} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiGroupPost(body?: GroupDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<DetailedGroupDto>>> {
-            const localVarAxiosArgs = await GroupApiAxiosParamCreator(configuration).apiGroupPost(body, options);
+        async apiBankCardPost(body?: CardDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<CardDto>>> {
+            const localVarAxiosArgs = await BankApiAxiosParamCreator(configuration).apiBankCardPost(body, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -296,107 +261,91 @@ export const GroupApiFp = function(configuration?: Configuration) {
 };
 
 /**
- * GroupApi - factory interface
+ * BankApi - factory interface
  * @export
  */
-export const GroupApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+export const BankApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     return {
         /**
          * 
-         * @summary Get list of groups that the currently authorised user is a part of
-         * @param {number} [take] 
-         * @param {number} [skip] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiGroupGet(take?: number, skip?: number, options?: AxiosRequestConfig): Promise<AxiosResponse<Array<SimpleGroupDto>>> {
-            return GroupApiFp(configuration).apiGroupGet(take, skip, options).then((request) => request(axios, basePath));
+        async apiBankAddressGet(options?: AxiosRequestConfig): Promise<AxiosResponse<AddressDto>> {
+            return BankApiFp(configuration).apiBankAddressGet(options).then((request) => request(axios, basePath));
         },
         /**
-         * Use this route to get a group. Supply the group guid.
-         * @summary Get Group
-         * @param {string} groupId 
+         * 
+         * @param {AddressDto} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiGroupGroupIdGet(groupId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<DetailedGroupDto>> {
-            return GroupApiFp(configuration).apiGroupGroupIdGet(groupId, options).then((request) => request(axios, basePath));
+        async apiBankAddressPost(body?: AddressDto, options?: AxiosRequestConfig): Promise<AxiosResponse<AddressDto>> {
+            return BankApiFp(configuration).apiBankAddressPost(body, options).then((request) => request(axios, basePath));
         },
         /**
-         * Use this route to edit a group. You must be the group owner to edit (remove/add) users. To edit group simply supply the new list of member guids. Example: To add a user to a group simply APPEND that user guid to the member guid list and call this route using that parameter. Keyword \"append\", if not append, your new group will be user that user.
-         * @summary Edit a Group
-         * @param {string} groupId 
-         * @param {GroupDto} [body] 
+         * 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiGroupGroupIdPut(groupId: string, body?: GroupDto, options?: AxiosRequestConfig): Promise<AxiosResponse<DetailedGroupDto>> {
-            return GroupApiFp(configuration).apiGroupGroupIdPut(groupId, body, options).then((request) => request(axios, basePath));
+        async apiBankCardGet(options?: AxiosRequestConfig): Promise<AxiosResponse<CardDto>> {
+            return BankApiFp(configuration).apiBankCardGet(options).then((request) => request(axios, basePath));
         },
         /**
-         * Use this route to create a group. Supply member guids to create group. See the GroupDto
-         * @summary Create a Group
-         * @param {GroupDto} [body] 
+         * 
+         * @param {CardDto} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiGroupPost(body?: GroupDto, options?: AxiosRequestConfig): Promise<AxiosResponse<DetailedGroupDto>> {
-            return GroupApiFp(configuration).apiGroupPost(body, options).then((request) => request(axios, basePath));
+        async apiBankCardPost(body?: CardDto, options?: AxiosRequestConfig): Promise<AxiosResponse<CardDto>> {
+            return BankApiFp(configuration).apiBankCardPost(body, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * GroupApi - object-oriented interface
+ * BankApi - object-oriented interface
  * @export
- * @class GroupApi
+ * @class BankApi
  * @extends {BaseAPI}
  */
-export class GroupApi extends BaseAPI {
+export class BankApi extends BaseAPI {
     /**
      * 
-     * @summary Get list of groups that the currently authorised user is a part of
-     * @param {number} [take] 
-     * @param {number} [skip] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof GroupApi
+     * @memberof BankApi
      */
-    public async apiGroupGet(take?: number, skip?: number, options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<SimpleGroupDto>>> {
-        return GroupApiFp(this.configuration).apiGroupGet(take, skip, options).then((request) => request(this.axios, this.basePath));
+    public async apiBankAddressGet(options?: AxiosRequestConfig) : Promise<AxiosResponse<AddressDto>> {
+        return BankApiFp(this.configuration).apiBankAddressGet(options).then((request) => request(this.axios, this.basePath));
     }
     /**
-     * Use this route to get a group. Supply the group guid.
-     * @summary Get Group
-     * @param {string} groupId 
+     * 
+     * @param {AddressDto} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof GroupApi
+     * @memberof BankApi
      */
-    public async apiGroupGroupIdGet(groupId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<DetailedGroupDto>> {
-        return GroupApiFp(this.configuration).apiGroupGroupIdGet(groupId, options).then((request) => request(this.axios, this.basePath));
+    public async apiBankAddressPost(body?: AddressDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<AddressDto>> {
+        return BankApiFp(this.configuration).apiBankAddressPost(body, options).then((request) => request(this.axios, this.basePath));
     }
     /**
-     * Use this route to edit a group. You must be the group owner to edit (remove/add) users. To edit group simply supply the new list of member guids. Example: To add a user to a group simply APPEND that user guid to the member guid list and call this route using that parameter. Keyword \"append\", if not append, your new group will be user that user.
-     * @summary Edit a Group
-     * @param {string} groupId 
-     * @param {GroupDto} [body] 
+     * 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof GroupApi
+     * @memberof BankApi
      */
-    public async apiGroupGroupIdPut(groupId: string, body?: GroupDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<DetailedGroupDto>> {
-        return GroupApiFp(this.configuration).apiGroupGroupIdPut(groupId, body, options).then((request) => request(this.axios, this.basePath));
+    public async apiBankCardGet(options?: AxiosRequestConfig) : Promise<AxiosResponse<CardDto>> {
+        return BankApiFp(this.configuration).apiBankCardGet(options).then((request) => request(this.axios, this.basePath));
     }
     /**
-     * Use this route to create a group. Supply member guids to create group. See the GroupDto
-     * @summary Create a Group
-     * @param {GroupDto} [body] 
+     * 
+     * @param {CardDto} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof GroupApi
+     * @memberof BankApi
      */
-    public async apiGroupPost(body?: GroupDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<DetailedGroupDto>> {
-        return GroupApiFp(this.configuration).apiGroupPost(body, options).then((request) => request(this.axios, this.basePath));
+    public async apiBankCardPost(body?: CardDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<CardDto>> {
+        return BankApiFp(this.configuration).apiBankCardPost(body, options).then((request) => request(this.axios, this.basePath));
     }
 }

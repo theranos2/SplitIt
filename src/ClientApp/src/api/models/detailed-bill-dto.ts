@@ -11,7 +11,7 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { DetailedItemDto } from './detailed-item-dto';
+import { AttachmentDto } from './attachment-dto';
 import { DetailedShareDto } from './detailed-share-dto';
 import { UserInfoDto } from './user-info-dto';
 /**
@@ -64,8 +64,8 @@ export interface DetailedBillDto {
     shares?: Array<DetailedShareDto> | null;
     /**
      * 
-     * @type {Array<DetailedItemDto>}
+     * @type {Array<AttachmentDto>}
      * @memberof DetailedBillDto
      */
-    overallItems?: Array<DetailedItemDto> | null;
+    attachments?: Array<AttachmentDto> | null;
 }

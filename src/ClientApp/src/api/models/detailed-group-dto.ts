@@ -11,34 +11,41 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { UserInfoDto } from './user-info-dto';
 /**
  * 
  * @export
- * @interface FileAttachment
+ * @interface DetailedGroupDto
  */
-export interface FileAttachment {
+export interface DetailedGroupDto {
     /**
      * 
      * @type {string}
-     * @memberof FileAttachment
+     * @memberof DetailedGroupDto
      */
     id?: string;
     /**
      * 
      * @type {string}
-     * @memberof FileAttachment
+     * @memberof DetailedGroupDto
      */
-    caption?: string | null;
+    name?: string | null;
     /**
      * 
-     * @type {string}
-     * @memberof FileAttachment
+     * @type {UserInfoDto}
+     * @memberof DetailedGroupDto
      */
-    contentType?: string | null;
+    owner?: UserInfoDto;
     /**
      * 
-     * @type {string}
-     * @memberof FileAttachment
+     * @type {number}
+     * @memberof DetailedGroupDto
      */
-    content?: string | null;
+    memberCount?: number;
+    /**
+     * 
+     * @type {Array<UserInfoDto>}
+     * @memberof DetailedGroupDto
+     */
+    members?: Array<UserInfoDto> | null;
 }

@@ -28,11 +28,10 @@ export const NotificationsApiAxiosParamCreator = function (configuration?: Confi
          * 
          * @summary Delete many notification at once
          * @param {Array<string>} [body] 
-         * @param {string} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiNotificationsDelete: async (body?: Array<string>, token?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiNotificationsDelete: async (body?: Array<string>, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/Notifications`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -50,10 +49,6 @@ export const NotificationsApiAxiosParamCreator = function (configuration?: Confi
                     ? await configuration.apiKey("Token")
                     : await configuration.apiKey;
                 localVarHeaderParameter["Token"] = localVarApiKeyValue;
-            }
-
-            if (token !== undefined && token !== null) {
-                localVarHeaderParameter['Token'] = String(token);
             }
 
             localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -78,14 +73,13 @@ export const NotificationsApiAxiosParamCreator = function (configuration?: Confi
         },
         /**
          * 
-         * @param {string} [token] 
          * @param {NotificationSort} [sortBy] 
          * @param {number} [take] 
          * @param {number} [skip] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiNotificationsGet: async (token?: string, sortBy?: NotificationSort, take?: number, skip?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiNotificationsGet: async (sortBy?: NotificationSort, take?: number, skip?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/Notifications`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -117,10 +111,6 @@ export const NotificationsApiAxiosParamCreator = function (configuration?: Confi
                 localVarQueryParameter['skip'] = skip;
             }
 
-            if (token !== undefined && token !== null) {
-                localVarHeaderParameter['Token'] = String(token);
-            }
-
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
                 query.set(key, localVarQueryParameter[key]);
@@ -141,11 +131,10 @@ export const NotificationsApiAxiosParamCreator = function (configuration?: Confi
          * 
          * @summary Mark Notification as seen aka delete it
          * @param {string} notificationId 
-         * @param {string} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiNotificationsNotificationIdDelete: async (notificationId: string, token?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiNotificationsNotificationIdDelete: async (notificationId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'notificationId' is not null or undefined
             if (notificationId === null || notificationId === undefined) {
                 throw new RequiredError('notificationId','Required parameter notificationId was null or undefined when calling apiNotificationsNotificationIdDelete.');
@@ -170,10 +159,6 @@ export const NotificationsApiAxiosParamCreator = function (configuration?: Confi
                 localVarHeaderParameter["Token"] = localVarApiKeyValue;
             }
 
-            if (token !== undefined && token !== null) {
-                localVarHeaderParameter['Token'] = String(token);
-            }
-
             const query = new URLSearchParams(localVarUrlObj.search);
             for (const key in localVarQueryParameter) {
                 query.set(key, localVarQueryParameter[key]);
@@ -193,11 +178,10 @@ export const NotificationsApiAxiosParamCreator = function (configuration?: Confi
         /**
          * 
          * @param {string} notificationId 
-         * @param {string} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiNotificationsNotificationIdGet: async (notificationId: string, token?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiNotificationsNotificationIdGet: async (notificationId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'notificationId' is not null or undefined
             if (notificationId === null || notificationId === undefined) {
                 throw new RequiredError('notificationId','Required parameter notificationId was null or undefined when calling apiNotificationsNotificationIdGet.');
@@ -220,10 +204,6 @@ export const NotificationsApiAxiosParamCreator = function (configuration?: Confi
                     ? await configuration.apiKey("Token")
                     : await configuration.apiKey;
                 localVarHeaderParameter["Token"] = localVarApiKeyValue;
-            }
-
-            if (token !== undefined && token !== null) {
-                localVarHeaderParameter['Token'] = String(token);
             }
 
             const query = new URLSearchParams(localVarUrlObj.search);
@@ -255,12 +235,11 @@ export const NotificationsApiFp = function(configuration?: Configuration) {
          * 
          * @summary Delete many notification at once
          * @param {Array<string>} [body] 
-         * @param {string} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiNotificationsDelete(body?: Array<string>, token?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
-            const localVarAxiosArgs = await NotificationsApiAxiosParamCreator(configuration).apiNotificationsDelete(body, token, options);
+        async apiNotificationsDelete(body?: Array<string>, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
+            const localVarAxiosArgs = await NotificationsApiAxiosParamCreator(configuration).apiNotificationsDelete(body, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -268,15 +247,14 @@ export const NotificationsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} [token] 
          * @param {NotificationSort} [sortBy] 
          * @param {number} [take] 
          * @param {number} [skip] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiNotificationsGet(token?: string, sortBy?: NotificationSort, take?: number, skip?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<Notification>>>> {
-            const localVarAxiosArgs = await NotificationsApiAxiosParamCreator(configuration).apiNotificationsGet(token, sortBy, take, skip, options);
+        async apiNotificationsGet(sortBy?: NotificationSort, take?: number, skip?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<Notification>>>> {
+            const localVarAxiosArgs = await NotificationsApiAxiosParamCreator(configuration).apiNotificationsGet(sortBy, take, skip, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -286,12 +264,11 @@ export const NotificationsApiFp = function(configuration?: Configuration) {
          * 
          * @summary Mark Notification as seen aka delete it
          * @param {string} notificationId 
-         * @param {string} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiNotificationsNotificationIdDelete(notificationId: string, token?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
-            const localVarAxiosArgs = await NotificationsApiAxiosParamCreator(configuration).apiNotificationsNotificationIdDelete(notificationId, token, options);
+        async apiNotificationsNotificationIdDelete(notificationId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
+            const localVarAxiosArgs = await NotificationsApiAxiosParamCreator(configuration).apiNotificationsNotificationIdDelete(notificationId, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -300,12 +277,11 @@ export const NotificationsApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} notificationId 
-         * @param {string} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiNotificationsNotificationIdGet(notificationId: string, token?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Notification>>> {
-            const localVarAxiosArgs = await NotificationsApiAxiosParamCreator(configuration).apiNotificationsNotificationIdGet(notificationId, token, options);
+        async apiNotificationsNotificationIdGet(notificationId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Notification>>> {
+            const localVarAxiosArgs = await NotificationsApiAxiosParamCreator(configuration).apiNotificationsNotificationIdGet(notificationId, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -324,45 +300,41 @@ export const NotificationsApiFactory = function (configuration?: Configuration, 
          * 
          * @summary Delete many notification at once
          * @param {Array<string>} [body] 
-         * @param {string} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiNotificationsDelete(body?: Array<string>, token?: string, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
-            return NotificationsApiFp(configuration).apiNotificationsDelete(body, token, options).then((request) => request(axios, basePath));
+        async apiNotificationsDelete(body?: Array<string>, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
+            return NotificationsApiFp(configuration).apiNotificationsDelete(body, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {string} [token] 
          * @param {NotificationSort} [sortBy] 
          * @param {number} [take] 
          * @param {number} [skip] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiNotificationsGet(token?: string, sortBy?: NotificationSort, take?: number, skip?: number, options?: AxiosRequestConfig): Promise<AxiosResponse<Array<Notification>>> {
-            return NotificationsApiFp(configuration).apiNotificationsGet(token, sortBy, take, skip, options).then((request) => request(axios, basePath));
+        async apiNotificationsGet(sortBy?: NotificationSort, take?: number, skip?: number, options?: AxiosRequestConfig): Promise<AxiosResponse<Array<Notification>>> {
+            return NotificationsApiFp(configuration).apiNotificationsGet(sortBy, take, skip, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Mark Notification as seen aka delete it
          * @param {string} notificationId 
-         * @param {string} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiNotificationsNotificationIdDelete(notificationId: string, token?: string, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
-            return NotificationsApiFp(configuration).apiNotificationsNotificationIdDelete(notificationId, token, options).then((request) => request(axios, basePath));
+        async apiNotificationsNotificationIdDelete(notificationId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
+            return NotificationsApiFp(configuration).apiNotificationsNotificationIdDelete(notificationId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {string} notificationId 
-         * @param {string} [token] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiNotificationsNotificationIdGet(notificationId: string, token?: string, options?: AxiosRequestConfig): Promise<AxiosResponse<Notification>> {
-            return NotificationsApiFp(configuration).apiNotificationsNotificationIdGet(notificationId, token, options).then((request) => request(axios, basePath));
+        async apiNotificationsNotificationIdGet(notificationId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<Notification>> {
+            return NotificationsApiFp(configuration).apiNotificationsNotificationIdGet(notificationId, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -378,17 +350,15 @@ export class NotificationsApi extends BaseAPI {
      * 
      * @summary Delete many notification at once
      * @param {Array<string>} [body] 
-     * @param {string} [token] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof NotificationsApi
      */
-    public async apiNotificationsDelete(body?: Array<string>, token?: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
-        return NotificationsApiFp(this.configuration).apiNotificationsDelete(body, token, options).then((request) => request(this.axios, this.basePath));
+    public async apiNotificationsDelete(body?: Array<string>, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
+        return NotificationsApiFp(this.configuration).apiNotificationsDelete(body, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 
-     * @param {string} [token] 
      * @param {NotificationSort} [sortBy] 
      * @param {number} [take] 
      * @param {number} [skip] 
@@ -396,30 +366,28 @@ export class NotificationsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof NotificationsApi
      */
-    public async apiNotificationsGet(token?: string, sortBy?: NotificationSort, take?: number, skip?: number, options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<Notification>>> {
-        return NotificationsApiFp(this.configuration).apiNotificationsGet(token, sortBy, take, skip, options).then((request) => request(this.axios, this.basePath));
+    public async apiNotificationsGet(sortBy?: NotificationSort, take?: number, skip?: number, options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<Notification>>> {
+        return NotificationsApiFp(this.configuration).apiNotificationsGet(sortBy, take, skip, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 
      * @summary Mark Notification as seen aka delete it
      * @param {string} notificationId 
-     * @param {string} [token] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof NotificationsApi
      */
-    public async apiNotificationsNotificationIdDelete(notificationId: string, token?: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
-        return NotificationsApiFp(this.configuration).apiNotificationsNotificationIdDelete(notificationId, token, options).then((request) => request(this.axios, this.basePath));
+    public async apiNotificationsNotificationIdDelete(notificationId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
+        return NotificationsApiFp(this.configuration).apiNotificationsNotificationIdDelete(notificationId, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 
      * @param {string} notificationId 
-     * @param {string} [token] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof NotificationsApi
      */
-    public async apiNotificationsNotificationIdGet(notificationId: string, token?: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<Notification>> {
-        return NotificationsApiFp(this.configuration).apiNotificationsNotificationIdGet(notificationId, token, options).then((request) => request(this.axios, this.basePath));
+    public async apiNotificationsNotificationIdGet(notificationId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<Notification>> {
+        return NotificationsApiFp(this.configuration).apiNotificationsNotificationIdGet(notificationId, options).then((request) => request(this.axios, this.basePath));
     }
 }
