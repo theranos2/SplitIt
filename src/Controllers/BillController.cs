@@ -11,6 +11,7 @@ using split_it.Authentication;
 using split_it.Exceptions.Http;
 using split_it.Models;
 using split_it.Services;
+using Stripe;
 
 namespace split_it.Controllers
 {
@@ -41,9 +42,17 @@ namespace split_it.Controllers
                 //shareDto.hasPaid = false;  // done by paying / calling a paying route
                 //shareDto.hasRejected = false; // everytime the owner updates or edit the bill it will resend to those who have rejected 
 
-                User payer = db.Users.Where(x => x.Id == shareDto.PayerId).FirstOrDefault();
-                if (payer == null)
-                    throw new HttpNotFound($"Cannot find payer: {shareDto.PayerId}");
+                User payer;
+                if (shareDto.PayerId == Guid.Empty)
+                {
+                    payer = null; // anon pay
+                }
+                else
+                {
+                    payer = db.Users.Where(x => x.Id == shareDto.PayerId).FirstOrDefault();
+                    if (payer == null)
+                        throw new HttpNotFound($"Cannot find payer: {shareDto.PayerId}");
+                }
 
                 // items cannot be empty
                 if (shareDto.Items == null || shareDto.Items.Count <= 0)
@@ -104,6 +113,7 @@ namespace split_it.Controllers
             if (bill.Owner.Id != curUserId && !isMember)
                 throw new HttpForbiddenRequest($"Permission Denied. Cannot view bill that you are not apart of.");
 
+
             return DetailedBillDto.FromEntity(bill);
         }
 
@@ -124,6 +134,8 @@ namespace split_it.Controllers
                 Title = billDto.Title,
                 Shares = ConvertToShares(billDto.Shares),
             };
+
+            newBill.IsSettled = newBill.Shares.All(x => x.Status == Status.Paid);
 
             db.Bills.Add(newBill).Reload();
             db.SaveChanges();
@@ -161,7 +173,7 @@ namespace split_it.Controllers
 
             // equal share  
             double eachAmount = billDto.Total / billDto.UserIds.Count();
-            // round see share round in bill create
+            // round to the upper 1 cent
             eachAmount = Math.Round(Math.Ceiling(eachAmount / 0.01) * 0.01, 2);
 
             List<Share> shares = new List<Share>();
@@ -195,6 +207,7 @@ namespace split_it.Controllers
                 Title = billDto.Title,
             };
 
+            newBill.IsSettled = newBill.Shares.All(x => x.Status == Status.Paid);
             db.Bills.Add(newBill);
             db.SaveChanges();
 
@@ -247,6 +260,7 @@ namespace split_it.Controllers
         [HttpGet]
         public IEnumerable<SimpleBillDto> GetMany([FromQuery] BillFilter filter)
         {
+            // TODO unauthorise people from accessing bills that aren't theirs
             User curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
 
             IQueryable<Bill> query = db.Bills.AsQueryable<Bill>()
@@ -333,6 +347,7 @@ namespace split_it.Controllers
         /// <response code="404">Bill ID given not found</response>
         /// <response code="400">Rejecting a bill that has been settled</response>
         /// <response code="403">Rejecting a bill you are not a part of</response>
+
         [HttpPost("{bill_id:Guid}/reject")]
         public IActionResult Reject(Guid bill_id)
         {
@@ -344,6 +359,7 @@ namespace split_it.Controllers
         /// <response code="404">Bill ID given not found</response>
         /// <response code="400">Accepting a bill that has been settled or was previously rejected</response>
         /// <response code="403">Accepting a bill you are not a part of</response>
+
         [HttpPost("{bill_id:Guid}/accept")]
         public IActionResult Accept(Guid bill_id)
         {
@@ -472,6 +488,36 @@ namespace split_it.Controllers
             return Ok(new { Id = attachment.Id, Caption = attachment.Caption });
         }
 
+
+
+        /// <summary>If the user has the bill id they can join it. This makes sharing by link and QR possible</summary>
+        [HttpPost("{bill_id:Guid}/join")]
+        public IActionResult Join(Guid bill_id)
+        {
+            User curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
+
+            var bill = db.Bills.Where(x => x.Id == bill_id).FirstOrDefault();
+            if (bill == null)
+                throw new HttpNotFound($"Bill {bill_id} not found.");
+
+            bill.Shares.Add(new Share
+            {
+                Id = Guid.Empty,
+                Payer = curUser,
+                Status = Status.Accepted,
+                Items = new List<Item>{ // add default item
+                    new Item {
+                        Id = Guid.Empty,
+                        Name = "",
+                        Price = 1.00
+                    }
+                }
+            });
+            db.SaveChanges();
+
+            return NoContent();
+        }
+
         [HttpDelete("{BillId:Guid}/attachment/{AttachmentId:Guid}")]
         public IActionResult DeleteAttachment(Guid BillId, Guid AttachmentId)
         {
@@ -486,7 +532,271 @@ namespace split_it.Controllers
             bill.Attachments = bill.Attachments.Where(attachment => attachment.Id != AttachmentId).ToList();
             db.SaveChanges();
 
+
             return NoContent();
         }
+
+
+        private PaymentIntent CreatePaymentIntent(string sellerCustomerId, double appSurcharge, double grandTotal, string intentId = null)
+        {
+            var intentOptions = new PaymentIntentCreateOptions
+            {
+                Amount = (int)(grandTotal * 100),
+                Currency = "aud",
+                PaymentMethodTypes = new List<string> {
+                    "card",
+                },
+                ApplicationFeeAmount = (int)(appSurcharge * 100)
+            };
+
+            // link bill owner account to payment
+            var requestOptions = new RequestOptions();
+            requestOptions.StripeAccount = sellerCustomerId;
+
+        createIntent: // yarrrrr
+            if (intentId == null)
+            {
+                var service = new PaymentIntentService();
+                try
+                {
+                    return service.Create(intentOptions, requestOptions);
+                }
+                catch (StripeException e)
+                {
+                    Console.WriteLine(e.Message);
+                    throw new HttpInternalServerError("Sumting wong wit stripe");
+                }
+            }
+            else
+            {
+                var service = new PaymentIntentService();
+                try
+                {
+                    var intentUpdateOptions = new PaymentIntentUpdateOptions()
+                    {
+                        Amount = intentOptions.Amount,
+                        Currency = intentOptions.Currency,
+                        PaymentMethodTypes = intentOptions.PaymentMethodTypes,
+                        ApplicationFeeAmount = intentOptions.ApplicationFeeAmount
+                    };
+                    return service.Update(intentId, intentUpdateOptions, requestOptions);
+                }
+                catch (StripeException e)
+                {
+                    Console.WriteLine(e.Message);
+                    intentId = null;
+                    goto createIntent;
+                }
+            }
+        }
+
+        // view payment status
+        [HttpGet("{bill_id:Guid}/pay")]
+        public PayDto ViewPay(Guid bill_id)
+        {
+            Bill bill = db.Bills.Where(x => x.Id == bill_id)
+                .Include(bill => bill.Owner)
+                .Include(bill => bill.Shares).ThenInclude(share => share.Payer)
+                .Include(bill => bill.Shares).ThenInclude(share => share.Items)
+                .FirstOrDefault();
+
+            if (bill == null)
+                throw new HttpNotFound($"Cannot find bill: {bill_id}");
+
+            Guid curUserId = IdentityTools.GetUser(db, HttpContext.User.Identity).Id; // check if bill member is requesting the bill
+            bool isMember = bill.Shares.Any(share => share.Payer.Id == curUserId);
+
+            // check ownership
+            if (bill.Owner.Id != curUserId && !isMember)
+                throw new HttpForbiddenRequest($"Permission Denied. Cannot view bill that you are not apart of.");
+
+            // check if owner has set up his bank details
+            var bankDetails = db.BankDetails.Where(x => x.Owner.Id == bill.Owner.Id).FirstOrDefault();
+            if (bankDetails == null || bankDetails.StripeCustomerId == null)
+                throw new HttpNotFound("Bill owner has setup their bank details yet. Please tell your bill owner to setup their bank details to pay them.");
+
+            string billOwnerStripeId = bankDetails.StripeCustomerId;
+
+            // if one is not paid all is not paid.
+            // because if pay 1 pay all
+            // user can only pay without sign if user field is null when they are anon
+            var payDto = CalcBill(bill, curUserId);
+
+            // check payment process
+            string intentId = bill.Shares.Where(x => x.Payer.Id == curUserId).FirstOrDefault().StripePaymentId;
+            if (!string.IsNullOrEmpty(intentId))
+            {
+                // confirm with stripe
+                var service = new PaymentIntentService();
+                try
+                {
+                    var intent = service.Get(intentId);
+                    string stripeIntentId = "LOL";
+                    if (intent.Status == "processing" || intent.Status == "succeeded")
+                    {
+                        var status = PaymentStatus.Processing;
+                        if (intent.Status == "succeeded")
+                        {
+                            status = PaymentStatus.Paid;
+                            // mark all shares as paid
+                            foreach (Share share in bill.Shares.Where(x => x.Payer.Id == curUserId))
+                            {
+                                share.Status = Status.Paid;
+                            }
+                            db.SaveChanges();
+                        }
+                        return new PayDto
+                        {
+                            BillTotal = payDto.BillTotal,
+                            SplitItSurcharge = payDto.SplitItSurcharge,
+                            StripeSurcharge = payDto.StripeSurcharge,
+                            TransactionId = stripeIntentId,
+                            PaymentStatus = status
+                        };
+                    }
+                }
+                catch (StripeException e)
+                {
+                    Console.WriteLine(e.Message);
+                    throw new HttpInternalServerError("Sumting went wong");
+                }
+
+            }
+
+            // check if previous payment requested
+            // if null then we create new intent
+            // if existing we update
+            var paymentIntent = CreatePaymentIntent(billOwnerStripeId, payDto.SplitItSurcharge, payDto.GrandTotal, intentId);
+
+            // update our shares with payment intent id
+            foreach (Share share in bill.Shares.Where(x => x.Payer.Id == curUserId))
+            {
+                share.StripePaymentId = paymentIntent.Id;
+            }
+            db.SaveChanges();
+
+            payDto.ClientSecret = paymentIntent.ClientSecret;
+            payDto.SellerId = billOwnerStripeId;
+            payDto.PaymentStatus = PaymentStatus.Unpaid;
+
+            return payDto;
+        }
+
+        private PayDto CalcBill(Bill bill, Guid curUserId)
+        {
+            // get total amount owed by current user in this bill
+            double totalBillAmount = bill.Shares.Where(x => x.Payer.Id == curUserId).Sum(x => x.Total);
+            totalBillAmount = Math.Round(Math.Ceiling(totalBillAmount / 0.01) * 0.01, 2); // round to the upper bound smallest cent
+
+            // calculate stripe's surcharge
+            double stripeSurcharge = GetStripeFee(totalBillAmount);
+
+            // calculate our program's surcharge
+            double splititSurcharge = GetSplitItFee(totalBillAmount);
+
+            // total surcharge 
+            double totalSurcharge = stripeSurcharge + splititSurcharge;
+
+            // grand total
+            double grandTotal = totalBillAmount + totalSurcharge;
+
+            return new PayDto
+            {
+                BillTotal = totalBillAmount,
+                SplitItSurcharge = splititSurcharge,
+                StripeSurcharge = stripeSurcharge,
+            };
+        }
+
+        private double GetSplitItFee(double amount)
+        {
+            const double SPLIT_IT_RATE = 1.00;
+            return Math.Round(((amount * SPLIT_IT_RATE) / 100), 2);
+        }
+
+        private double GetStripeFee(double amount)
+        {
+            const double STRIPE_RATE = 1.75; // 1.75%. This is worse than the Mafia skimming the casino.
+            const double STRIPE_CHARGE_PER_TRANSACTATION = 0.30; // 30 cents per transact
+            return Math.Round(((amount * STRIPE_RATE) / 100) + STRIPE_CHARGE_PER_TRANSACTATION, 2);
+        }
+
+        /// <summary>Get many comments from a bill</summary>
+        [HttpGet("{BillId:Guid}/comments")]
+        public List<CommentDto> GetManyComments(
+            Guid BillId,
+            [FromQuery(Name = "sortBy")] CommentSort sortBy = CommentSort.DATE_DESC,
+            [FromQuery(Name = "take")] int take = 10,
+            [FromQuery(Name = "skip")] int skip = 0,
+            [FromQuery(Name = "content")] string content = ""
+        )
+        {
+            var user = IdentityTools.GetUser(db, HttpContext.User.Identity);
+            var qb = db.Bills
+                .Where(bill =>
+                    (bill.Owner.Id == user.Id || bill.Shares.Any(share => share.Payer.Id == user.Id))
+                    && bill.Id == BillId
+                )
+                .Include(bill => bill.Comments)
+                .SelectMany(bill => bill.Comments);
+
+            if (!string.IsNullOrEmpty(content))
+                qb = qb.Where(comment => comment.Content.ToLower().Contains(content.ToLower()));
+
+            if (sortBy == CommentSort.DATE_ASC)
+                qb = qb.OrderBy(comment => comment.CreatedAt);
+            else
+                qb = qb.OrderByDescending(comment => comment.CreatedAt);
+
+            return qb
+                .Skip(skip)
+                .Take(take)
+                .Select(CommentDto.FromEntity)
+                .ToList();
+        }
+
+        /// <summary>Get one comment from a bill</summary>
+        [HttpGet("{BillId:Guid}/comments/{CommentId:Guid}")]
+        public CommentDto GetOneComment(Guid BillId, Guid CommentId)
+        {
+            var user = IdentityTools.GetUser(db, HttpContext.User.Identity);
+            var comment = db.Bills
+                .Where(bill =>
+                    (bill.Owner.Id == user.Id || bill.Shares.Any(share => share.Payer.Id == user.Id))
+                    && bill.Id == BillId
+                )
+                .Include(bill => bill.Comments)
+                .SelectMany(bill => bill.Comments)
+                .Where(c => c.Id == CommentId)
+                .Select(CommentDto.FromEntity)
+                .FirstOrDefault();
+            if (comment == null)
+                throw new HttpNotFound($"Comment with ID: {CommentId} not found");
+            return comment;
+        }
+
+        /// <summary>Create a comment on a bill</summary>
+        [HttpPost("{BillId:Guid}/comments")]
+        public CommentDto CreateOneComment(Guid BillId, [FromBody] CommentInputDto input)
+        {
+            var user = IdentityTools.GetUser(db, HttpContext.User.Identity);
+            var bill = db.Bills.Where(bill =>
+                (bill.Owner.Id == user.Id || bill.Shares.Any(share => share.Payer.Id == user.Id))
+                && bill.Id == BillId
+            ).FirstOrDefault();
+            if (bill == null)
+                throw new HttpBadRequest($"Bill requested not found or you are not part of it");
+
+            var comment = new Comment
+            {
+                Commenter = user,
+                Content = input.Content,
+            };
+            bill.Comments.Add(comment);
+            db.SaveChanges();
+
+            return CommentDto.FromEntity(comment);
+        }
+
     }
 }

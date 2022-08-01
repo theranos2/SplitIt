@@ -16,6 +16,7 @@ namespace split_it
         public DbSet<Group> Groups { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<FileAttachment> Files { get; set; }
+        public DbSet<BankingInfo> BankDetails { get; set; }
 
         public static DbContextOptions<DatabaseContext> DefaultDatabaseOptions = new DbContextOptionsBuilder<DatabaseContext>()
             .UseSqlite("Data Source=database.db")
@@ -85,7 +86,17 @@ namespace split_it
         public string Title { get; set; }
         public ICollection<FileAttachment> Attachments { get; set; } = new List<FileAttachment> { };
         public ICollection<Share> Shares { get; set; }
+        public ICollection<Comment> Comments { get; set; } = new List<Comment> { };
         public bool IsSettled { get; set; } = false;
+    }
+
+    public class Comment
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public User Commenter { get; set; }
+        public string Content { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 
     public class Item
@@ -120,6 +131,7 @@ namespace split_it
         }
 
         public User Payer { get; set; }
+        public string StripePaymentId { get; set; } = null;
         public ICollection<Item> Items { get; set; }
     }
 
@@ -136,7 +148,6 @@ namespace split_it
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-
         public string Email { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -164,5 +175,24 @@ namespace split_it
         {
             return HashCode.Combine(Id, Email, FirstName, LastName, Password, MfaEnabled);
         }
+    }
+
+
+    public class BankingInfo
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public string StripeCustomerId { get; set; } = null;
+        public User Owner { get; set; }
+        public byte[] CardNumber { get; set; }
+        public byte[] CardSecret { get; set; }
+        public byte[] CardName { get; set; }
+        public byte[] CardExpiry { get; set; }
+        public byte[] DoB { get; set; }
+        public byte[] HouseNumber { get; set; }
+        public byte[] StreetName { get; set; }
+        public byte[] State { get; set; }
+        public byte[] Postcode { get; set; }
+        public byte[] Country { get; set; }
     }
 }

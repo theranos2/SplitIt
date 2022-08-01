@@ -22,6 +22,7 @@ import Graph from 'components/Insights/Graph';
 import { AuthContext } from 'utility/hooks/useAuth';
 import { useState } from 'react';
 import { Logout } from 'components/AccountManagement/Logout';
+import BillPay from 'components/BillCreation/BillPay';
 
 const App = () => {
   const [token, setToken] = useState(window.localStorage.getItem('token') ?? '');
@@ -38,6 +39,7 @@ const App = () => {
           <Route element={<PrivateRoute />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/logout" element={<Logout />} />
+            <Route path="/bill/pay/:bill_id" element={<BillPay />} />
             <Route path="/bill/view:bill_id" element={<BillsAll />} />
             <Route path="/bill/view" element={<BillsAll />} />
             <Route path="/bill/create" element={<BillCreate />} />

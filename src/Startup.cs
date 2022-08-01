@@ -15,6 +15,8 @@ using split_it.Authentication;
 using split_it.Exceptions;
 using split_it.Middlewares;
 using split_it.Services;
+using split_it.Utils;
+using Stripe;
 
 namespace split_it
 {
@@ -31,6 +33,7 @@ namespace split_it
         public void ConfigureServices(IServiceCollection services)
         {
 
+            StripeConfiguration.ApiKey = "sk_test_51LRAp0LRaQPWk3cf2gGKPMZ0ehrefwxPuEcQUBRTlulQdjXtK0pYiABLXQzWes6qPiQ0lfFy0xB09MX8RksDgNQx00IDlfFR7a";
             // Use our custom validation response
             services.AddControllersWithViews(options => options.Filters.Add(typeof(ValidationResponse)))
                 .AddJsonOptions(options =>
@@ -54,6 +57,7 @@ namespace split_it
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Split-It!", Version = "v1" });
+                c.OperationFilter<IgnoreParameterAttributeFilter>();
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var filePath = Path.Combine(System.AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(filePath);
