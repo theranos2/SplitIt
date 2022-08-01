@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -505,6 +505,10 @@ namespace split_it.Controllers
                     }
                 }
             });
+            db.SaveChanges();
+
+            return NoContent();
+        }
 
         [HttpDelete("{BillId:Guid}/attachment/{AttachmentId:Guid}")]
         public IActionResult DeleteAttachment(Guid BillId, Guid AttachmentId)
@@ -741,7 +745,6 @@ namespace split_it.Controllers
 
             return CommentDto.FromEntity(comment);
         }
-
 
     }
 }
