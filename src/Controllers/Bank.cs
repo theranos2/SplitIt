@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using split_it.Authentication;
 using split_it.Exceptions.Http;
 using split_it.Models;
+using Stripe;
 
 namespace split_it.Controllers
 {
@@ -118,6 +119,13 @@ namespace split_it.Controllers
         [HttpPost("card")]
         public CardDto EditCardDetails(CardDto cardDetails)
         {
+            User curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
+
+            // check if address info is setup 
+            BankingInfo bankInfo = db.BankDetails.Where(x => x.Owner.Id == curUser.Id).FirstOrDefault();
+            if (bankInfo == null || bankInfo.Country == null)
+                throw new HttpBadRequest("Please setup your payment address first.");
+
             // Credit card validation here.
             if (cardDetails.Expiry < DateTime.Now)
                 throw new HttpBadRequest("Cannot add an expired card.");
@@ -131,7 +139,6 @@ namespace split_it.Controllers
             cardDetails.Secret = new string(cardDetails.Secret.Where(c => char.IsDigit(c)).ToArray());
             cardDetails.Name = cardDetails.Name.ToUpper();
 
-            User curUser = IdentityTools.GetUser(db, HttpContext.User.Identity);
             BankingInfo bankInfoEncrypted = db.BankDetails.Where(x => x.Owner.Id == curUser.Id).FirstOrDefault();
 
             if (bankInfoEncrypted == null)
@@ -147,6 +154,10 @@ namespace split_it.Controllers
             }
 
             EncryptInfo(bankInfoEncrypted, cardDetails);
+
+            // setup stripe connect account
+            string stripeAccountId = SetupStripeAccount(curUser.Email);
+            bankInfo.StripeCustomerId = stripeAccountId;
             db.SaveChanges();
 
             return CardDto.FromEntity(new BankingInfoDto
@@ -156,6 +167,103 @@ namespace split_it.Controllers
                 CardNumber = cardDetails.Number,
                 CardSecret = cardDetails.Secret
             });
+        }
+
+        private string SetupStripeAccount(string email)
+        {
+            // THIS IS A STUB ONLY FOR TESTING
+            // SINCE STRIPE IS TEST ENVIRONMENT WE DONT ACTUALLY HAVE TO SUPPLY REAL THING.
+            var options = new AccountCreateOptions
+            {
+                Type = "custom",
+                Country = "AU",
+                Email = "jenny.rosen@example.com",
+                Capabilities = new AccountCapabilitiesOptions
+                {
+                    CardPayments = new AccountCapabilitiesCardPaymentsOptions
+                    {
+                        Requested = true,
+                    },
+                    Transfers = new AccountCapabilitiesTransfersOptions
+                    {
+                        Requested = true,
+                    },
+                },
+                BusinessType = "individual",
+                BusinessProfile = new AccountBusinessProfileOptions
+                {
+                    Url = "https://www.google.com",
+                    Mcc = "5734"
+                },
+                Individual = new AccountIndividualOptions
+                {
+                    Address = new AddressOptions
+                    {
+                        City = "Sydney",
+                        Country = "AU",
+                        Line1 = "address_full_match​",
+                        PostalCode = "2031",
+                        State = "NSW"
+                    },
+                    Dob = new DobOptions
+                    {
+                        Day = 1,
+                        Month = 1,
+                        Year = 1990
+                    },
+                    Email = "jenny.rosen@example.com",
+                    FirstName = "jenny",
+                    LastName = "rosen",
+                    Phone = "+61 444 444 444", // lol police number
+                    RegisteredAddress = new AddressOptions
+                    {
+                        City = "Sydney",
+                        Country = "AU",
+                        Line1 = "address_full_match​",
+                        PostalCode = "2031",
+                        State = "NSW"
+                    },
+                    Verification = new AccountIndividualVerificationOptions
+                    {
+                        Document = new AccountIndividualVerificationDocumentOptions
+                        {
+                            Front = "file_identity_document_success"
+                        },
+                        AdditionalDocument = new AccountIndividualVerificationAdditionalDocumentOptions
+                        {
+                            Front = "file_identity_document_success"
+                        }
+                    }
+                },
+                TosAcceptance = new AccountTosAcceptanceOptions
+                {
+                    ServiceAgreement = "full",
+                    Date = DateTimeOffset.FromUnixTimeSeconds(1609798905).UtcDateTime,
+                    Ip = "8.8.8.8",
+                },
+                ExternalAccount = new AccountBankAccountOptions
+                {
+                    AccountHolderName = "Jenny Rosen",
+                    AccountNumber = "000123456", // Success number
+                    Country = "AU",
+                    Currency = "aud",
+                    RoutingNumber = "110000" // BSB
+                },
+                Settings = new AccountSettingsOptions
+                {
+                    Payouts = new AccountSettingsPayoutsOptions
+                    {
+                        Schedule = new AccountSettingsPayoutsScheduleOptions
+                        {
+                            Interval = "manual"
+                        },
+                        StatementDescriptor = "Split It! Payment"
+                    }
+                }
+            };
+            var service = new AccountService();
+            var s = service.Create(options);
+            return s.Id;
         }
 
         [HttpGet("address")]

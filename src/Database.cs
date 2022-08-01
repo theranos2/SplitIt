@@ -177,17 +177,6 @@ namespace split_it
         }
     }
 
-    public class Transaction
-    {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
-        public DateTime Time { get; set; }
-        public User Source { get; set; }
-        public User Destination { get; set; }
-        public Share Share { get; set; }
-        public double GrandTotal { get; set; }
-        public double SurchargeTotal { get; set; }
-    }
 
     public class BankingInfo
     {

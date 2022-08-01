@@ -18,27 +18,30 @@ namespace split_it.Models
         public string Postcode { get; set; }
         public string Country { get; set; }
     }
-
-
-
-    public class PayReceiptDto
+    public enum PaymentStatus
     {
-        public DateTime PaidDate { get; set; }
-        public double AmountPaid { get; set; }
-        public Guid TransactionId { get; set; }
-
+        Unpaid,
+        Processing,
+        Paid
     }
+
     public class PayDto
     {
-        public bool hasPaid { get; set; }
+        public PaymentStatus PaymentStatus { get; set; } = PaymentStatus.Unpaid;
         public double GrandTotal
         {
-            get { return SurchargeTotal + BillTotal; }
+            get { return GrandTotal + SurchargeTotal; }
         }
-        public double SurchargeTotal { get; set; }
+        public double SurchargeTotal
+        {
+            get { return SplitItSurcharge + StripeSurcharge; }
+        }
+        public double SplitItSurcharge { get; set; }
+        public double StripeSurcharge { get; set; }
         public double BillTotal { get; set; }
-        public string SellerId { get; set; }
-        public string ClientSecret { get; set; }
+        public string SellerId { get; set; } = null;
+        public string ClientSecret { get; set; } = null;
+        public string TransactionId { get; set; } = null;
     }
 
     public class AddressDto
