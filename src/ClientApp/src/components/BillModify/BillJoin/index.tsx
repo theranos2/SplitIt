@@ -24,6 +24,11 @@ const BillJoin = () => {
     history(`/bill/view/:${bill.id}`, { replace: true });
   };
 
+  const decline = () => {
+    // reject the invitation in the backend
+    history('/', { replace: true });
+  };
+
   return (
     <Container component="main" maxWidth="xs" style={{ textAlign: 'center', paddingTop: '15px' }}>
       <Typography component="h1" variant="h5" align="center" color="text.primary">
@@ -32,6 +37,9 @@ const BillJoin = () => {
       <Typography variant="h5" align="center" color="text.secondary" paragraph>
         <Button variant="outlined" onClick={accept}>
           Accept
+        </Button>
+        <Button variant="outlined" onClick={decline}>
+          Decline
         </Button>
       </Typography>
     </Container>

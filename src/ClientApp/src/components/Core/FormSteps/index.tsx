@@ -14,6 +14,7 @@ import { UserSelector } from 'components/Core/UserSelector';
 import { DateSelector } from 'components/InputForm/DateSelector';
 import { ItemSelector } from 'components/InputForm/ItemSelector';
 import { PriceDisplay } from 'components/InputForm/PriceDisplay';
+import { GroupSelector } from 'components/InputForm/GroupSelector';
 
 import FormStepsProps, { Steps } from './props';
 
@@ -44,6 +45,20 @@ const FormSteps = (props: FormStepsProps) => {
           label: f.menu_label,
           element: (
             <ItemSelector
+              name={f.name}
+              label={f.label}
+              items={inputs['items']}
+              setItems={set('items')}
+              users={inputs['users']}
+              err={f.err}
+            />
+          )
+        };
+      case 'groups':
+        return {
+          label: f.menu_label,
+          element: (
+            <GroupSelector
               name={f.name}
               label={f.label}
               items={inputs['items']}
