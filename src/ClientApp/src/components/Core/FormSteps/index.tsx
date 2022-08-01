@@ -35,15 +35,7 @@ const FormSteps = (props: FormStepsProps) => {
       case 'users':
         return {
           label: f.menu_label,
-          element: (
-            <UserSelector
-              name={f.name}
-              label={f.label}
-              users={inputs['users']}
-              setUsers={set('users')}
-              err={f.err}
-            />
-          )
+          element: <UserSelector users={inputs['users']} setUsers={set('users')} err={f.err} />
         };
       case 'items':
         return {
