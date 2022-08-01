@@ -11,8 +11,8 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 
 import ItemDisplay from 'components/Users/ItemDisplay';
+import { Item, User } from 'components/Core/Entities';
 import { ItemSelectorProps } from './props';
-import { Item, User } from '../InputFormProps';
 
 export const ItemSelector = (props: ItemSelectorProps) => {
   const { name, label, items, setItems, users, err } = props;
@@ -73,7 +73,6 @@ export const ItemSelector = (props: ItemSelectorProps) => {
                 type="number"
                 InputLabelProps={{ shrink: true }}
               />
-<<<<<<< HEAD
             </Grid>
           </Grid>
           <Select
@@ -86,7 +85,7 @@ export const ItemSelector = (props: ItemSelectorProps) => {
           >
             {users.map((user: User, idx: number) => (
               <MenuItem key={`menuitem-user-${idx}`} value={user.id}>
-                {user.name}
+                {user.firstName} {user.lastName}
               </MenuItem>
             ))}
           </Select>
@@ -94,8 +93,7 @@ export const ItemSelector = (props: ItemSelectorProps) => {
         </FormControl>
       </Box>
       <Button onClick={addItem}>Add item</Button>
-=======
-              <InputLabel id={`select-${name}-inputlabel`}>Add {label}</InputLabel>
+      {/* <InputLabel id={`select-${name}-inputlabel`}>Add {label}</InputLabel>
               <Select
                 labelId={`select-${name}-label`}
                 id={`select-${name}-id`}
@@ -117,8 +115,7 @@ export const ItemSelector = (props: ItemSelectorProps) => {
           <Button onClick={cancel}>Close</Button>
           <Button onClick={submit}>Confirm</Button>
         </DialogActions>
-      </Dialog>
->>>>>>> main
+      </Dialog> */}
       {err.cond ? <Alert severity="warning">{err.msg}</Alert> : <></>}
       <ItemDisplay items={items} removeItem={removeItem} />
     </>

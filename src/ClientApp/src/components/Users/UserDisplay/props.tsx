@@ -1,4 +1,4 @@
-import { User } from '../../BillCreation/BillCreationProps';
+import { User } from 'components/Core/Entities';
 
 export interface UserDisplayProps {
   users: User[];

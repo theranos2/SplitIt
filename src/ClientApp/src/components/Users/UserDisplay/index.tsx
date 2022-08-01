@@ -8,7 +8,7 @@ import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 
 import { UserDisplayProps } from './props';
-import { User } from '../../BillCreation/BillCreationProps';
+import { User } from 'components/Core/Entities';
 
 const UserDisplay = (props: UserDisplayProps) => {
   const { users, removeUser } = props;

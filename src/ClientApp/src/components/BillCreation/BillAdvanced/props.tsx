@@ -1,5 +1,4 @@
-import { Item } from 'api/models/item';
-import { User } from 'api/models/user';
+import { Item, User } from 'components/Core/Entities';
 
 export default interface InputProps {
   name: string;

@@ -1,4 +1,4 @@
-import { Item } from '../../BillCreation/BillCreationProps';
+import { Item } from 'components/Core/Entities';
 
 export interface ItemDisplayProps {
   items?: Item[];

@@ -1,5 +1,5 @@
-import { ButtonEventHandler, ErrorType } from '../InputFormProps';
-import { Item, User } from '../InputFormProps';
+import { ButtonEventHandler, ErrorType } from 'components/Core/FormProps';
+import { Item, User } from 'components/Core/Entities';
 
 export interface ItemSelectorProps {
   name: string;

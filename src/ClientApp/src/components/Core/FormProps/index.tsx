@@ -15,3 +15,8 @@ export interface CancelProps {
   href: string;
   msg: string;
 }
+
+export interface ErrorType {
+  cond: boolean;
+  msg: string;
+}

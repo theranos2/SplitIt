@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
 const BillDetailed = () => {
-  const bill_id = parseInt((useParams().bill_id ?? ':0').slice(1));
+  const bill_id = (useParams().bill_id ?? ':0').slice(1);
   const bill: Bill = database.bills.filter((e) => e.id === bill_id)[0]; // TODO: fetch from db
 
   return (

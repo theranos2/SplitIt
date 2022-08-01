@@ -1,4 +1,4 @@
-import { ButtonSubmission } from '../InputFormProps';
+import { ButtonSubmission } from 'components/Core/FormProps';
 
 export default interface DateSelectorProps {
   start: Date;
