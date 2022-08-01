@@ -21,7 +21,7 @@ const BillJoin = () => {
 
   const accept = () => {
     // accept the invitation in the backend
-    history(`/bill/view/:${bill.id}`, { replace: true })
+    history(`/bill/view/:${bill.id}`, { replace: true });
   };
 
   return (
