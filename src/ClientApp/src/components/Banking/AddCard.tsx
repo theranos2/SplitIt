@@ -2,7 +2,7 @@ import { AddCard, Close } from '@mui/icons-material';
 import { Alert, IconButton, Stack, TextField } from '@mui/material';
 import { BankApi } from 'api';
 import moment, { Moment } from 'moment';
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useAuthContext } from 'utility/hooks/useAuth';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -10,6 +10,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { LoadingButton } from '@mui/lab';
 import axios from 'axios';
+import { Container } from './common';
 
 /**
  * Modified from https://stackoverflow.com/a/23222600
@@ -28,22 +29,6 @@ function luhnCheck(val: string) {
   }
   return sum % 10 == 0;
 }
-
-const Container = ({ children }: { children?: ReactNode }) => (
-  <Stack
-    spacing={3}
-    direction="row"
-    sx={{
-      alignItems: 'center',
-      justifyContent: 'center',
-      margin: 8
-    }}
-  >
-    <Stack spacing={3} sx={{ width: 500 }}>
-      {children}
-    </Stack>
-  </Stack>
-);
 
 type CreditCardFormFields = {
   cardNumber: string;
