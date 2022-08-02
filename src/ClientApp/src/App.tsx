@@ -17,6 +17,8 @@ import HomePage from 'components/HomePage';
 import GroupIndex from 'components/Groups/GroupIndex';
 import GroupCreate from 'components/Groups/GroupCreate/GroupCreate';
 import GroupsView from 'components/Groups/GroupsView/GroupsView';
+import GroupView from 'components/Groups/GroupView/GroupView';
+import Graph from 'components/Insights/Graph';
 import { AuthContext } from 'utility/hooks/useAuth';
 import { useState } from 'react';
 import { Logout } from 'components/AccountManagement/Logout';
@@ -47,9 +49,11 @@ const App = () => {
             <Route path="/groups" element={<GroupIndex />} />
             <Route path="/groups/create" element={<GroupCreate />} />
             <Route path="/groups/view" element={<GroupsView />} />
+            <Route path="/groups/view/:group_id" element={<GroupView />} />
             <Route path="/banking/card/add" element={<AddCardPage />} />
             <Route path="/banking/card" element={<ViewCardPage />} />
             <Route path="/banking/address/add" element={<AddAddressPage />} />
+            <Route path="/analytics" element={<Graph />} />
           </Route>
 
           {/* 404 - Not Found route */}

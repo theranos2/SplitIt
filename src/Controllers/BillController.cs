@@ -40,7 +40,7 @@ namespace split_it.Controllers
                 //TODO
                 // owner can modify, owner can specify if they have paid or not.!
                 //shareDto.hasPaid = false;  // done by paying / calling a paying route
-                //shareDto.hasRejected = false; // everytime the owner updates or edit the bill it will resend to those who have rejected 
+                //shareDto.hasRejected = false; // everytime the owner updates or edit the bill it will resend to those who have rejected
 
                 User payer;
                 if (shareDto.PayerId == Guid.Empty)
@@ -171,7 +171,7 @@ namespace split_it.Controllers
                     throw new HttpNotFound($"Cannot find user: {user.Id}");
             }
 
-            // equal share  
+            // equal share
             double eachAmount = billDto.Total / billDto.UserIds.Count();
             // round to the upper 1 cent
             eachAmount = Math.Round(Math.Ceiling(eachAmount / 0.01) * 0.01, 2);
@@ -694,7 +694,7 @@ namespace split_it.Controllers
             // calculate our program's surcharge
             double splititSurcharge = GetSplitItFee(totalBillAmount);
 
-            // total surcharge 
+            // total surcharge
             double totalSurcharge = stripeSurcharge + splititSurcharge;
 
             // grand total
