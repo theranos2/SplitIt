@@ -5,7 +5,12 @@ import { InputProps } from '../BillCreationProps';
 import { simple_create } from 'utility/api/billcreate';
 
 const BillSimple = () => {
-  const [inputs, setInputs] = React.useState<InputProps>({ name: '', users: [], price: 0 });
+  const [inputs, setInputs] = React.useState<InputProps>({
+    name: '',
+    price: 0,
+    users: [],
+    group: ''
+  });
 
   const set = (name: string) => (input: any) => {
     name === 'users'
