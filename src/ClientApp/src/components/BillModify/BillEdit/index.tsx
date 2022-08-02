@@ -1,6 +1,4 @@
 import { useParams } from 'react-router-dom';
-import database from 'utility/database/database.json';
-
 import { BillDto } from 'api';
 
 const BillEdit = () => {

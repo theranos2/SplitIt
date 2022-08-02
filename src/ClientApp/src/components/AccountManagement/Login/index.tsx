@@ -18,8 +18,6 @@ const Login = () => {
     return await login(inputs);
   };
 
-  // const fake_login = () => login({ email: 'test@test.com', password: 'password' });
-
   return (
     <LoginForm
       title="Sign In"

@@ -14,7 +14,7 @@ const InputField = (props: InputFieldProps) => {
         label={label}
         type={type}
         id={name}
-        value={inputs[name]}
+        value={inputs}
         onChange={set}
         margin="normal"
         required

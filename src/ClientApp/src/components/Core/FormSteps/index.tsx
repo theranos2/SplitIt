@@ -56,15 +56,7 @@ const FormSteps = (props: FormStepsProps) => {
       case 'groups':
         return {
           label: f.menu_label,
-          element: (
-            <GroupSelector
-              name={f.name}
-              label={f.label}
-              items={inputs['group']}
-              setItems={set('group')}
-              err={f.err}
-            />
-          )
+          element: <GroupSelector group={inputs['group']} setGroup={set('group')} />
         };
       default: {
         return {

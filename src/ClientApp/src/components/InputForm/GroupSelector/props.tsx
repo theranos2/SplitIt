@@ -1,6 +1,6 @@
 import { GroupDto } from 'api';
 
 export default interface GroupSelectorProps {
-  group: GroupDto;
+  group: GroupDto | undefined;
   setGroup: (group: GroupDto) => void;
 }

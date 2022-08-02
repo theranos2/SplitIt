@@ -1,16 +1,23 @@
 import { useState } from 'react';
+import TextField from '@mui/material/TextField';
+import SearchIcon from '@mui/icons-material/Search';
 
-import SearchBarProps, { FilterProps } from './props';
+import SearchBarProps, { FilterProps, OrderProps } from './props';
 
 const SearchBar = (props: SearchBarProps) => {
-  const [filter, setFilter] = useState<FilterProps>({ name: '' });
-  const [order, setOrder] = useState<OrderProps>(() => );
+  const { items, currentItems, setCurrentItems, filters } = props;
 
-  const checkFilter = (filter) => {
-    return {
+  const [filter, setFilter] = useState<FilterProps>({ name: '', value: undefined });
+  const [order, setOrder] = useState<OrderProps>({ name: '' });
 
-    }[filter.name]
-  };
+  const checkFilter = (filter: FilterProps) => filters[filter.name];
+
+  return (
+    <>
+      <TextField id="standard-bare" defaultValue="Bare" margin="normal" />
+      <SearchIcon />
+    </>
+  );
 };
 
 export default SearchBar;

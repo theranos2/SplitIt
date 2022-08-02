@@ -1,10 +1,7 @@
 import React from 'react';
 
-import OutlinedInput from '@mui/material/OutlinedInput';
-import FormControl from '@mui/material/FormControl';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import Box from '@mui/material/Box';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 
 import { GroupDto } from 'api';
 import GroupSelectorProps from './props';
@@ -20,32 +17,20 @@ export const GroupSelector = (props: GroupSelectorProps) => {
   /* TODO: actually fetch the users from the backend, rather than hardcode them */
   React.useEffect(() => {
     (async () => {
-      setAllGroups(await fetch('/api/groups/').then((res) => res.json()));
+      setAllGroups(await fetch('localhost:5000/api/Group').then((res) => res.json()));
     })();
   }, [group]);
 
   return (
-    <>
-      <Box component="form" sx={{ display: 'flex', flexWrap: 'wrap' }}>
-        <FormControl sx={{ m: 1, minWidth: 120 }}>
-          <Select
-            labelId={`select-group-label`}
-            id={`select-group-id`}
-            value={group}
-            label="Choose your group"
-            onChange={setCurrentGroup}
-            input={<OutlinedInput label={'Select a group'} />}
-          >
-            {allGroups.map((group: GroupDto, idx: number) => (
-              <MenuItem key={`menuitem-group-${idx}`} value={group.id}>
-                {group.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
-    </>
+    <Autocomplete
+      disablePortal
+      id="combo-box-demo"
+      value={group}
+      options={allGroups}
+      onChange={setCurrentGroup}
+      getOptionLabel={(group: GroupDto) => group.name}
+      sx={{ width: 300 }}
+      renderInput={(params: any) => <TextField {...params} label="Choose your group" />}
+    />
   );
 };
-
-// based on https://mui.com/material-ui/react-select/
