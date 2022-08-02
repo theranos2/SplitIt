@@ -14,31 +14,19 @@
 /**
  * 
  * @export
- * @interface FileAttachment
+ * @interface BillIdAttachmentBody
  */
-export interface FileAttachment {
+export interface BillIdAttachmentBody {
     /**
      * 
-     * @type {string}
-     * @memberof FileAttachment
+     * @type {Blob}
+     * @memberof BillIdAttachmentBody
      */
-    id?: string;
+    file: Blob;
     /**
-     * 
+     * Defaults to file name if not provided
      * @type {string}
-     * @memberof FileAttachment
+     * @memberof BillIdAttachmentBody
      */
     caption?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof FileAttachment
-     */
-    contentType?: string | null;
-    /**
-     * 
-     * @type {string}
-     * @memberof FileAttachment
-     */
-    content?: string | null;
 }

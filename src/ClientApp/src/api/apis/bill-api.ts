@@ -16,10 +16,10 @@ import { Configuration } from '../configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
-import { BillDto } from '../models';
-import { BillSimpleDtoIn } from '../models';
+import { BillInputDto } from '../models';
 import { DetailedBillDto } from '../models';
 import { SimpleBillDto } from '../models';
+import { SimpleBillInputDto } from '../models';
 /**
  * BillApi - axios parameter creator
  * @export
@@ -32,12 +32,12 @@ export const BillApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiBillAttachmentBillIdPost: async (billId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiBillBillIdAcceptPost: async (billId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'billId' is not null or undefined
             if (billId === null || billId === undefined) {
-                throw new RequiredError('billId','Required parameter billId was null or undefined when calling apiBillAttachmentBillIdPost.');
+                throw new RequiredError('billId','Required parameter billId was null or undefined when calling apiBillBillIdAcceptPost.');
             }
-            const localVarPath = `/api/Bill/attachment/{bill_id}`
+            const localVarPath = `/api/Bill/{bill_id}/accept`
                 .replace(`{${"bill_id"}}`, encodeURIComponent(String(billId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -67,6 +67,173 @@ export const BillApiAxiosParamCreator = function (configuration?: Configuration)
             localVarUrlObj.search = (new URLSearchParams(query)).toString();
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} billId 
+         * @param {string} attachmentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBillBillIdAttachmentAttachmentIdDelete: async (billId: string, attachmentId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'billId' is not null or undefined
+            if (billId === null || billId === undefined) {
+                throw new RequiredError('billId','Required parameter billId was null or undefined when calling apiBillBillIdAttachmentAttachmentIdDelete.');
+            }
+            // verify required parameter 'attachmentId' is not null or undefined
+            if (attachmentId === null || attachmentId === undefined) {
+                throw new RequiredError('attachmentId','Required parameter attachmentId was null or undefined when calling apiBillBillIdAttachmentAttachmentIdDelete.');
+            }
+            const localVarPath = `/api/Bill/{BillId}/attachment/{AttachmentId}`
+                .replace(`{${"BillId"}}`, encodeURIComponent(String(billId)))
+                .replace(`{${"AttachmentId"}}`, encodeURIComponent(String(attachmentId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Token required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("Token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["Token"] = localVarApiKeyValue;
+            }
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} billId 
+         * @param {string} attachmentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBillBillIdAttachmentAttachmentIdGet: async (billId: string, attachmentId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'billId' is not null or undefined
+            if (billId === null || billId === undefined) {
+                throw new RequiredError('billId','Required parameter billId was null or undefined when calling apiBillBillIdAttachmentAttachmentIdGet.');
+            }
+            // verify required parameter 'attachmentId' is not null or undefined
+            if (attachmentId === null || attachmentId === undefined) {
+                throw new RequiredError('attachmentId','Required parameter attachmentId was null or undefined when calling apiBillBillIdAttachmentAttachmentIdGet.');
+            }
+            const localVarPath = `/api/Bill/{BillId}/attachment/{AttachmentId}`
+                .replace(`{${"BillId"}}`, encodeURIComponent(String(billId)))
+                .replace(`{${"AttachmentId"}}`, encodeURIComponent(String(attachmentId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Token required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("Token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["Token"] = localVarApiKeyValue;
+            }
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} billId 
+         * @param {Blob} [file] 
+         * @param {string} [caption] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBillBillIdAttachmentPostForm: async (billId: string, file?: Blob, caption?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'billId' is not null or undefined
+            if (billId === null || billId === undefined) {
+                throw new RequiredError('billId','Required parameter billId was null or undefined when calling apiBillBillIdAttachmentPostForm.');
+            }
+            const localVarPath = `/api/Bill/{BillId}/attachment`
+                .replace(`{${"BillId"}}`, encodeURIComponent(String(billId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new FormData();
+
+            // authentication Token required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("Token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["Token"] = localVarApiKeyValue;
+            }
+
+
+            if (file !== undefined) { 
+                localVarFormParams.append('File', file as any);
+            }
+
+            if (caption !== undefined) { 
+                localVarFormParams.append('Caption', caption as any);
+            }
+
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -172,11 +339,11 @@ export const BillApiAxiosParamCreator = function (configuration?: Configuration)
          * Use this route to edit a bill. Quite similar to the create bill. To edit just do the same.
          * @summary Edit a bill
          * @param {string} billId 
-         * @param {BillDto} [body] 
+         * @param {BillInputDto} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiBillBillIdPut: async (billId: string, body?: BillDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiBillBillIdPut: async (billId: string, body?: BillInputDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'billId' is not null or undefined
             if (billId === null || billId === undefined) {
                 throw new RequiredError('billId','Required parameter billId was null or undefined when calling apiBillBillIdPut.');
@@ -215,6 +382,107 @@ export const BillApiAxiosParamCreator = function (configuration?: Configuration)
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers?.['Content-Type'] === 'application/json';
             localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Re-invite user to the bill if they rejected it
+         * @param {string} billId 
+         * @param {string} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBillBillIdReinviteUserIdPost: async (billId: string, userId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'billId' is not null or undefined
+            if (billId === null || billId === undefined) {
+                throw new RequiredError('billId','Required parameter billId was null or undefined when calling apiBillBillIdReinviteUserIdPost.');
+            }
+            // verify required parameter 'userId' is not null or undefined
+            if (userId === null || userId === undefined) {
+                throw new RequiredError('userId','Required parameter userId was null or undefined when calling apiBillBillIdReinviteUserIdPost.');
+            }
+            const localVarPath = `/api/Bill/{BillId}/reinvite/{UserId}`
+                .replace(`{${"BillId"}}`, encodeURIComponent(String(billId)))
+                .replace(`{${"UserId"}}`, encodeURIComponent(String(userId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Token required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("Token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["Token"] = localVarApiKeyValue;
+            }
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} billId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBillBillIdRejectPost: async (billId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'billId' is not null or undefined
+            if (billId === null || billId === undefined) {
+                throw new RequiredError('billId','Required parameter billId was null or undefined when calling apiBillBillIdRejectPost.');
+            }
+            const localVarPath = `/api/Bill/{bill_id}/reject`
+                .replace(`{${"bill_id"}}`, encodeURIComponent(String(billId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Token required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("Token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["Token"] = localVarApiKeyValue;
+            }
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
@@ -282,7 +550,7 @@ export const BillApiAxiosParamCreator = function (configuration?: Configuration)
             }
 
             if (isSettled !== undefined) {
-                localVarQueryParameter['isSettled'] = isSettled;
+                localVarQueryParameter['IsSettled'] = isSettled;
             }
 
             if (title !== undefined) {
@@ -316,11 +584,11 @@ export const BillApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * Use this route to create a bill.
          * @summary Create Bill
-         * @param {BillDto} [body] 
+         * @param {BillInputDto} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiBillPost: async (body?: BillDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiBillPost: async (body?: BillInputDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/Bill`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -361,60 +629,13 @@ export const BillApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * 
-         * @param {string} billId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiBillRejectBillIdPost: async (billId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'billId' is not null or undefined
-            if (billId === null || billId === undefined) {
-                throw new RequiredError('billId','Required parameter billId was null or undefined when calling apiBillRejectBillIdPost.');
-            }
-            const localVarPath = `/api/Bill/reject/{bill_id}`
-                .replace(`{${"bill_id"}}`, encodeURIComponent(String(billId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Token required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-                    ? await configuration.apiKey("Token")
-                    : await configuration.apiKey;
-                localVarHeaderParameter["Token"] = localVarApiKeyValue;
-            }
-
-            const query = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                query.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.params) {
-                query.set(key, options.params[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(query)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
          * Use this route to create a simple bill.
          * @summary Create Bill Simple
-         * @param {BillSimpleDtoIn} [body] 
+         * @param {SimpleBillInputDto} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiBillSimplePost: async (body?: BillSimpleDtoIn, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        apiBillSimplePost: async (body?: SimpleBillInputDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/Bill/simple`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -454,53 +675,6 @@ export const BillApiAxiosParamCreator = function (configuration?: Configuration)
                 options: localVarRequestOptions,
             };
         },
-        /**
-         * 
-         * @param {string} fileName 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiFileFileNameGet: async (fileName: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'fileName' is not null or undefined
-            if (fileName === null || fileName === undefined) {
-                throw new RequiredError('fileName','Required parameter fileName was null or undefined when calling apiFileFileNameGet.');
-            }
-            const localVarPath = `/api/file/{file_name}`
-                .replace(`{${"file_name"}}`, encodeURIComponent(String(fileName)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Token required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-                    ? await configuration.apiKey("Token")
-                    : await configuration.apiKey;
-                localVarHeaderParameter["Token"] = localVarApiKeyValue;
-            }
-
-            const query = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                query.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.params) {
-                query.set(key, options.params[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(query)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
     }
 };
 
@@ -516,8 +690,51 @@ export const BillApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBillAttachmentBillIdPost(billId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<string>>> {
-            const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiBillAttachmentBillIdPost(billId, options);
+        async apiBillBillIdAcceptPost(billId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
+            const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiBillBillIdAcceptPost(billId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @param {string} billId 
+         * @param {string} attachmentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdAttachmentAttachmentIdDelete(billId: string, attachmentId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
+            const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiBillBillIdAttachmentAttachmentIdDelete(billId, attachmentId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @param {string} billId 
+         * @param {string} attachmentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdAttachmentAttachmentIdGet(billId: string, attachmentId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
+            const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiBillBillIdAttachmentAttachmentIdGet(billId, attachmentId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @param {string} billId 
+         * @param {Blob} [file] 
+         * @param {string} [caption] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdAttachmentPostForm(billId: string, file?: Blob, caption?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
+            const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiBillBillIdAttachmentPostForm(billId, file, caption, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -529,7 +746,7 @@ export const BillApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBillBillIdDelete(billId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<string>>> {
+        async apiBillBillIdDelete(billId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
             const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiBillBillIdDelete(billId, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
@@ -554,12 +771,40 @@ export const BillApiFp = function(configuration?: Configuration) {
          * Use this route to edit a bill. Quite similar to the create bill. To edit just do the same.
          * @summary Edit a bill
          * @param {string} billId 
-         * @param {BillDto} [body] 
+         * @param {BillInputDto} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBillBillIdPut(billId: string, body?: BillDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<BillDto>>> {
+        async apiBillBillIdPut(billId: string, body?: BillInputDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<DetailedBillDto>>> {
             const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiBillBillIdPut(billId, body, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Re-invite user to the bill if they rejected it
+         * @param {string} billId 
+         * @param {string} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdReinviteUserIdPost(billId: string, userId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
+            const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiBillBillIdReinviteUserIdPost(billId, userId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @param {string} billId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdRejectPost(billId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
+            const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiBillBillIdRejectPost(billId, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -591,25 +836,12 @@ export const BillApiFp = function(configuration?: Configuration) {
         /**
          * Use this route to create a bill.
          * @summary Create Bill
-         * @param {BillDto} [body] 
+         * @param {BillInputDto} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBillPost(body?: BillDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<BillDto>>> {
+        async apiBillPost(body?: BillInputDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<DetailedBillDto>>> {
             const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiBillPost(body, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @param {string} billId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiBillRejectBillIdPost(billId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<string>>> {
-            const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiBillRejectBillIdPost(billId, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -618,25 +850,12 @@ export const BillApiFp = function(configuration?: Configuration) {
         /**
          * Use this route to create a simple bill.
          * @summary Create Bill Simple
-         * @param {BillSimpleDtoIn} [body] 
+         * @param {SimpleBillInputDto} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBillSimplePost(body?: BillSimpleDtoIn, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<BillDto>>> {
+        async apiBillSimplePost(body?: SimpleBillInputDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<DetailedBillDto>>> {
             const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiBillSimplePost(body, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @param {string} fileName 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiFileFileNameGet(fileName: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<string>>> {
-            const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiFileFileNameGet(fileName, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -657,8 +876,39 @@ export const BillApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBillAttachmentBillIdPost(billId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<string>> {
-            return BillApiFp(configuration).apiBillAttachmentBillIdPost(billId, options).then((request) => request(axios, basePath));
+        async apiBillBillIdAcceptPost(billId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
+            return BillApiFp(configuration).apiBillBillIdAcceptPost(billId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} billId 
+         * @param {string} attachmentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdAttachmentAttachmentIdDelete(billId: string, attachmentId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
+            return BillApiFp(configuration).apiBillBillIdAttachmentAttachmentIdDelete(billId, attachmentId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} billId 
+         * @param {string} attachmentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdAttachmentAttachmentIdGet(billId: string, attachmentId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
+            return BillApiFp(configuration).apiBillBillIdAttachmentAttachmentIdGet(billId, attachmentId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} billId 
+         * @param {Blob} [file] 
+         * @param {string} [caption] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdAttachmentPostForm(billId: string, file?: Blob, caption?: string, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
+            return BillApiFp(configuration).apiBillBillIdAttachmentPostForm(billId, file, caption, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -666,7 +916,7 @@ export const BillApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBillBillIdDelete(billId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<string>> {
+        async apiBillBillIdDelete(billId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
             return BillApiFp(configuration).apiBillBillIdDelete(billId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -683,12 +933,32 @@ export const BillApiFactory = function (configuration?: Configuration, basePath?
          * Use this route to edit a bill. Quite similar to the create bill. To edit just do the same.
          * @summary Edit a bill
          * @param {string} billId 
-         * @param {BillDto} [body] 
+         * @param {BillInputDto} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBillBillIdPut(billId: string, body?: BillDto, options?: AxiosRequestConfig): Promise<AxiosResponse<BillDto>> {
+        async apiBillBillIdPut(billId: string, body?: BillInputDto, options?: AxiosRequestConfig): Promise<AxiosResponse<DetailedBillDto>> {
             return BillApiFp(configuration).apiBillBillIdPut(billId, body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Re-invite user to the bill if they rejected it
+         * @param {string} billId 
+         * @param {string} userId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdReinviteUserIdPost(billId: string, userId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
+            return BillApiFp(configuration).apiBillBillIdReinviteUserIdPost(billId, userId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} billId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdRejectPost(billId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
+            return BillApiFp(configuration).apiBillBillIdRejectPost(billId, options).then((request) => request(axios, basePath));
         },
         /**
          * Use this route to search bills.
@@ -712,40 +982,22 @@ export const BillApiFactory = function (configuration?: Configuration, basePath?
         /**
          * Use this route to create a bill.
          * @summary Create Bill
-         * @param {BillDto} [body] 
+         * @param {BillInputDto} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBillPost(body?: BillDto, options?: AxiosRequestConfig): Promise<AxiosResponse<BillDto>> {
+        async apiBillPost(body?: BillInputDto, options?: AxiosRequestConfig): Promise<AxiosResponse<DetailedBillDto>> {
             return BillApiFp(configuration).apiBillPost(body, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} billId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiBillRejectBillIdPost(billId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<string>> {
-            return BillApiFp(configuration).apiBillRejectBillIdPost(billId, options).then((request) => request(axios, basePath));
         },
         /**
          * Use this route to create a simple bill.
          * @summary Create Bill Simple
-         * @param {BillSimpleDtoIn} [body] 
+         * @param {SimpleBillInputDto} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiBillSimplePost(body?: BillSimpleDtoIn, options?: AxiosRequestConfig): Promise<AxiosResponse<BillDto>> {
+        async apiBillSimplePost(body?: SimpleBillInputDto, options?: AxiosRequestConfig): Promise<AxiosResponse<DetailedBillDto>> {
             return BillApiFp(configuration).apiBillSimplePost(body, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {string} fileName 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async apiFileFileNameGet(fileName: string, options?: AxiosRequestConfig): Promise<AxiosResponse<string>> {
-            return BillApiFp(configuration).apiFileFileNameGet(fileName, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -764,8 +1016,42 @@ export class BillApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof BillApi
      */
-    public async apiBillAttachmentBillIdPost(billId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<string>> {
-        return BillApiFp(this.configuration).apiBillAttachmentBillIdPost(billId, options).then((request) => request(this.axios, this.basePath));
+    public async apiBillBillIdAcceptPost(billId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
+        return BillApiFp(this.configuration).apiBillBillIdAcceptPost(billId, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 
+     * @param {string} billId 
+     * @param {string} attachmentId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BillApi
+     */
+    public async apiBillBillIdAttachmentAttachmentIdDelete(billId: string, attachmentId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
+        return BillApiFp(this.configuration).apiBillBillIdAttachmentAttachmentIdDelete(billId, attachmentId, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 
+     * @param {string} billId 
+     * @param {string} attachmentId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BillApi
+     */
+    public async apiBillBillIdAttachmentAttachmentIdGet(billId: string, attachmentId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
+        return BillApiFp(this.configuration).apiBillBillIdAttachmentAttachmentIdGet(billId, attachmentId, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 
+     * @param {string} billId 
+     * @param {Blob} [file] 
+     * @param {string} [caption] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BillApi
+     */
+    public async apiBillBillIdAttachmentPostForm(billId: string, file?: Blob, caption?: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
+        return BillApiFp(this.configuration).apiBillBillIdAttachmentPostForm(billId, file, caption, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 
@@ -774,7 +1060,7 @@ export class BillApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof BillApi
      */
-    public async apiBillBillIdDelete(billId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<string>> {
+    public async apiBillBillIdDelete(billId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
         return BillApiFp(this.configuration).apiBillBillIdDelete(billId, options).then((request) => request(this.axios, this.basePath));
     }
     /**
@@ -792,13 +1078,35 @@ export class BillApi extends BaseAPI {
      * Use this route to edit a bill. Quite similar to the create bill. To edit just do the same.
      * @summary Edit a bill
      * @param {string} billId 
-     * @param {BillDto} [body] 
+     * @param {BillInputDto} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof BillApi
      */
-    public async apiBillBillIdPut(billId: string, body?: BillDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<BillDto>> {
+    public async apiBillBillIdPut(billId: string, body?: BillInputDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<DetailedBillDto>> {
         return BillApiFp(this.configuration).apiBillBillIdPut(billId, body, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 
+     * @summary Re-invite user to the bill if they rejected it
+     * @param {string} billId 
+     * @param {string} userId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BillApi
+     */
+    public async apiBillBillIdReinviteUserIdPost(billId: string, userId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
+        return BillApiFp(this.configuration).apiBillBillIdReinviteUserIdPost(billId, userId, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 
+     * @param {string} billId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BillApi
+     */
+    public async apiBillBillIdRejectPost(billId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
+        return BillApiFp(this.configuration).apiBillBillIdRejectPost(billId, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * Use this route to search bills.
@@ -823,43 +1131,23 @@ export class BillApi extends BaseAPI {
     /**
      * Use this route to create a bill.
      * @summary Create Bill
-     * @param {BillDto} [body] 
+     * @param {BillInputDto} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof BillApi
      */
-    public async apiBillPost(body?: BillDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<BillDto>> {
+    public async apiBillPost(body?: BillInputDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<DetailedBillDto>> {
         return BillApiFp(this.configuration).apiBillPost(body, options).then((request) => request(this.axios, this.basePath));
-    }
-    /**
-     * 
-     * @param {string} billId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof BillApi
-     */
-    public async apiBillRejectBillIdPost(billId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<string>> {
-        return BillApiFp(this.configuration).apiBillRejectBillIdPost(billId, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * Use this route to create a simple bill.
      * @summary Create Bill Simple
-     * @param {BillSimpleDtoIn} [body] 
+     * @param {SimpleBillInputDto} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof BillApi
      */
-    public async apiBillSimplePost(body?: BillSimpleDtoIn, options?: AxiosRequestConfig) : Promise<AxiosResponse<BillDto>> {
+    public async apiBillSimplePost(body?: SimpleBillInputDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<DetailedBillDto>> {
         return BillApiFp(this.configuration).apiBillSimplePost(body, options).then((request) => request(this.axios, this.basePath));
-    }
-    /**
-     * 
-     * @param {string} fileName 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof BillApi
-     */
-    public async apiFileFileNameGet(fileName: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<string>> {
-        return BillApiFp(this.configuration).apiFileFileNameGet(fileName, options).then((request) => request(this.axios, this.basePath));
     }
 }

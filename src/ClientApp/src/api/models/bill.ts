@@ -12,7 +12,6 @@
  * Do not edit the class manually.
  */
 import { FileAttachment } from './file-attachment';
-import { Item } from './item';
 import { Share } from './share';
 import { User } from './user';
 /**
@@ -40,7 +39,7 @@ export interface Bill {
      */
     owner?: User;
     /**
-     * 
+     * Inferred from Sum of total shares (only the non-rejected ones)
      * @type {number}
      * @memberof Bill
      */
@@ -63,12 +62,6 @@ export interface Bill {
      * @memberof Bill
      */
     shares?: Array<Share> | null;
-    /**
-     * 
-     * @type {Array<Item>}
-     * @memberof Bill
-     */
-    overallItems?: Array<Item> | null;
     /**
      * 
      * @type {boolean}
