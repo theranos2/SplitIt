@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { BillForm } from '../BillForm';
-import { InputProps } from '../BillCreationProps';
+import FormSteps from 'components/Core/FormSteps';
+import InputProps from './props';
 import { simple_create } from 'utility/api/billcreate';
 
 const BillSimple = () => {
@@ -9,7 +9,7 @@ const BillSimple = () => {
     name: '',
     price: 0,
     users: [],
-    group: ''
+    group: undefined
   });
 
   const set = (name: string) => (input: any) => {
@@ -29,7 +29,7 @@ const BillSimple = () => {
   };
 
   return (
-    <BillForm
+    <FormSteps
       title="Create a simple bill"
       inputs={inputs}
       submit={{ href: '/', func: submit }}

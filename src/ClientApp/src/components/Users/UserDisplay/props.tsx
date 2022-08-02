@@ -1,6 +1,6 @@
-import { User } from 'components/Core/Entities';
+import { UserInfoDto } from 'api';
 
 export interface UserDisplayProps {
-  users: User[];
-  removeUser: (user: User) => void;
+  users: UserInfoDto[];
+  removeUser: (user: UserInfoDto) => void;
 }

@@ -1,14 +1,15 @@
 import * as React from 'react';
 
-import { BillForm } from '../BillForm';
-import InputProps from './props';
+import FormSteps from 'components/Core/FormSteps';
+import InputProps from 'components/Core/InputProps';
 
 const BillAdvanced = () => {
   const [inputs, setInputs] = React.useState<InputProps>({
     name: '',
+    price: 0,
     users: [],
     items: [],
-    price: 0
+    group: undefined
   });
 
   const set = (name: string) => (input: any) => {
@@ -17,7 +18,7 @@ const BillAdvanced = () => {
         setInputs((old: InputProps) => ({ ...old, items: input }));
         setInputs((old: InputProps) => ({
           ...old,
-          price: old.items.reduce((i, j) => (j.price ? i + j.price : i), 0)
+          price: old.items ? old.items.reduce((i, j) => (j.price ? i + j.price : i), 0) : 0
         }));
         break;
       case 'users':
@@ -39,7 +40,7 @@ const BillAdvanced = () => {
   };
 
   return (
-    <BillForm
+    <FormSteps
       title="Create an advanced bill"
       inputs={inputs}
       submit={{ href: '/', func: submit }}

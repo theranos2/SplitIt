@@ -8,14 +8,14 @@ import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 
 import { UserDisplayProps } from './props';
-import { User } from 'components/Core/Entities';
+import { UserInfoDto } from 'api';
 
 const UserDisplay = (props: UserDisplayProps) => {
   const { users, removeUser } = props;
 
   return (
     <>
-      {users.map((user: User, idx: number) => (
+      {users.map((user: UserInfoDto, idx: number) => (
         <Card
           key={`user-display-${idx}`}
           sx={{ display: 'flex', width: '100%', paddingLeft: '10px' }}

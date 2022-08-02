@@ -9,11 +9,7 @@ import { CardActionArea } from '@mui/material';
 
 import { Context } from 'utility/Context';
 
-import { GroupDto } from 'api';
-
-interface GroupDisplayProps {
-  group: GroupDto;
-}
+import GroupDisplayProps from './props';
 
 const GroupDisplay = (props: GroupDisplayProps) => {
   const { group } = props;

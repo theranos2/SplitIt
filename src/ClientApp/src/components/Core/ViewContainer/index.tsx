@@ -34,9 +34,9 @@ const ViewContainer = (props: ViewContainerProps) => {
           <Grid container spacing={4}>
             {items.map((item: BillDto | GroupDto) =>
               item.ownerId ? (
-                <BillDisplay key={`item-${item.id}`} bill={item} />
+                <BillDisplay key={`item-${item.id}`} bill={item as BillDto} />
               ) : (
-                <GroupDisplay key={`item-${item.id}`} group={item} />
+                <GroupDisplay key={`item-${item.id}`} group={item as GroupDto} />
               )
             )}
           </Grid>

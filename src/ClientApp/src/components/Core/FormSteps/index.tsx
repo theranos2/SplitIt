@@ -67,7 +67,7 @@ const FormSteps = (props: FormStepsProps) => {
             />
           )
         };
-      default:
+      default: {
         return {
           label: f.menu_label,
           element: (
@@ -75,12 +75,13 @@ const FormSteps = (props: FormStepsProps) => {
               name={f.name}
               label={f.label}
               type={f.type}
-              inputs={inputs[f.name]}
+              inputs={inputs['name']}
               set={set(f.name)}
               err={f.err}
             />
           )
         };
+      }
     }
   });
 

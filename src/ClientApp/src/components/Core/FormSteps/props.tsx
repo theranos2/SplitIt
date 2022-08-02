@@ -1,4 +1,4 @@
-import { InputProps } from 'components/BillCreation/BillCreationProps';
+import InputProps from 'components/Core/InputProps';
 import { ButtonSubmission, SubmitProps, CancelProps } from 'components/Core/FormProps';
 
 export default interface FormStepsProps {
