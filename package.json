@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "highcharts": "^10.2.0",
-    "highcharts-react-official": "^3.1.0"
-  }
-}
