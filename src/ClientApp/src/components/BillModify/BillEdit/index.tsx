@@ -1,11 +1,14 @@
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { BillDto } from 'api';
 
 const BillEdit = () => {
   const bill_id = (useParams().bill_id ?? ':0').slice(1);
-  const bill: BillDto = database.bills.filter((e) => e.id === bill_id)[0]; // TODO: fetch from db
+  const [bill, setBill] = useState<BillDto | undefined>(undefined);
 
-  console.log(bill);
+  useEffect(() => {
+    (async () => setBill(await fetch(`/api/Bill/${bill_id}`).then((res) => res.json())))();
+  }, []);
 
   return <>TODO</>;
 };
