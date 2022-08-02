@@ -1,6 +1,6 @@
-import { Item } from 'components/Core/Entities';
+import { ItemDto } from 'api';
 
 export interface ItemDisplayProps {
-  items?: Item[];
-  removeItem: (item: Item) => void;
+  items?: ItemDto[];
+  removeItem: (item: ItemDto) => void;
 }

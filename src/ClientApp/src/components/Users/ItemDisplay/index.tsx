@@ -7,14 +7,14 @@ import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 
 import { ItemDisplayProps } from './props';
-import { Item } from 'components/Core/Entities';
+import { ItemDto } from 'api';
 
 const ItemDisplay = (props: ItemDisplayProps) => {
   const { items, removeItem } = props;
 
   return (
     <>
-      {items?.map((item: Item, idx: number) => (
+      {items?.map((item: ItemDto, idx: number) => (
         <Card
           key={`item-display-${idx}`}
           sx={{ display: 'flex', width: '100%', paddingLeft: '10px' }}

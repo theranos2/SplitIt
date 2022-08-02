@@ -19,13 +19,16 @@ export const ItemSelector = (props: ItemSelectorProps) => {
 
   const [currentItem, setCurrentItem] = React.useState<ItemDto>({
     name: '',
-    price: 0,
-    user: 0
+    price: 0
   });
+  const [currentUser, setCurrentUser] = React.useState<number>(0);
 
   const setItem = (name: string) => (event: any) =>
     setCurrentItem((old) => ({ ...old, [name]: event.target.value }));
-  const cancel = () => setCurrentItem({ name: '', price: 0, user: 0 });
+  const cancel = () => {
+    setCurrentItem({ name: '', price: 0 });
+    setCurrentUser(0);
+  };
 
   const addItem = (event: any) => {
     event.preventDefault();
@@ -77,12 +80,12 @@ export const ItemSelector = (props: ItemSelectorProps) => {
           <Select
             labelId={`select-${name}-label`}
             id={`select-${name}-id`}
-            value={currentItem.user}
+            value={currentUser}
             label="Choose users"
             onChange={setItem('user')}
             input={<OutlinedInput label={label} />}
           >
-            {users.map((user: User, idx: number) => (
+            {users.map((user: UserInfoDto, idx: number) => (
               <MenuItem key={`menuitem-user-${idx}`} value={user.id}>
                 {user.firstName} {user.lastName}
               </MenuItem>
