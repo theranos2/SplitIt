@@ -20,6 +20,7 @@ import GroupsView from 'components/Groups/GroupsView/GroupsView';
 import { AuthContext } from 'utility/hooks/useAuth';
 import { useState } from 'react';
 import { Logout } from 'components/AccountManagement/Logout';
+import { AddCardPage } from 'components/Banking';
 
 const App = () => {
   const [token, setToken] = useState(window.localStorage.getItem('token') ?? '');
@@ -45,6 +46,7 @@ const App = () => {
             <Route path="/groups" element={<GroupIndex />} />
             <Route path="/groups/create" element={<GroupCreate />} />
             <Route path="/groups/view" element={<GroupsView />} />
+            <Route path="/banking/addCard" element={<AddCardPage />} />
           </Route>
 
           {/* 404 - Not Found route */}
