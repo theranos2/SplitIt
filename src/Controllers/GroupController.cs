@@ -32,7 +32,7 @@ namespace split_it.Controllers
         [HttpGet("{groupId:Guid}")]
         public DetailedGroupDto Get(Guid groupId)
         {
-            Group group = db.Groups.Where(x => x.Id == groupId).FirstOrDefault();
+            Group group = db.Groups.Where(x => x.Id == groupId).Include(x => x.Owner).Include(x => x.Members).FirstOrDefault();
 
             if (group == null)
                 throw new HttpNotFound($"Cannot find group: {groupId}");
