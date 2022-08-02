@@ -18,7 +18,8 @@ const GroupsView = () => {
       description="View all of your groups"
       items={groups}
       filters={{
-        name: (old: SimpleGroupDto[], value: any) => old.filter((e: SimpleGroupDto) => e.name?.includes(value))
+        name: (old: SimpleGroupDto[], value: any) =>
+          old.filter((e: SimpleGroupDto) => e.name?.includes(value))
       }}
     />
   );

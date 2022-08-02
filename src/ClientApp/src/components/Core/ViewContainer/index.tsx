@@ -11,6 +11,8 @@ import { BillDto, SimpleGroupDto } from 'api';
 
 import ViewContainerProps from './props';
 
+const is_bill = (x: any): x is BillDto => true;
+
 const ViewContainer = (props: ViewContainerProps) => {
   const { title, description, items } = props;
   const theme = createTheme();
@@ -33,7 +35,7 @@ const ViewContainer = (props: ViewContainerProps) => {
         <Container sx={{ py: 0 }} maxWidth="md">
           <Grid container spacing={4}>
             {items.map((item: BillDto | SimpleGroupDto) =>
-              item ? (
+              is_bill(item) ? (
                 <BillDisplay key={`item-${item.id}`} bill={item as BillDto} />
               ) : (
                 <GroupDisplay key={`item-${item.id}`} group={item as SimpleGroupDto} />

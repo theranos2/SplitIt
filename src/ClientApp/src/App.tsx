@@ -23,9 +23,9 @@ import TopNavigation from 'components/Menu/TopNavigation';
 import NotFound from 'components/NotFound';
 import HomePage from 'components/HomePage';
 import GroupIndex from 'components/Groups/GroupIndex';
-import GroupCreate from 'components/Groups/GroupCreate/GroupCreate';
-import GroupsView from 'components/Groups/GroupsView/GroupsView';
-import GroupView from 'components/Groups/GroupView/GroupView';
+import GroupCreate from 'components/Groups/GroupCreate';
+import GroupsView from 'components/Groups/GroupsView';
+import GroupView from 'components/Groups/GroupView';
 import Graph from 'components/Insights/Graph';
 import BillPay from 'components/BillCreation/BillPay';
 
@@ -44,31 +44,23 @@ const App = () => {
           </Route>
 
           <Route element={<PrivateRoute />}>
-<<<<<<< HEAD
+            <Route path="/logout" element={<Logout />} />
+            <Route path="/bill/view" element={<BillsAll />} />
             <Route path="/bill/view/:bill_id" element={<BillDetailed />} />
             <Route path="/bill/edit/:bill_id" element={<BillEdit />} />
             <Route path="/bill/join/:bill_id" element={<BillJoin />} />
             <Route path="/bill/share/:bill_id" element={<BillShare />} />
-=======
-            <Route path="/" element={<HomePage />} />
-            <Route path="/logout" element={<Logout />} />
             <Route path="/bill/pay/:bill_id" element={<BillPay />} />
-            <Route path="/bill/view:bill_id" element={<BillsAll />} />
->>>>>>> main
-            <Route path="/bill/view" element={<BillsAll />} />
             <Route path="/bill/create" element={<BillCreate />} />
             <Route path="/bill/simple" element={<BillSimple />} />
             <Route path="/bill/advanced" element={<BillAdvanced />} />
             <Route path="/groups" element={<GroupIndex />} />
             <Route path="/groups/create" element={<GroupCreate />} />
             <Route path="/groups/view" element={<GroupsView />} />
-<<<<<<< HEAD
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/logout" element={<Logout />} />
-=======
             <Route path="/groups/view/:group_id" element={<GroupView />} />
             <Route path="/analytics" element={<Graph />} />
->>>>>>> main
           </Route>
 
           {/* 404 - Not Found route */}

@@ -24,7 +24,7 @@ export const ItemSelector = (props: ItemSelectorProps) => {
   const [currentUser, setCurrentUser] = React.useState<number>(0);
 
   const setItem = (name: string) => (event: any) =>
-    setCurrentItem((old) => ({ ...old, [name]: event.target.value }));
+    setCurrentItem((old: ItemDto) => ({ ...old, [name]: event.target.value }));
   const cancel = () => {
     setCurrentItem({ name: '', price: 0 });
     setCurrentUser(0);

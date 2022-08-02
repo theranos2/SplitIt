@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Box, Container, createTheme, Link, ThemeProvider, Typography } from '@mui/material';
 import { Title } from '@mui/icons-material';
-import { DetailedGroupDto, GroupApi, UserInfoDto } from 'api';
+import { GroupApi, UserInfoDto } from 'api';
+import { DetailedGroupDto } from 'api/models/detailed-group-dto';
 import { useParams } from 'react-router-dom';
-import { token } from 'utility/config';
-
+import { useAuthContext } from 'utility/hooks/useAuth';
 
 const theme = createTheme();
 
@@ -21,6 +21,7 @@ const error_page = () => (
 
 export default function GroupView() {
   const { group_id } = useParams();
+  const { token } = useAuthContext();
 
   // Group id not found in URL parameter
   if (group_id === undefined) {
@@ -43,7 +44,9 @@ export default function GroupView() {
   }
 
   // Initialise and populate group members array
-  const members = group?.members.map((m: UserInfoDto) => m.firstName + ' ' + m.lastName).join(', ');
+  const members = group.members
+    ? group?.members.map((m: UserInfoDto) => m.firstName + ' ' + m.lastName).join(', ')
+    : [];
 
   return (
     <ThemeProvider theme={theme}>
