@@ -13,7 +13,7 @@ export default function GroupsView() {
   // Clicking on a row directs user to a detailed group view page
   const handleRowClick = (group: any) => {
     console.log(group);
-    window.location.href = "/groups/view/" + group.id;
+    window.location.href = '/groups/view/' + group.id;
   };
 
   const [groups, SetGroups] = React.useState<SimpleGroupDto[]>([]);
@@ -51,7 +51,7 @@ export default function GroupsView() {
                   }}
                 >
                   <TableCell>{group.name}</TableCell>
-                  <TableCell>{group.owner?.firstName+' '+group.owner?.lastName}</TableCell>
+                  <TableCell>{group.owner?.firstName + ' ' + group.owner?.lastName}</TableCell>
                   <TableCell>{group.memberCount}</TableCell>
                 </TableRow>
               ))}

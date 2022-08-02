@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import NoDataToDisplay from 'highcharts/modules/no-data-to-display';
 import { BillApi, SimpleBillDto } from 'api';
 import { token } from 'utility/config';
 
@@ -23,11 +22,11 @@ export default function Graph() {
     })();
   }, []);
 
-  const sorted_bills = groupBy(bills, i => (i.owner?.firstName + ' ' + i.owner?.lastName));
+  const sorted_bills = groupBy(bills, (i) => i.owner?.firstName + ' ' + i.owner?.lastName);
 
-  let bill_data = [];
-  for (let key in sorted_bills) {
-    bill_data.push({name: key, y: sorted_bills[key].length});
+  const bill_data = [];
+  for (const key in sorted_bills) {
+    bill_data.push({ name: key, y: sorted_bills[key].length });
   }
 
   const options = {
@@ -37,10 +36,12 @@ export default function Graph() {
     title: {
       text: 'Bills by owner'
     },
-    series: [{
-      name: 'Number',
-      data: bill_data
-    }]
+    series: [
+      {
+        name: 'Number',
+        data: bill_data
+      }
+    ]
   };
   return (
     <div>
@@ -48,5 +49,3 @@ export default function Graph() {
     </div>
   );
 }
-
-

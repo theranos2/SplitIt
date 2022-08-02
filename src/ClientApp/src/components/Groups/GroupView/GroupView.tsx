@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Box, Container, createTheme, Link, ThemeProvider, Typography } from '@mui/material';
-import { Groups, Title } from '@mui/icons-material';
+import { Title } from '@mui/icons-material';
 import { DetailedGroupDto, GroupApi } from 'api';
 import { useParams } from 'react-router-dom';
 import { token } from 'utility/config';
@@ -17,7 +17,7 @@ export default function GroupView() {
         <Container component="main" maxWidth="xs">
           <Title>An error occured, please try again.</Title>
           <Link color="primary" href="/groups/view" sx={{ mt: 3 }}>
-              Go back
+            Go back
           </Link>
         </Container>
       </ThemeProvider>
@@ -41,7 +41,7 @@ export default function GroupView() {
         <Container component="main" maxWidth="xs">
           <Title>An error occured, please try again.</Title>
           <Link color="primary" href="/groups/view" sx={{ mt: 3 }}>
-              Go back
+            Go back
           </Link>
         </Container>
       </ThemeProvider>
@@ -49,9 +49,9 @@ export default function GroupView() {
   }
 
   // Initialise and populate group members array
-  var members: string = '';
+  let members = '';
   if (group.members != undefined) {
-    members = group.members.map(m => m.firstName + ' ' + m.lastName).join(', ');
+    members = group.members.map((m) => m.firstName + ' ' + m.lastName).join(', ');
   }
 
   return (
@@ -61,17 +61,11 @@ export default function GroupView() {
         sx={{
           bgcolor: 'background.paper',
           pt: 8,
-          pb: 6,
+          pb: 6
         }}
       >
         <Container maxWidth="sm">
-          <Typography
-            component="h1"
-            variant="h2"
-            align="center"
-            color="text.primary"
-            gutterBottom
-          >
+          <Typography component="h1" variant="h2" align="center" color="text.primary" gutterBottom>
             {group.name}
           </Typography>
           <Typography variant="h5" align="center" color="text.secondary" paragraph>
@@ -81,5 +75,6 @@ export default function GroupView() {
           </Typography>
         </Container>
       </Box>
-    </ThemeProvider>  );
+    </ThemeProvider>
+  );
 }
