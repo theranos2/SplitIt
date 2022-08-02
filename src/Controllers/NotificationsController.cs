@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using split_it.Authentication;
 using split_it.Models;
 using split_it.Services;
+using split_it.Utils;
 
 namespace split_it.Controllers
 {
@@ -22,6 +23,7 @@ namespace split_it.Controllers
         /// <response code="400">Take skip value invalid</response>
         [HttpGet]
         public List<Notification> GetMany(
+            [IgnoreParameter]
             [FromHeader(Name = "Token")] string Token,
             [FromQuery(Name = "sortBy")] NotificationSort sortBy = NotificationSort.DATE_DESC,
             [FromQuery(Name = "take")] int take = 10,
@@ -37,6 +39,7 @@ namespace split_it.Controllers
         [HttpDelete]
         public void SeenMany(
             List<Guid> NotificationIds,
+            [IgnoreParameter]
             [FromHeader(Name = "Token")] string Token
         )
         {
@@ -48,6 +51,7 @@ namespace split_it.Controllers
         [HttpGet("{NotificationId:Guid}")]
         public Notification GetById(
             Guid NotificationId,
+            [IgnoreParameter]
             [FromHeader(Name = "Token")] string Token
         )
         {
@@ -60,6 +64,7 @@ namespace split_it.Controllers
         [HttpDelete("{NotificationId:Guid}")]
         public void Seen(
             Guid NotificationId,
+            [IgnoreParameter]
             [FromHeader(Name = "Token")] string Token
         )
         {

@@ -10,7 +10,7 @@ const BillEdit = () => {
     (async () => setBill(await fetch(`/api/Bill/${bill_id}`).then((res) => res.json())))();
   }, []);
 
-  return <>TODO</>;
+  return <>{bill?.title}</>;
 };
 
 export default BillEdit;

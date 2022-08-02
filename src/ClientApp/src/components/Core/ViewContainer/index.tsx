@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 
 import BillDisplay from 'components/BillView/BillDisplay';
 import GroupDisplay from 'components/Groups/GroupDisplay';
-import { BillDto, GroupDto } from 'api';
+import { BillDto, SimpleGroupDto } from 'api';
 
 import ViewContainerProps from './props';
 
@@ -32,11 +32,11 @@ const ViewContainer = (props: ViewContainerProps) => {
         </Box>
         <Container sx={{ py: 0 }} maxWidth="md">
           <Grid container spacing={4}>
-            {items.map((item: BillDto | GroupDto) =>
-              item.ownerId ? (
+            {items.map((item: BillDto | SimpleGroupDto) =>
+              item ? (
                 <BillDisplay key={`item-${item.id}`} bill={item as BillDto} />
               ) : (
-                <GroupDisplay key={`item-${item.id}`} group={item as GroupDto} />
+                <GroupDisplay key={`item-${item.id}`} group={item as SimpleGroupDto} />
               )
             )}
           </Grid>

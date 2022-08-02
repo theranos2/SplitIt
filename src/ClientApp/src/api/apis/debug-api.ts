@@ -71,47 +71,6 @@ export const DebugApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiDebugCreateGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/Debug/create`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Token required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-                    ? await configuration.apiKey("Token")
-                    : await configuration.apiKey;
-                localVarHeaderParameter["Token"] = localVarApiKeyValue;
-            }
-
-            const query = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                query.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.params) {
-                query.set(key, options.params[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(query)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
         apiDebugNotificationsGet: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/Debug/notifications`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -215,18 +174,6 @@ export const DebugApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiDebugCreateGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Bill>>> {
-            const localVarAxiosArgs = await DebugApiAxiosParamCreator(configuration).apiDebugCreateGet(options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
         async apiDebugNotificationsGet(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<Notification>>>> {
             const localVarAxiosArgs = await DebugApiAxiosParamCreator(configuration).apiDebugNotificationsGet(options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
@@ -268,14 +215,6 @@ export const DebugApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async apiDebugCreateGet(options?: AxiosRequestConfig): Promise<AxiosResponse<Bill>> {
-            return DebugApiFp(configuration).apiDebugCreateGet(options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
         async apiDebugNotificationsGet(options?: AxiosRequestConfig): Promise<AxiosResponse<Array<Notification>>> {
             return DebugApiFp(configuration).apiDebugNotificationsGet(options).then((request) => request(axios, basePath));
         },
@@ -305,15 +244,6 @@ export class DebugApi extends BaseAPI {
      */
     public async apiDebugBillsGet(options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<Bill>>> {
         return DebugApiFp(this.configuration).apiDebugBillsGet(options).then((request) => request(this.axios, this.basePath));
-    }
-    /**
-     * 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DebugApi
-     */
-    public async apiDebugCreateGet(options?: AxiosRequestConfig) : Promise<AxiosResponse<Bill>> {
-        return DebugApiFp(this.configuration).apiDebugCreateGet(options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * 

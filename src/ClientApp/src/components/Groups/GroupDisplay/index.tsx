@@ -31,7 +31,7 @@ const GroupDisplay = (props: GroupDisplayProps) => {
               {group.name}
             </Typography>
             <Typography variant="body2" color="text.secondary" align="center">
-              ${group.ownerId}
+              {group.owner?.firstName} {group.owner?.lastName}
             </Typography>
           </CardContent>
         </CardActionArea>

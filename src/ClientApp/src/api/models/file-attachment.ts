@@ -28,11 +28,17 @@ export interface FileAttachment {
      * @type {string}
      * @memberof FileAttachment
      */
-    filename?: string | null;
+    caption?: string | null;
     /**
      * 
      * @type {string}
      * @memberof FileAttachment
      */
-    extension?: string | null;
+    contentType?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof FileAttachment
+     */
+    content?: string | null;
 }

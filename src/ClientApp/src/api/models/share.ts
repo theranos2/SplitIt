@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 import { Item } from './item';
+import { Status } from './status';
 import { User } from './user';
 /**
  * 
@@ -27,18 +28,12 @@ export interface Share {
     id?: string;
     /**
      * 
-     * @type {boolean}
+     * @type {Status}
      * @memberof Share
      */
-    hasPaid?: boolean;
+    status?: Status;
     /**
-     * 
-     * @type {boolean}
-     * @memberof Share
-     */
-    hasRejected?: boolean;
-    /**
-     * 
+     * Inferred from sum of items
      * @type {number}
      * @memberof Share
      */

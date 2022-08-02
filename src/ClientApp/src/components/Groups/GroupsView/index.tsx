@@ -1,15 +1,24 @@
+import { useEffect, useState } from 'react';
 import ViewContainer from 'components/Core/ViewContainer';
-import database from 'utility/database/database.json';
-import { GroupDto } from 'api';
+import { SimpleGroupDto, GroupApi } from 'api';
 
 const GroupsView = () => {
+  const [groups, SetGroups] = useState<SimpleGroupDto[]>([]);
+  useEffect(() => {
+    const api = new GroupApi({ apiKey: '' });
+    (async () => {
+      const resp = await api.apiGroupGet();
+      SetGroups(resp.data);
+    })();
+  }, []);
+
   return (
     <ViewContainer
       title="Groups"
       description="View all of your groups"
-      items={database.groups}
+      items={groups}
       filters={{
-        name: (old: GroupDto[], value: any) => old.filter((e: GroupDto) => e.name.includes(value))
+        name: (old: SimpleGroupDto[], value: any) => old.filter((e: SimpleGroupDto) => e.name?.includes(value))
       }}
     />
   );

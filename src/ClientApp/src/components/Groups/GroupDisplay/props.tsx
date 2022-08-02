@@ -1,5 +1,5 @@
-import { GroupDto } from 'api';
+import { SimpleGroupDto } from 'api';
 
 export default interface GroupDisplayProps {
-  group: GroupDto;
+  group: SimpleGroupDto;
 }

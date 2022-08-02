@@ -34,11 +34,39 @@ namespace seeder
                             {
                                 Name = "Popcorn",
                                 Price = 3
-                            },
+                            }
+                        }
+                    }
+                },
+                Created = DateTime.Now,
+                IsSettled = false,
+            },
+            new Bill
+            {
+                Id = Guid.NewGuid(),
+                Owner = UserSeeder.Data[1],
+                Title = "Something 2",
+                Shares = new List<Share>
+                {
+                    new Share
+                    {
+                        Payer = UserSeeder.Data[1],
+                        Items = new List<Item>{
                             new Item
                             {
-                                Name = "Asshat tax",
-                                Price = 0.9
+                                Name = "Ice Cream",
+                                Price = 3
+                            },
+                        },
+                    },
+                    new Share
+                    {
+                        Payer = UserSeeder.Data[0],
+                        Items = new List<Item>{
+                            new Item
+                            {
+                                Name = "Rice",
+                                Price = 3
                             }
                         }
                     }
