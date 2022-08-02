@@ -9,10 +9,10 @@ import { CardActionArea } from '@mui/material';
 
 import { Context } from 'utility/Context';
 
-import { Bill } from 'api/models/bill';
+import { BillDto } from 'api';
 
 interface BillDisplayProps {
-  bill: Bill;
+  bill: BillDto;
 }
 
 const BillDisplay = (props: BillDisplayProps) => {
