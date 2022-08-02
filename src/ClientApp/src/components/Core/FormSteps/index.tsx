@@ -15,7 +15,6 @@ import { DateSelector } from 'components/InputForm/DateSelector';
 import { ItemSelector } from 'components/InputForm/ItemSelector';
 import { PriceDisplay } from 'components/InputForm/PriceDisplay';
 import { GroupSelector } from 'components/InputForm/GroupSelector';
-
 import FormStepsProps, { Steps } from './props';
 
 const FormSteps = (props: FormStepsProps) => {
