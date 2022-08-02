@@ -21,6 +21,7 @@ import { AuthContext } from 'utility/hooks/useAuth';
 import { useState } from 'react';
 import { Logout } from 'components/AccountManagement/Logout';
 import { AddCardPage, ViewCardPage } from 'components/Banking';
+import { AddAddressPage } from 'components/Banking/AddAddress';
 
 const App = () => {
   const [token, setToken] = useState(window.localStorage.getItem('token') ?? '');
@@ -48,6 +49,7 @@ const App = () => {
             <Route path="/groups/view" element={<GroupsView />} />
             <Route path="/banking/card/add" element={<AddCardPage />} />
             <Route path="/banking/card" element={<ViewCardPage />} />
+            <Route path="/banking/address/add" element={<AddAddressPage />} />
           </Route>
 
           {/* 404 - Not Found route */}
