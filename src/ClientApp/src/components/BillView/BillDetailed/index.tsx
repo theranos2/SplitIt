@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-// import UserDisplay from 'components/Users/UserDisplay';
-// import ItemDisplay from 'components/Users/ItemDisplay';
+import UserDisplay from 'components/Users/UserDisplay';
+import ItemDisplay from 'components/Users/ItemDisplay';
 import IconLink from 'components/Menu/IconLink';
 
-import { DetailedBillDto, BillApi } from 'api';
+import { UserInfoDto, DetailedBillDto, BillApi, DetailedShareDto, DetailedItemDto } from 'api';
 import { useToken } from 'utility/hooks';
 
 import ShareIcon from '@mui/icons-material/Share';
@@ -18,11 +18,26 @@ import Container from '@mui/material/Container';
 const BillDetailed = () => {
   const bill_id = (useParams().bill_id ?? ':0').slice(1);
   const [bill, setBill] = useState<DetailedBillDto | undefined>(undefined);
+  const [users, setUsers] = useState<UserInfoDto[]>([]);
+  const [items, setItems] = useState<DetailedItemDto[]>([]);
 
   useEffect(() => {
     (async () => {
       const res = await new BillApi({ apiKey: useToken() ?? '' }).apiBillBillIdGet(bill_id);
-      if (res.status === 200) setBill(res.data);
+      if (res.status === 200) {
+        setBill(res.data);
+
+        if (res.data.shares) {
+          const all_items = res.data.shares.map((share: DetailedShareDto) => {
+            return { user: share?.payer, item: share?.items };
+          });
+
+          // ignore all items where user or items is undefined
+          all_items.filter((item) => item.user && item.item);
+          setUsers(all_items.map((i) => i.user) as UserInfoDto[]);
+          setItems(all_items.map((i) => i.item).flat(1) as DetailedItemDto[]);
+        }
+      }
     })();
   }, []);
 
@@ -42,14 +57,14 @@ const BillDetailed = () => {
       <Typography variant="h5" align="center" paragraph>
         Members
       </Typography>
-      {/* <UserDisplay users={bill.users} removeUser={() => 0} /> */}
+      <UserDisplay users={users} removeUser={() => 0} />
       {bill?.shares ? (
         <>
           <LockOutlinedIcon style={{ paddingTop: '20px' }} />
           <Typography variant="h5" align="center" paragraph>
             Items
           </Typography>
-          {/* <ItemDisplay items={bill.shares} removeItem={() => 0} /> */}
+          <ItemDisplay items={items} removeItem={() => 0} />
         </>
       ) : (
         <></>
