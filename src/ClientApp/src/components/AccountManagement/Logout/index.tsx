@@ -4,9 +4,11 @@ import { Navigate } from 'react-router-dom';
 import { AccountApi } from 'api';
 
 export const Logout = () => {
+  const { setToken } = useAuthContext();
+
   useEffect(() => {
     (async () => await new AccountApi().apiAccountLogoutPost())();
-    useAuthContext().setToken('');
+    setToken('');
   }, []);
 
   return <Navigate to="/" replace />;

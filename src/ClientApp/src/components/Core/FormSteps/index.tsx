@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -18,11 +18,23 @@ import { PriceDisplay } from 'components/InputForm/PriceDisplay';
 import { GroupSelector } from 'components/InputForm/GroupSelector';
 import FormStepsProps, { Steps } from './props';
 
+import { UserInfoDto, SimpleGroupDto, UserApi, GroupApi } from 'api';
+import { useToken } from 'utility/hooks';
+
 const FormSteps = (props: FormStepsProps) => {
   const { title, inputs, set, submit, cancel, fields } = props;
   const navigate = useNavigate();
 
-  const [error, setError] = React.useState('');
+  const [groups, setGroups] = useState<SimpleGroupDto[]>([]);
+  const [users, setUsers] = useState<UserInfoDto[]>([]);
+  useEffect(() => {
+    (async () => {
+      setUsers((await new UserApi({ apiKey: useToken() ?? '' }).apiUserGet()).data);
+      setGroups((await new GroupApi({ apiKey: useToken() ?? '' }).apiGroupGet()).data);
+    })();
+  }, []);
+
+  const [error, setError] = useState('');
   const steps: Steps[] = fields.map((f) => {
     switch (f.type) {
       case 'date':
@@ -38,13 +50,7 @@ const FormSteps = (props: FormStepsProps) => {
       case 'users':
         return {
           label: f.menu_label,
-          element: (
-            <UserSelector
-              values={inputs['users']}
-              onChange={set('users')}
-              options={inputs['users']}
-            />
-          )
+          element: <UserSelector values={inputs['users']} onChange={set('users')} options={users} />
         };
       case 'items':
         return {
@@ -63,7 +69,9 @@ const FormSteps = (props: FormStepsProps) => {
       case 'group':
         return {
           label: f.menu_label,
-          element: <GroupSelector group={inputs['group']} setGroup={set('group')} />
+          element: (
+            <GroupSelector values={inputs['group']} onChange={set('group')} options={groups} />
+          )
         };
       default: {
         return {
@@ -83,7 +91,7 @@ const FormSteps = (props: FormStepsProps) => {
     }
   });
 
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
 
   const handle_next = () => setActiveStep((prev) => prev + 1);
 
