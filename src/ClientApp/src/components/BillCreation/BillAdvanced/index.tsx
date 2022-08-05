@@ -42,7 +42,7 @@ const BillAdvanced = () => {
       return await new BillApi({ apiKey: useToken() ?? '' }).apiBillSimplePost({
         title: inputs.name,
         userIds: inputs.users.map((user: UserInfoDto) => user.id ?? ''),
-        total: inputs.price
+        total: inputs.price ?? 0
       });
     }
   };
