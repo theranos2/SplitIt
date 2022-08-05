@@ -13,10 +13,11 @@ import BillAdvanced from 'components/BillCreation/BillAdvanced';
 import BillDetailed from 'components/BillView/BillDetailed';
 import BillCreate from 'components/BillCreation/BillCreate';
 import BillSimple from 'components/BillCreation/BillSimple';
+import BillsAll from 'components/BillView/BillsAll';
 import BillEdit from 'components/BillModify/BillEdit';
 import BillJoin from 'components/BillModify/BillJoin';
 import BillShare from 'components/BillModify/BillShare';
-import BillsAll from 'components/BillView/BillsAll';
+import BillPay from 'components/BillModify/BillPay';
 import Notifications from 'components/Notifications/NotificationsPage';
 
 import TopNavigation from 'components/Menu/TopNavigation';
@@ -27,7 +28,8 @@ import GroupCreate from 'components/Groups/GroupCreate';
 import GroupsView from 'components/Groups/GroupsView';
 import GroupView from 'components/Groups/GroupView';
 import Graph from 'components/Insights/Graph';
-import BillPay from 'components/BillCreation/BillPay';
+import { AddCardPage, ViewCardPage } from 'components/Banking';
+import { AddAddressPage } from 'components/Banking/AddAddress';
 
 const App = () => {
   const [token, setToken] = useState(window.localStorage.getItem('token') ?? '');
@@ -60,6 +62,9 @@ const App = () => {
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/groups/view/:group_id" element={<GroupView />} />
+            <Route path="/banking/card/add" element={<AddCardPage />} />
+            <Route path="/banking/card" element={<ViewCardPage />} />
+            <Route path="/banking/address/add" element={<AddAddressPage />} />
             <Route path="/analytics" element={<Graph />} />
           </Route>
 
