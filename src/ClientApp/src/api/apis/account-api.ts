@@ -16,6 +16,8 @@ import { Configuration } from '../configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
+import { ForgottenPasswordRequestDto } from '../models';
+import { ForgottenPasswordSubmitDto } from '../models';
 import { LoginDto } from '../models';
 import { RegisterDto } from '../models';
 import { TokenDto } from '../models';
@@ -26,6 +28,98 @@ import { UserDto } from '../models';
  */
 export const AccountApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @param {ForgottenPasswordRequestDto} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAccountForgotPasswordPost: async (body?: ForgottenPasswordRequestDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Account/forgot-password`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Token required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("Token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["Token"] = localVarApiKeyValue;
+            }
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers?.['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {ForgottenPasswordSubmitDto} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiAccountForgotPasswordSubmitPost: async (body?: ForgottenPasswordSubmitDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Account/forgot-password-submit`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Token required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("Token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["Token"] = localVarApiKeyValue;
+            }
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers?.['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * 
          * @summary Login using credentials
@@ -250,6 +344,53 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @param {string} secretStr 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        confirmSecretStrGet: async (secretStr: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'secretStr' is not null or undefined
+            if (secretStr === null || secretStr === undefined) {
+                throw new RequiredError('secretStr','Required parameter secretStr was null or undefined when calling confirmSecretStrGet.');
+            }
+            const localVarPath = `/confirm/{secretStr}`
+                .replace(`{${"secretStr"}}`, encodeURIComponent(String(secretStr)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Token required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("Token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["Token"] = localVarApiKeyValue;
+            }
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -259,6 +400,32 @@ export const AccountApiAxiosParamCreator = function (configuration?: Configurati
  */
 export const AccountApiFp = function(configuration?: Configuration) {
     return {
+        /**
+         * 
+         * @param {ForgottenPasswordRequestDto} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiAccountForgotPasswordPost(body?: ForgottenPasswordRequestDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
+            const localVarAxiosArgs = await AccountApiAxiosParamCreator(configuration).apiAccountForgotPasswordPost(body, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @param {ForgottenPasswordSubmitDto} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiAccountForgotPasswordSubmitPost(body?: ForgottenPasswordSubmitDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
+            const localVarAxiosArgs = await AccountApiAxiosParamCreator(configuration).apiAccountForgotPasswordSubmitPost(body, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
         /**
          * 
          * @summary Login using credentials
@@ -325,6 +492,19 @@ export const AccountApiFp = function(configuration?: Configuration) {
                 return axios.request(axiosRequestArgs);
             };
         },
+        /**
+         * 
+         * @param {string} secretStr 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async confirmSecretStrGet(secretStr: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
+            const localVarAxiosArgs = await AccountApiAxiosParamCreator(configuration).confirmSecretStrGet(secretStr, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
     }
 };
 
@@ -334,6 +514,24 @@ export const AccountApiFp = function(configuration?: Configuration) {
  */
 export const AccountApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     return {
+        /**
+         * 
+         * @param {ForgottenPasswordRequestDto} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiAccountForgotPasswordPost(body?: ForgottenPasswordRequestDto, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
+            return AccountApiFp(configuration).apiAccountForgotPasswordPost(body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {ForgottenPasswordSubmitDto} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiAccountForgotPasswordSubmitPost(body?: ForgottenPasswordSubmitDto, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
+            return AccountApiFp(configuration).apiAccountForgotPasswordSubmitPost(body, options).then((request) => request(axios, basePath));
+        },
         /**
          * 
          * @summary Login using credentials
@@ -380,6 +578,15 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
         async apiAccountRegisterPost(body?: RegisterDto, options?: AxiosRequestConfig): Promise<AxiosResponse<TokenDto>> {
             return AccountApiFp(configuration).apiAccountRegisterPost(body, options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @param {string} secretStr 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async confirmSecretStrGet(secretStr: string, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
+            return AccountApiFp(configuration).confirmSecretStrGet(secretStr, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -390,6 +597,26 @@ export const AccountApiFactory = function (configuration?: Configuration, basePa
  * @extends {BaseAPI}
  */
 export class AccountApi extends BaseAPI {
+    /**
+     * 
+     * @param {ForgottenPasswordRequestDto} [body] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AccountApi
+     */
+    public async apiAccountForgotPasswordPost(body?: ForgottenPasswordRequestDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
+        return AccountApiFp(this.configuration).apiAccountForgotPasswordPost(body, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 
+     * @param {ForgottenPasswordSubmitDto} [body] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AccountApi
+     */
+    public async apiAccountForgotPasswordSubmitPost(body?: ForgottenPasswordSubmitDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
+        return AccountApiFp(this.configuration).apiAccountForgotPasswordSubmitPost(body, options).then((request) => request(this.axios, this.basePath));
+    }
     /**
      * 
      * @summary Login using credentials
@@ -440,5 +667,15 @@ export class AccountApi extends BaseAPI {
      */
     public async apiAccountRegisterPost(body?: RegisterDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<TokenDto>> {
         return AccountApiFp(this.configuration).apiAccountRegisterPost(body, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 
+     * @param {string} secretStr 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AccountApi
+     */
+    public async confirmSecretStrGet(secretStr: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
+        return AccountApiFp(this.configuration).confirmSecretStrGet(secretStr, options).then((request) => request(this.axios, this.basePath));
     }
 }

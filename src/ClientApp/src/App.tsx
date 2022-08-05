@@ -22,7 +22,8 @@ import Graph from 'components/Insights/Graph';
 import { AuthContext } from 'utility/hooks/useAuth';
 import { useState } from 'react';
 import { Logout } from 'components/AccountManagement/Logout';
-import BillPay from 'components/BillCreation/BillPay';
+import { AddCardPage, ViewCardPage } from 'components/Banking';
+import { AddAddressPage } from 'components/Banking/AddAddress';
 
 const App = () => {
   const [token, setToken] = useState(window.localStorage.getItem('token') ?? '');
@@ -39,8 +40,7 @@ const App = () => {
           <Route element={<PrivateRoute />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/logout" element={<Logout />} />
-            <Route path="/bill/pay/:bill_id" element={<BillPay />} />
-            <Route path="/bill/view:bill_id" element={<BillsAll />} />
+            <Route path="/bill/view/:bill_id" element={<BillsAll />} />
             <Route path="/bill/view" element={<BillsAll />} />
             <Route path="/bill/create" element={<BillCreate />} />
             <Route path="/bill/simple" element={<BillSimple />} />
@@ -50,6 +50,9 @@ const App = () => {
             <Route path="/groups/create" element={<GroupCreate />} />
             <Route path="/groups/view" element={<GroupsView />} />
             <Route path="/groups/view/:group_id" element={<GroupView />} />
+            <Route path="/banking/card/add" element={<AddCardPage />} />
+            <Route path="/banking/card" element={<ViewCardPage />} />
+            <Route path="/banking/address/add" element={<AddAddressPage />} />
             <Route path="/analytics" element={<Graph />} />
           </Route>
 
