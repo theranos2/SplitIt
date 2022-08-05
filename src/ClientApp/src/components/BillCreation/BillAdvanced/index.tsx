@@ -22,6 +22,7 @@ const BillAdvanced = () => {
         }));
         break;
       case 'users':
+      case 'group':
         setInputs((old: InputProps) => ({ ...old, users: input }));
         break;
       default:
@@ -60,6 +61,13 @@ const BillAdvanced = () => {
           label: 'Users',
           type: 'users',
           err: { cond: inputs.users === [], msg: "You haven't added any users." }
+        },
+        {
+          name: 'group',
+          menu_label: 'Choose a group (optional)',
+          label: 'Group',
+          type: 'group',
+          err: { cond: inputs.group === undefined, msg: "You haven't chosen a group." }
         },
         {
           name: 'items',

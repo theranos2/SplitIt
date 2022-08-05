@@ -3,7 +3,6 @@ import React from 'react';
 import FormSteps from 'components/Core/FormSteps';
 import InputProps from './props';
 
-import { useAuthContext } from 'utility/hooks/useAuth';
 import { BillApi, UserInfoDto } from 'api';
 import { useToken } from 'utility/hooks';
 
@@ -16,7 +15,7 @@ const BillSimple = () => {
   });
 
   const set = (name: string) => (input: any) => {
-    name === 'users'
+    name === 'users' || name === 'group'
       ? setInputs((old: InputProps) => ({ ...old, [name]: input }))
       : setInputs((old: InputProps) => ({ ...old, [name]: input.target.value }));
   };
@@ -24,19 +23,14 @@ const BillSimple = () => {
   const submit = async (event: any) => {
     event.preventDefault();
 
-    if (inputs.name === '' || inputs.users === [] || inputs.price === 0) {
-      return console.error('Inputs cannot be empty.');
+    if (inputs.name === '' || inputs.price === 0) {
+      return { status: 400, statusText: 'Inputs cannot be empty.' };
     } else {
-      const res = await new BillApi({ apiKey: useToken() ?? '' }).apiBillSimplePost({
+      return await new BillApi({ apiKey: useToken() ?? '' }).apiBillSimplePost({
         title: inputs.name,
-        userIds: inputs.users.map((user: UserInfoDto) => `${user.firstName} ${user.lastName}`),
+        userIds: inputs.users.map((user: UserInfoDto) => user.id ?? ''),
         total: inputs.price
       });
-      if (res.status === 200) {
-        console.log('success');
-      } else {
-        console.log('failure');
-      }
     }
   };
 
@@ -61,6 +55,13 @@ const BillSimple = () => {
           label: 'Users',
           type: 'users',
           err: { cond: inputs.users === [], msg: "You haven't added any users." }
+        },
+        {
+          name: 'group',
+          menu_label: 'Choose a group (optional)',
+          label: 'Group',
+          type: 'group',
+          err: { cond: inputs.group === undefined, msg: "You haven't chosen a group." }
         },
         { name: 'price', label: 'Price', type: 'price', disabled: false }
       ]}

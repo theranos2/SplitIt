@@ -1,11 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import StepLabel from '@mui/material/StepLabel';
 import Container from '@mui/material/Container';
 import Stepper from '@mui/material/Stepper';
 import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
 import Step from '@mui/material/Step';
 import Box from '@mui/material/Box';
 
@@ -19,7 +20,9 @@ import FormStepsProps, { Steps } from './props';
 
 const FormSteps = (props: FormStepsProps) => {
   const { title, inputs, set, submit, cancel, fields } = props;
+  const navigate = useNavigate();
 
+  const [error, setError] = React.useState('');
   const steps: Steps[] = fields.map((f) => {
     switch (f.type) {
       case 'date':
@@ -36,7 +39,11 @@ const FormSteps = (props: FormStepsProps) => {
         return {
           label: f.menu_label,
           element: (
-            <UserSelector values={inputs['users']} onChange={set('users')} options={f.users} />
+            <UserSelector
+              values={inputs['users']}
+              onChange={set('users')}
+              options={inputs['users']}
+            />
           )
         };
       case 'items':
@@ -53,7 +60,7 @@ const FormSteps = (props: FormStepsProps) => {
             />
           )
         };
-      case 'groups':
+      case 'group':
         return {
           label: f.menu_label,
           element: <GroupSelector group={inputs['group']} setGroup={set('group')} />
@@ -82,6 +89,16 @@ const FormSteps = (props: FormStepsProps) => {
 
   const handle_back = () => setActiveStep((prev) => prev - 1);
 
+  const form_submit = async (event: any) => {
+    const res = await submit.func(event);
+
+    if (res.status !== 200) {
+      setError(res.statusText);
+    } else {
+      navigate('/', { replace: true });
+    }
+  };
+
   return (
     <Box sx={{ width: '100%', paddingTop: '10px' }}>
       <Stepper activeStep={activeStep} alternativeLabel>
@@ -94,6 +111,13 @@ const FormSteps = (props: FormStepsProps) => {
       <Container component="main" maxWidth="xs" style={{ textAlign: 'center', paddingTop: '15px' }}>
         <LockOutlinedIcon />
         <h1>{title}</h1>
+        {error !== '' ? (
+          <Alert style={{ width: 400 }} severity="error">
+            {error}
+          </Alert>
+        ) : (
+          <></>
+        )}
         {steps[activeStep].label}
         {steps[activeStep].element}
         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
@@ -108,7 +132,7 @@ const FormSteps = (props: FormStepsProps) => {
           )}
           <Box sx={{ flex: '1 1 auto' }} />
           {activeStep === steps.length - 1 ? (
-            <Link to={submit.href} onClick={submit?.func} style={{ textDecoration: 'none' }}>
+            <Link to={submit.href} onClick={form_submit} style={{ textDecoration: 'none' }}>
               <Button>Submit</Button>
             </Link>
           ) : (
