@@ -19,22 +19,22 @@ import Box from '@mui/material/Box';
 export const LoginForm = (props: LoginFormProps) => {
   const { title, inputs, fields, set, submit, cancel } = props;
   const [error, setError] = React.useState('');
+  const { setToken } = useAuthContext();
   const navigate = useNavigate();
-  const theme = createTheme();
 
   const form_submit = async (event: any) => {
     const res = await submit.func(event);
 
-    console.log(res);
-
     if (res.status !== 200) {
       setError(res.statusText);
     } else {
-      useAuthContext().setToken(res.data.token);
+      setToken(res.data.token);
+      localStorage.setItem('token', res.data.token ?? '');
       navigate('/', { replace: true });
     }
   };
 
+  const theme = createTheme();
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -47,7 +47,13 @@ export const LoginForm = (props: LoginFormProps) => {
             {title}
           </Typography>
           {/* TODO: make this fit the width of the page */}
-          {error !== '' ? <Alert severity="error">{error}</Alert> : <></>}
+          {error !== '' ? (
+            <Alert style={{ width: 400 }} severity="error">
+              {error}
+            </Alert>
+          ) : (
+            <></>
+          )}
           <Box component="form" noValidate sx={{ mt: 1 }}>
             {fields.map((field, idx) => {
               switch (field.type) {
