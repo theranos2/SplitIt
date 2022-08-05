@@ -1,8 +1,9 @@
-import { Item } from '../BillCreationProps';
+import { DetailedItemDto, UserInfoDto, GroupDto } from 'api';
 
 export default interface InputProps {
   name: string;
-  users: number[]; // an array of user-ids
-  items: Item[];
   price: number;
+  users: UserInfoDto[]; // an array of user-ids
+  items: DetailedItemDto[];
+  group: GroupDto | undefined;
 }

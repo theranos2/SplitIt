@@ -1,25 +1,28 @@
 import * as React from 'react';
 
-import { BillForm } from '../BillForm';
-import InputProps from './props';
-import { Item } from '../BillCreationProps';
+import FormSteps from 'components/Core/FormSteps';
+import InputProps from 'components/Core/InputProps';
 
 const BillAdvanced = () => {
   const [inputs, setInputs] = React.useState<InputProps>({
     name: '',
+    price: 0,
     users: [],
     items: [],
-    price: 0
+    group: undefined
   });
 
   const set = (name: string) => (input: any) => {
-    // should be event<???> | Array<number> | Array<Item>
     switch (name) {
-      case 'users':
-        input.forEach((e: number) => inputs['users'].push(e));
-        break;
       case 'items':
-        input.forEach((e: Item) => inputs['items'].push(e));
+        setInputs((old: InputProps) => ({ ...old, items: input }));
+        setInputs((old: InputProps) => ({
+          ...old,
+          price: old.items ? old.items.reduce((i, j) => (j.price ? i + j.price : i), 0) : 0
+        }));
+        break;
+      case 'users':
+        setInputs((old: InputProps) => ({ ...old, users: input }));
         break;
       default:
         setInputs((old: InputProps) => ({ ...old, [name]: input.target.value }));
@@ -31,13 +34,13 @@ const BillAdvanced = () => {
 
     if (inputs.name === '' || inputs.users === [] || inputs.price === 0 || inputs.items === []) {
       return console.error('Inputs cannot be empty.');
+    } else {
+      // send the new bill to the backend
     }
-
-    // send the new bill to the backend
   };
 
   return (
-    <BillForm
+    <FormSteps
       title="Create an advanced bill"
       inputs={inputs}
       submit={{ href: '/', func: submit }}
@@ -46,18 +49,21 @@ const BillAdvanced = () => {
       fields={[
         {
           name: 'name',
+          menu_label: 'Name the bill',
           label: 'Name',
           type: 'text',
           err: { cond: inputs.name.length > 20, msg: 'Name is too long.' }
         },
         {
           name: 'users',
+          menu_label: 'Invite some friends',
           label: 'Users',
           type: 'users',
           err: { cond: inputs.users === [], msg: "You haven't added any users." }
         },
         {
           name: 'items',
+          menu_label: 'Add your items',
           label: 'Items',
           type: 'items',
           err: { cond: inputs.items === [], msg: "You haven't added any items." }

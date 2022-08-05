@@ -1,5 +1,4 @@
 import { Notification } from 'api';
-
 import { Menu, MenuItem, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
@@ -7,7 +6,7 @@ interface DropDownMenuProps {
   notifications: Notification[];
   anchorEl: Element | null;
   open: boolean;
-  handleClose: () => void;
+  handleClose: (event: any) => void;
 }
 
 const DropDownMenu = (props: DropDownMenuProps) => {
@@ -18,7 +17,7 @@ const DropDownMenu = (props: DropDownMenuProps) => {
       id="basic-menu"
       anchorEl={anchorEl}
       open={open}
-      onClose={() => handleClose()}
+      onClose={handleClose}
       MenuListProps={{
         'aria-labelledby': 'basic-button'
       }}
@@ -28,7 +27,7 @@ const DropDownMenu = (props: DropDownMenuProps) => {
         }
       }}
     >
-      <MenuItem onClick={() => handleClose()} style={{ justifyContent: 'space-between' }}>
+      <MenuItem onClick={handleClose} style={{ justifyContent: 'space-between' }}>
         <Typography noWrap variant="h5" color={'black'} fontWeight={'bold'}>
           Notifications
         </Typography>
@@ -39,7 +38,7 @@ const DropDownMenu = (props: DropDownMenuProps) => {
         </Link>
       </MenuItem>
       {notifications.map((n: Notification, idx: number) => (
-        <MenuItem key={`notification-${idx}`} onClick={() => handleClose()}>
+        <MenuItem key={`notification-${idx}`} onClick={handleClose}>
           <Link to={`/${n.domain}/${n.resourceId}`} style={{ textDecoration: 'none' }}>
             {n.message}
           </Link>

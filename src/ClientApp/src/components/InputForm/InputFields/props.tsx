@@ -1,10 +1,10 @@
-import { ButtonSubmission, ErrorType } from '../InputFormProps';
+import { ButtonEventHandler, ErrorType } from 'components/Core/FormProps';
 
 export default interface InputFieldProps {
   name: string;
   label: string;
   type: string;
-  inputs: Record<string, any>;
-  set: ButtonSubmission;
+  inputs: any;
+  set: ButtonEventHandler;
   err: ErrorType;
 }

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import DateSelectorProps from './props';
 
 import LocalizationProvider from '@mui/lab/LocalizationProvider';

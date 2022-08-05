@@ -1,10 +1,10 @@
 import React from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
-import { useAuthContext } from 'utility/hooks/useAuth';
+import { Context } from 'utility/Context';
 
 const RoutePrivate: React.FC<any> = ({ children }): React.ReactElement => {
-  const { token } = useAuthContext();
-  return token === '' ? <Navigate to="/login" replace /> : children ?? <Outlet />;
+  const context = React.useContext(Context);
+  return !context?.loggedIn ? <Navigate to="/login" replace /> : children ?? <Outlet />;
 };
 
 export default RoutePrivate;

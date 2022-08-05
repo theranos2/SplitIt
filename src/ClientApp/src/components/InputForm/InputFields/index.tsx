@@ -1,5 +1,3 @@
-import React from 'react';
-
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
 
@@ -16,8 +14,8 @@ const InputField = (props: InputFieldProps) => {
         label={label}
         type={type}
         id={name}
-        value={inputs[name]}
-        onChange={set(name)}
+        value={inputs}
+        onChange={set}
         margin="normal"
         required
         fullWidth

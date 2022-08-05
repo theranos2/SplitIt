@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+// import { Context } from 'utility/Context';
+// import { ContextProps } from 'utility/Context/props';
 
 import InputField from '../../InputForm/InputFields';
 import { DateSelector } from '../../InputForm/DateSelector';
@@ -17,6 +19,7 @@ import Box from '@mui/material/Box';
 import { useAuthContext } from 'utility/hooks/useAuth';
 
 export const LoginForm = (props: LoginFormProps) => {
+  // const context = React.useContext<ContextProps | null>(Context);
   const { title, inputs, fields, set, submit, cancel } = props;
   const [error, setError] = React.useState('');
   const theme = createTheme();
@@ -68,8 +71,8 @@ export const LoginForm = (props: LoginFormProps) => {
                       name={field.name}
                       label={field.label}
                       type={field.type}
-                      inputs={inputs}
-                      set={set}
+                      inputs={inputs[field.name]}
+                      set={set(field.name)}
                       err={field.err}
                     />
                   );

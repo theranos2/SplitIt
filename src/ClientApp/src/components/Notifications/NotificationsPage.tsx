@@ -2,15 +2,13 @@ import React from 'react';
 import NotificationDisplay from './Notification';
 import { NotificationsApi, Notification } from 'api';
 
-import { token } from 'utility/config';
-
 const NotificationsPage = () => {
   const [notifications, setNotifications] = React.useState<Notification[]>([]);
   //   const [hideRead, setHideRead] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     (async () => {
-      const api = new NotificationsApi({ apiKey: token });
+      const api = new NotificationsApi({ apiKey: window.localStorage.getItem('token') ?? '' });
       const result = await api.apiNotificationsGet();
       const NewNotifications = result.data;
       NewNotifications && setNotifications([...notifications, ...NewNotifications]);

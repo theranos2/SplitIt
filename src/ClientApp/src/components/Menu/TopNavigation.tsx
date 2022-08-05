@@ -1,16 +1,17 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import CardMembershipRoundedIcon from '@mui/icons-material/CardMembershipRounded';
 import AddBusinessRoundedIcon from '@mui/icons-material/AddBusinessRounded';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import GroupsIcon from '@mui/icons-material/Groups';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import GroupsIcon from '@mui/icons-material/Groups';
 import NotificationsMenu from '../Notifications/NotificationsMenu';
 import IconLink from './IconLink';
 import { useAuthContext } from 'utility/hooks/useAuth';
@@ -23,7 +24,7 @@ const TopNavigation = () => {
           { href: '/bill/create', icon: <AddBusinessRoundedIcon /> },
           { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
           { href: '/groups', icon: <GroupsIcon /> },
-          { href: 'notif', icon: <NotificationsMenu /> },
+          { href: '/notifications', icon: <NotificationsMenu /> },
           { href: '/logout', icon: <ExitToAppIcon /> }
         ]
       : [{ href: '/login', icon: <AccountCircle /> }];
@@ -44,8 +45,7 @@ const TopNavigation = () => {
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             {links.map((link, idx) =>
-              link.href === 'notif' ? (
-                // <DropDownMenu key={`menu-link-${idx}`} />
+              link.href === '/notifications' ? (
                 <NotificationsMenu key={`menu-link-${idx}`} />
               ) : (
                 <IconLink key={`menu-link-${idx}`} href={link.href} icon={link.icon} />

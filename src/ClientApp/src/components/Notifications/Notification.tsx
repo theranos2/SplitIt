@@ -84,6 +84,7 @@ const getNotifAge = (notifDate: string | undefined, now: Date): string => {
     age = now.getSeconds() - s.getSeconds();
     timeUnit = 'second(s)';
   }
+
   return `${age} ${timeUnit} ago`;
 };
 

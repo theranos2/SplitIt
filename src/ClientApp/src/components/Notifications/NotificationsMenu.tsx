@@ -4,7 +4,6 @@ import { Notification, NotificationsApi } from 'api';
 import DropDownMenu from './DropDownMenu';
 
 import { Badge, IconButton } from '@mui/material';
-import { token } from 'utility/config';
 
 const NotificationsMenu = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -20,7 +19,7 @@ const NotificationsMenu = () => {
 
   React.useEffect(() => {
     (async () => {
-      const api = new NotificationsApi({ apiKey: token });
+      const api = new NotificationsApi({ apiKey: window.localStorage.get('token') });
       const result = await api.apiNotificationsGet();
       const NewNotifications = result.data;
       NewNotifications && setNotifications(NewNotifications);
@@ -31,11 +30,6 @@ const NotificationsMenu = () => {
 
   return (
     <>
-      {/* <Badge badgeContent={10} color="error" overlap="circular">
-      <NotificationsIcon />
-    </Badge> */}
-      {/* <DropDownMenu /> */}
-
       <Badge badgeContent={notifications.length} color="error" overlap="circular">
         <IconButton
           size="large"

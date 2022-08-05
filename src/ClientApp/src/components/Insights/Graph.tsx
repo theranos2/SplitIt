@@ -2,9 +2,10 @@ import * as React from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { BillApi, SimpleBillDto } from 'api';
-import { token } from 'utility/config';
+import { useAuthContext } from 'utility/hooks/useAuth';
 
 export default function Graph() {
+  const { token } = useAuthContext();
   // Function to group bills by a given key
   const groupBy = <T, K extends keyof any>(arr: T[], key: (i: T) => K) =>
     arr.reduce((groups, item) => {
