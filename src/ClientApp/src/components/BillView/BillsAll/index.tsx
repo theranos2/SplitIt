@@ -2,11 +2,16 @@ import { useState, useEffect } from 'react';
 import ViewContainer from 'components/Core/ViewContainer';
 import { SimpleBillDto } from 'api';
 
+import { BillApi } from 'api';
+import { useToken } from 'utility/hooks';
+
 const BillsAll = () => {
   const [allBills, setAllBills] = useState<SimpleBillDto[]>([]);
+
   useEffect(() => {
     (async () => {
-      setAllBills(await fetch('google.com').then((res) => res.json()));
+      const res = await new BillApi({ apiKey: useToken() ?? '' }).apiBillGet();
+      if (res.status === 200) setAllBills(res.data);
     })();
   }, []);
 

@@ -1,6 +1,7 @@
-import { GroupDto } from 'api';
+import { SimpleGroupDto } from 'api';
 
 export default interface GroupSelectorProps {
-  group: GroupDto | undefined;
-  setGroup: (group: GroupDto) => void;
+  values: SimpleGroupDto | undefined;
+  onChange: (group: SimpleGroupDto) => void;
+  options: SimpleGroupDto[] | undefined;
 }

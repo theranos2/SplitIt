@@ -1,6 +1,6 @@
 import React from 'react';
 import { LoginForm } from '../LoginForm';
-import { signup } from 'utility/api/account';
+import { AccountApi } from 'api';
 
 const Register = () => {
   const [inputs, setInputs] = React.useState({
@@ -18,11 +18,11 @@ const Register = () => {
     event.preventDefault();
 
     if (Object.values(inputs).some((input) => input === '')) {
-      return { error: true, msg: 'Inputs cannot be empty.' };
+      return { status: 400, statusText: 'Inputs cannot be empty.' };
     } else if (inputs.password !== inputs.password_confirm) {
-      return { error: true, msg: 'Passwords must match.' };
+      return { status: 400, statusText: 'Passwords must match.' };
     } else {
-      return signup(inputs);
+      await new AccountApi().apiAccountRegisterPost(inputs);
     }
   };
 
@@ -38,7 +38,7 @@ const Register = () => {
           name: 'email',
           label: 'Email Address',
           type: 'text',
-          err: { cond: inputs.email.length > 20, msg: 'Email is too long.' }
+          err: { cond: inputs.email.length > 40, msg: 'Email is too long.' }
         },
         {
           name: 'firstName',
@@ -62,7 +62,7 @@ const Register = () => {
           name: 'password_confirm',
           label: 'Confirm Password',
           type: 'password',
-          err: { cond: inputs.password !== inputs.password_confirm, msg: 'Password is too long.' }
+          err: { cond: inputs.password !== inputs.password_confirm, msg: 'Passwords do not match.' }
         }
       ]}
     />

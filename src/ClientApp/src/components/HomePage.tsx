@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -17,13 +16,13 @@ const HomePage = () => {
     >
       <Grid item xs={3}>
         <ButtonGroup orientation="vertical" aria-label="vertical outlined button group">
-          <Button key="one">
+          <Button key="bill-create-btn">
             <Link to="/bill/create">Create a bill</Link>
           </Button>
-          <Button key="one">
+          <Button key="bill-view-btn">
             <Link to="/bill/view">View bills</Link>
           </Button>
-          <Button key="one">
+          <Button key="groups-btn">
             <Link to="/groups">Groups</Link>
           </Button>
         </ButtonGroup>

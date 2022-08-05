@@ -19,7 +19,7 @@ const NotificationsMenu = () => {
 
   React.useEffect(() => {
     (async () => {
-      const api = new NotificationsApi({ apiKey: window.localStorage.get('token') });
+      const api = new NotificationsApi({ apiKey: window.localStorage.getItem('token') ?? '' });
       const result = await api.apiNotificationsGet();
       const NewNotifications = result.data;
       NewNotifications && setNotifications(NewNotifications);

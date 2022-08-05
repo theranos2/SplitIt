@@ -1,5 +1,5 @@
 export interface ButtonEventHandler {
-  (event: any): void;
+  (event: any): any;
 }
 
 export interface ButtonSubmission {

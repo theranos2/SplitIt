@@ -1,11 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-// import { Context } from 'utility/Context';
-// import { ContextProps } from 'utility/Context/props';
 
-import InputField from '../../InputForm/InputFields';
 import { DateSelector } from '../../InputForm/DateSelector';
+import { useAuthContext } from 'utility/hooks/useAuth';
+import InputField from '../../InputForm/InputFields';
 import LoginFormProps from './props';
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -16,23 +15,26 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
-import { useAuthContext } from 'utility/hooks/useAuth';
 
 export const LoginForm = (props: LoginFormProps) => {
-  // const context = React.useContext<ContextProps | null>(Context);
   const { title, inputs, fields, set, submit, cancel } = props;
   const [error, setError] = React.useState('');
-  const theme = createTheme();
   const { setToken } = useAuthContext();
+  const navigate = useNavigate();
 
   const form_submit = async (event: any) => {
     const res = await submit.func(event);
-    res?.error ? setError(res.msg) : setError('');
-    if (!res?.error) {
-      setToken(window.localStorage.getItem('token') ?? '');
+
+    if (res.status !== 200) {
+      setError(res.statusText);
+    } else {
+      setToken(res.data.token);
+      localStorage.setItem('token', res.data.token ?? '');
+      navigate('/', { replace: true });
     }
   };
 
+  const theme = createTheme();
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -45,7 +47,13 @@ export const LoginForm = (props: LoginFormProps) => {
             {title}
           </Typography>
           {/* TODO: make this fit the width of the page */}
-          {error !== '' ? <Alert severity="error">{error}</Alert> : <></>}
+          {error !== '' ? (
+            <Alert style={{ width: 400 }} severity="error">
+              {error}
+            </Alert>
+          ) : (
+            <></>
+          )}
           <Box component="form" noValidate sx={{ mt: 1 }}>
             {fields.map((field, idx) => {
               switch (field.type) {

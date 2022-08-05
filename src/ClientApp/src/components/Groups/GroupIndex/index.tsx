@@ -17,13 +17,13 @@ const GroupIndex = () => {
     >
       <Grid item xs={3}>
         <ButtonGroup orientation="vertical" aria-label="vertical outlined button group">
-          <Button key="one">
+          <Button key="group-create-btn">
             <Link to="/groups/create">Create a group</Link>
           </Button>
-          <Button key="one">
+          <Button key="group-view-btn">
             <Link to="/groups/view">View groups</Link>
           </Button>
-          <Button key="one">
+          <Button key="group-back-btn">
             <Link to="/">Back</Link>
           </Button>
         </ButtonGroup>

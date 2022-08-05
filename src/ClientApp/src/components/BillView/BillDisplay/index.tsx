@@ -1,4 +1,4 @@
-import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
@@ -6,8 +6,6 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
-
-import { Context } from 'utility/Context';
 
 import { SimpleBillDto } from 'api';
 
@@ -17,11 +15,11 @@ interface BillDisplayProps {
 
 const BillDisplay = (props: BillDisplayProps) => {
   const { bill } = props;
-  const history = React.useContext(Context)?.history;
-  const navigate = () => history(`/bill/view/:${bill.id}`, { replace: true });
+  const navigate = useNavigate();
+  const view = () => navigate(`/bill/view/:${bill.id}`, { replace: true });
 
   return (
-    <Grid item xs={12} sm={6} md={4} onClick={navigate}>
+    <Grid item xs={12} sm={6} md={4} onClick={view}>
       <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
         <CardActionArea>
           <CardMedia

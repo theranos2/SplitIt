@@ -1,11 +1,12 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import StepLabel from '@mui/material/StepLabel';
 import Container from '@mui/material/Container';
 import Stepper from '@mui/material/Stepper';
 import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
 import Step from '@mui/material/Step';
 import Box from '@mui/material/Box';
 
@@ -17,9 +18,23 @@ import { PriceDisplay } from 'components/InputForm/PriceDisplay';
 import { GroupSelector } from 'components/InputForm/GroupSelector';
 import FormStepsProps, { Steps } from './props';
 
+import { UserInfoDto, SimpleGroupDto, UserApi, GroupApi } from 'api';
+import { useToken } from 'utility/hooks';
+
 const FormSteps = (props: FormStepsProps) => {
   const { title, inputs, set, submit, cancel, fields } = props;
+  const navigate = useNavigate();
 
+  const [groups, setGroups] = useState<SimpleGroupDto[]>([]);
+  const [users, setUsers] = useState<UserInfoDto[]>([]);
+  useEffect(() => {
+    (async () => {
+      setUsers((await new UserApi({ apiKey: useToken() ?? '' }).apiUserGet()).data);
+      setGroups((await new GroupApi({ apiKey: useToken() ?? '' }).apiGroupGet()).data);
+    })();
+  }, []);
+
+  const [error, setError] = useState('');
   const steps: Steps[] = fields.map((f) => {
     switch (f.type) {
       case 'date':
@@ -35,9 +50,7 @@ const FormSteps = (props: FormStepsProps) => {
       case 'users':
         return {
           label: f.menu_label,
-          element: (
-            <UserSelector values={inputs['users']} onChange={set('users')} options={f.users} />
-          )
+          element: <UserSelector values={inputs['users']} onChange={set('users')} options={users} />
         };
       case 'items':
         return {
@@ -53,10 +66,12 @@ const FormSteps = (props: FormStepsProps) => {
             />
           )
         };
-      case 'groups':
+      case 'group':
         return {
           label: f.menu_label,
-          element: <GroupSelector group={inputs['group']} setGroup={set('group')} />
+          element: (
+            <GroupSelector values={inputs['group']} onChange={set('group')} options={groups} />
+          )
         };
       default: {
         return {
@@ -76,11 +91,21 @@ const FormSteps = (props: FormStepsProps) => {
     }
   });
 
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
 
   const handle_next = () => setActiveStep((prev) => prev + 1);
 
   const handle_back = () => setActiveStep((prev) => prev - 1);
+
+  const form_submit = async (event: any) => {
+    const res = await submit.func(event);
+
+    if (res.status !== 200) {
+      setError(res.statusText);
+    } else {
+      navigate('/', { replace: true });
+    }
+  };
 
   return (
     <Box sx={{ width: '100%', paddingTop: '10px' }}>
@@ -94,6 +119,13 @@ const FormSteps = (props: FormStepsProps) => {
       <Container component="main" maxWidth="xs" style={{ textAlign: 'center', paddingTop: '15px' }}>
         <LockOutlinedIcon />
         <h1>{title}</h1>
+        {error !== '' ? (
+          <Alert style={{ width: 400 }} severity="error">
+            {error}
+          </Alert>
+        ) : (
+          <></>
+        )}
         {steps[activeStep].label}
         {steps[activeStep].element}
         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
@@ -108,7 +140,7 @@ const FormSteps = (props: FormStepsProps) => {
           )}
           <Box sx={{ flex: '1 1 auto' }} />
           {activeStep === steps.length - 1 ? (
-            <Link to={submit.href} onClick={submit?.func} style={{ textDecoration: 'none' }}>
+            <Link to={submit.href} onClick={form_submit} style={{ textDecoration: 'none' }}>
               <Button>Submit</Button>
             </Link>
           ) : (
