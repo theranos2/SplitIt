@@ -1,9 +1,9 @@
-import { ItemDto, UserInfoDto, GroupDto } from 'api';
+import { DetailedItemDto, UserInfoDto, GroupDto } from 'api';
 
 export default interface InputProps {
   name: string;
   price: number;
   users: UserInfoDto[]; // an array of user-ids
-  items: ItemDto[];
+  items: DetailedItemDto[];
   group: GroupDto | undefined;
 }

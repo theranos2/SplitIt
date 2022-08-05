@@ -11,20 +11,20 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 
 import ItemDisplay from 'components/Users/ItemDisplay';
-import { ItemDto, UserInfoDto } from 'api';
+import { DetailedItemDto, UserInfoDto } from 'api';
 import { ItemSelectorProps } from './props';
 
 export const ItemSelector = (props: ItemSelectorProps) => {
   const { name, label, items, setItems, users, err } = props;
 
-  const [currentItem, setCurrentItem] = React.useState<ItemDto>({
+  const [currentItem, setCurrentItem] = React.useState<DetailedItemDto>({
     name: '',
     price: 0
   });
   const [currentUser, setCurrentUser] = React.useState<number>(0);
 
   const setItem = (name: string) => (event: any) =>
-    setCurrentItem((old: ItemDto) => ({ ...old, [name]: event.target.value }));
+    setCurrentItem((old: DetailedItemDto) => ({ ...old, [name]: event.target.value }));
   const cancel = () => {
     setCurrentItem({ name: '', price: 0 });
     setCurrentUser(0);
@@ -36,7 +36,8 @@ export const ItemSelector = (props: ItemSelectorProps) => {
     cancel();
   };
 
-  const removeItem = (iid: ItemDto) => setItems(items?.filter((item: ItemDto) => item !== iid));
+  const removeItem = (iid: DetailedItemDto) =>
+    setItems(items?.filter((item: DetailedItemDto) => item !== iid));
 
   /* TODO: actually fetch the users from the backend, rather than hardcode them */
   // React.useEffect(() => {

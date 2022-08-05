@@ -7,11 +7,11 @@ import Box from '@mui/material/Box';
 
 import BillDisplay from 'components/BillView/BillDisplay';
 import GroupDisplay from 'components/Groups/GroupDisplay';
-import { BillDto, SimpleGroupDto } from 'api';
+import { SimpleBillDto, SimpleGroupDto } from 'api';
 
 import ViewContainerProps from './props';
 
-const is_bill = (x: any): x is BillDto => true;
+const is_bill = (x: any): x is SimpleBillDto => true;
 
 const ViewContainer = (props: ViewContainerProps) => {
   const { title, description, items } = props;
@@ -34,9 +34,9 @@ const ViewContainer = (props: ViewContainerProps) => {
         </Box>
         <Container sx={{ py: 0 }} maxWidth="md">
           <Grid container spacing={4}>
-            {items.map((item: BillDto | SimpleGroupDto) =>
+            {items.map((item: SimpleBillDto | SimpleGroupDto) =>
               is_bill(item) ? (
-                <BillDisplay key={`item-${item.id}`} bill={item as BillDto} />
+                <BillDisplay key={`item-${item.id}`} bill={item as SimpleBillDto} />
               ) : (
                 <GroupDisplay key={`item-${item.id}`} group={item as SimpleGroupDto} />
               )

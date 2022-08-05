@@ -1,8 +1,8 @@
-import { BillDto, SimpleGroupDto } from 'api';
+import { SimpleBillDto, SimpleGroupDto } from 'api';
 
 export default interface ViewContainerProps {
   title: string;
   description: string;
-  items: Array<BillDto | SimpleGroupDto>;
+  items: Array<SimpleBillDto | SimpleGroupDto>;
   filters: Record<string, (items: any[], value: any) => any[]>;
 }

@@ -1,6 +1,6 @@
-import { ItemDto } from 'api';
+import { DetailedItemDto } from 'api';
 
 export interface ItemDisplayProps {
-  items?: ItemDto[];
-  removeItem: (item: ItemDto) => void;
+  items?: DetailedItemDto[];
+  removeItem: (item: DetailedItemDto) => void;
 }

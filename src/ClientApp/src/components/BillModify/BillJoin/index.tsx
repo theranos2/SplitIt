@@ -3,18 +3,18 @@ import { useParams } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { BillDto } from 'api';
+import { SimpleBillDto } from 'api';
 import { Context } from 'utility/Context';
 
 const BillJoin = () => {
   const bill_id = (useParams().bill_id ?? ':0').slice(1);
-  const [bill, setBill] = useState<BillDto>(null as unknown as BillDto);
+  const [bill, setBill] = useState<SimpleBillDto>(null as unknown as SimpleBillDto);
   const [owner, setOwner] = useState<string>('');
   const history = useContext(Context)?.history;
 
   useEffect(() => {
     // get the bill from the backend
-    setBill(bill_id as unknown as BillDto);
+    setBill(bill_id as unknown as SimpleBillDto);
     // get the owner from the backend
     setOwner('nobody');
   }, []);

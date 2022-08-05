@@ -1,8 +1,8 @@
-import { BillDto } from 'api';
+import { SimpleBillDto } from 'api';
 
 export default interface SearchBarProps {
-  items: BillDto[];
-  setCurrentItems: (bill: BillDto[]) => void;
+  items: SimpleBillDto[];
+  setCurrentItems: (bill: SimpleBillDto[]) => void;
   filters: Record<string, <T>(bills: T[], value: any) => T[]>;
 }
 

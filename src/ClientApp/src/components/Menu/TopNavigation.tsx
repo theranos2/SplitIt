@@ -24,7 +24,7 @@ const TopNavigation = () => {
           { href: '/bill/create', icon: <AddBusinessRoundedIcon /> },
           { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
           { href: '/groups', icon: <GroupsIcon /> },
-          { href: 'notif', icon: <NotificationsMenu /> },
+          { href: '/notifications', icon: <NotificationsMenu /> },
           { href: '/logout', icon: <ExitToAppIcon /> }
         ]
       : [{ href: '/login', icon: <AccountCircle /> }];

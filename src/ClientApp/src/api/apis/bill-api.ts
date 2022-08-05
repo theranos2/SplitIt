@@ -17,7 +17,11 @@ import { Configuration } from '../configuration';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
 import { BillInputDto } from '../models';
+import { CommentDto } from '../models';
+import { CommentInputDto } from '../models';
+import { CommentSort } from '../models';
 import { DetailedBillDto } from '../models';
+import { PayDto } from '../models';
 import { SimpleBillDto } from '../models';
 import { SimpleBillInputDto } from '../models';
 /**
@@ -242,6 +246,181 @@ export const BillApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
+         * @summary Get one comment from a bill
+         * @param {string} billId 
+         * @param {string} commentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBillBillIdCommentsCommentIdGet: async (billId: string, commentId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'billId' is not null or undefined
+            if (billId === null || billId === undefined) {
+                throw new RequiredError('billId','Required parameter billId was null or undefined when calling apiBillBillIdCommentsCommentIdGet.');
+            }
+            // verify required parameter 'commentId' is not null or undefined
+            if (commentId === null || commentId === undefined) {
+                throw new RequiredError('commentId','Required parameter commentId was null or undefined when calling apiBillBillIdCommentsCommentIdGet.');
+            }
+            const localVarPath = `/api/Bill/{BillId}/comments/{CommentId}`
+                .replace(`{${"BillId"}}`, encodeURIComponent(String(billId)))
+                .replace(`{${"CommentId"}}`, encodeURIComponent(String(commentId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Token required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("Token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["Token"] = localVarApiKeyValue;
+            }
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get many comments from a bill
+         * @param {string} billId 
+         * @param {CommentSort} [sortBy] 
+         * @param {number} [take] 
+         * @param {number} [skip] 
+         * @param {string} [content] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBillBillIdCommentsGet: async (billId: string, sortBy?: CommentSort, take?: number, skip?: number, content?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'billId' is not null or undefined
+            if (billId === null || billId === undefined) {
+                throw new RequiredError('billId','Required parameter billId was null or undefined when calling apiBillBillIdCommentsGet.');
+            }
+            const localVarPath = `/api/Bill/{BillId}/comments`
+                .replace(`{${"BillId"}}`, encodeURIComponent(String(billId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Token required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("Token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["Token"] = localVarApiKeyValue;
+            }
+
+            if (sortBy !== undefined) {
+                localVarQueryParameter['sortBy'] = sortBy;
+            }
+
+            if (take !== undefined) {
+                localVarQueryParameter['take'] = take;
+            }
+
+            if (skip !== undefined) {
+                localVarQueryParameter['skip'] = skip;
+            }
+
+            if (content !== undefined) {
+                localVarQueryParameter['content'] = content;
+            }
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Create a comment on a bill
+         * @param {string} billId 
+         * @param {CommentInputDto} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBillBillIdCommentsPost: async (billId: string, body?: CommentInputDto, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'billId' is not null or undefined
+            if (billId === null || billId === undefined) {
+                throw new RequiredError('billId','Required parameter billId was null or undefined when calling apiBillBillIdCommentsPost.');
+            }
+            const localVarPath = `/api/Bill/{BillId}/comments`
+                .replace(`{${"BillId"}}`, encodeURIComponent(String(billId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Token required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("Token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["Token"] = localVarApiKeyValue;
+            }
+
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            const needsSerialization = (typeof body !== "string") || localVarRequestOptions.headers?.['Content-Type'] === 'application/json';
+            localVarRequestOptions.data =  needsSerialization ? JSON.stringify(body !== undefined ? body : {}) : (body || "");
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @param {string} billId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -300,6 +479,101 @@ export const BillApiAxiosParamCreator = function (configuration?: Configuration)
                 throw new RequiredError('billId','Required parameter billId was null or undefined when calling apiBillBillIdGet.');
             }
             const localVarPath = `/api/Bill/{bill_id}`
+                .replace(`{${"bill_id"}}`, encodeURIComponent(String(billId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Token required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("Token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["Token"] = localVarApiKeyValue;
+            }
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary If the user has the bill id they can join it. This makes sharing by link and QR possible
+         * @param {string} billId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBillBillIdJoinPost: async (billId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'billId' is not null or undefined
+            if (billId === null || billId === undefined) {
+                throw new RequiredError('billId','Required parameter billId was null or undefined when calling apiBillBillIdJoinPost.');
+            }
+            const localVarPath = `/api/Bill/{bill_id}/join`
+                .replace(`{${"bill_id"}}`, encodeURIComponent(String(billId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Token required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+                    ? await configuration.apiKey("Token")
+                    : await configuration.apiKey;
+                localVarHeaderParameter["Token"] = localVarApiKeyValue;
+            }
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {string} billId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiBillBillIdPayGet: async (billId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'billId' is not null or undefined
+            if (billId === null || billId === undefined) {
+                throw new RequiredError('billId','Required parameter billId was null or undefined when calling apiBillBillIdPayGet.');
+            }
+            const localVarPath = `/api/Bill/{bill_id}/pay`
                 .replace(`{${"bill_id"}}`, encodeURIComponent(String(billId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
@@ -742,6 +1016,54 @@ export const BillApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get one comment from a bill
+         * @param {string} billId 
+         * @param {string} commentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdCommentsCommentIdGet(billId: string, commentId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<CommentDto>>> {
+            const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiBillBillIdCommentsCommentIdGet(billId, commentId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Get many comments from a bill
+         * @param {string} billId 
+         * @param {CommentSort} [sortBy] 
+         * @param {number} [take] 
+         * @param {number} [skip] 
+         * @param {string} [content] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdCommentsGet(billId: string, sortBy?: CommentSort, take?: number, skip?: number, content?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<Array<CommentDto>>>> {
+            const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiBillBillIdCommentsGet(billId, sortBy, take, skip, content, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary Create a comment on a bill
+         * @param {string} billId 
+         * @param {CommentInputDto} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdCommentsPost(billId: string, body?: CommentInputDto, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<CommentDto>>> {
+            const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiBillBillIdCommentsPost(billId, body, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
          * @param {string} billId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -762,6 +1084,33 @@ export const BillApiFp = function(configuration?: Configuration) {
          */
         async apiBillBillIdGet(billId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<DetailedBillDto>>> {
             const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiBillBillIdGet(billId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @summary If the user has the bill id they can join it. This makes sharing by link and QR possible
+         * @param {string} billId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdJoinPost(billId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<void>>> {
+            const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiBillBillIdJoinPost(billId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
+         * 
+         * @param {string} billId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdPayGet(billId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<PayDto>>> {
+            const localVarAxiosArgs = await BillApiAxiosParamCreator(configuration).apiBillBillIdPayGet(billId, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -912,6 +1261,42 @@ export const BillApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 
+         * @summary Get one comment from a bill
+         * @param {string} billId 
+         * @param {string} commentId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdCommentsCommentIdGet(billId: string, commentId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<CommentDto>> {
+            return BillApiFp(configuration).apiBillBillIdCommentsCommentIdGet(billId, commentId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get many comments from a bill
+         * @param {string} billId 
+         * @param {CommentSort} [sortBy] 
+         * @param {number} [take] 
+         * @param {number} [skip] 
+         * @param {string} [content] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdCommentsGet(billId: string, sortBy?: CommentSort, take?: number, skip?: number, content?: string, options?: AxiosRequestConfig): Promise<AxiosResponse<Array<CommentDto>>> {
+            return BillApiFp(configuration).apiBillBillIdCommentsGet(billId, sortBy, take, skip, content, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Create a comment on a bill
+         * @param {string} billId 
+         * @param {CommentInputDto} [body] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdCommentsPost(billId: string, body?: CommentInputDto, options?: AxiosRequestConfig): Promise<AxiosResponse<CommentDto>> {
+            return BillApiFp(configuration).apiBillBillIdCommentsPost(billId, body, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @param {string} billId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -928,6 +1313,25 @@ export const BillApiFactory = function (configuration?: Configuration, basePath?
          */
         async apiBillBillIdGet(billId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<DetailedBillDto>> {
             return BillApiFp(configuration).apiBillBillIdGet(billId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary If the user has the bill id they can join it. This makes sharing by link and QR possible
+         * @param {string} billId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdJoinPost(billId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<void>> {
+            return BillApiFp(configuration).apiBillBillIdJoinPost(billId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} billId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async apiBillBillIdPayGet(billId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<PayDto>> {
+            return BillApiFp(configuration).apiBillBillIdPayGet(billId, options).then((request) => request(axios, basePath));
         },
         /**
          * Use this route to edit a bill. Quite similar to the create bill. To edit just do the same.
@@ -1055,6 +1459,45 @@ export class BillApi extends BaseAPI {
     }
     /**
      * 
+     * @summary Get one comment from a bill
+     * @param {string} billId 
+     * @param {string} commentId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BillApi
+     */
+    public async apiBillBillIdCommentsCommentIdGet(billId: string, commentId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<CommentDto>> {
+        return BillApiFp(this.configuration).apiBillBillIdCommentsCommentIdGet(billId, commentId, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 
+     * @summary Get many comments from a bill
+     * @param {string} billId 
+     * @param {CommentSort} [sortBy] 
+     * @param {number} [take] 
+     * @param {number} [skip] 
+     * @param {string} [content] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BillApi
+     */
+    public async apiBillBillIdCommentsGet(billId: string, sortBy?: CommentSort, take?: number, skip?: number, content?: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<Array<CommentDto>>> {
+        return BillApiFp(this.configuration).apiBillBillIdCommentsGet(billId, sortBy, take, skip, content, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 
+     * @summary Create a comment on a bill
+     * @param {string} billId 
+     * @param {CommentInputDto} [body] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BillApi
+     */
+    public async apiBillBillIdCommentsPost(billId: string, body?: CommentInputDto, options?: AxiosRequestConfig) : Promise<AxiosResponse<CommentDto>> {
+        return BillApiFp(this.configuration).apiBillBillIdCommentsPost(billId, body, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 
      * @param {string} billId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
@@ -1073,6 +1516,27 @@ export class BillApi extends BaseAPI {
      */
     public async apiBillBillIdGet(billId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<DetailedBillDto>> {
         return BillApiFp(this.configuration).apiBillBillIdGet(billId, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 
+     * @summary If the user has the bill id they can join it. This makes sharing by link and QR possible
+     * @param {string} billId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BillApi
+     */
+    public async apiBillBillIdJoinPost(billId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<void>> {
+        return BillApiFp(this.configuration).apiBillBillIdJoinPost(billId, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * 
+     * @param {string} billId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof BillApi
+     */
+    public async apiBillBillIdPayGet(billId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<PayDto>> {
+        return BillApiFp(this.configuration).apiBillBillIdPayGet(billId, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * Use this route to edit a bill. Quite similar to the create bill. To edit just do the same.

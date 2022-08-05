@@ -1,10 +1,10 @@
 import { ButtonEventHandler, ErrorType } from 'components/Core/FormProps';
-import { ItemDto, UserInfoDto } from 'api';
+import { DetailedItemDto, UserInfoDto } from 'api';
 
 export interface ItemSelectorProps {
   name: string;
   label: string;
-  items?: ItemDto[];
+  items?: DetailedItemDto[];
   setItems: ButtonEventHandler;
   users: UserInfoDto[];
   err: ErrorType;

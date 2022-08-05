@@ -11,6 +11,7 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+import { Comment } from './comment';
 import { FileAttachment } from './file-attachment';
 import { Share } from './share';
 import { User } from './user';
@@ -62,6 +63,12 @@ export interface Bill {
      * @memberof Bill
      */
     shares?: Array<Share> | null;
+    /**
+     * 
+     * @type {Array<Comment>}
+     * @memberof Bill
+     */
+    comments?: Array<Comment> | null;
     /**
      * 
      * @type {boolean}

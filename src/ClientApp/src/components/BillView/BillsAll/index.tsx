@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import ViewContainer from 'components/Core/ViewContainer';
-import { BillDto } from 'api';
+import { SimpleBillDto } from 'api';
 
 const BillsAll = () => {
-  const [allBills, setAllBills] = useState<BillDto[]>([]);
+  const [allBills, setAllBills] = useState<SimpleBillDto[]>([]);
   useEffect(() => {
     (async () => {
       setAllBills(await fetch('google.com').then((res) => res.json()));
@@ -16,9 +16,12 @@ const BillsAll = () => {
       description="All of your bills"
       items={allBills}
       filters={{
-        name: (old: BillDto[], value: any) => old.filter((e: BillDto) => e.title.includes(value)),
-        minPrice: (old: BillDto[], value: any) => old.filter((e: BillDto) => e.total ?? 0 >= value),
-        maxPrice: (old: BillDto[], value: any) => old.filter((e: BillDto) => e.total ?? 0 <= value)
+        name: (old: SimpleBillDto[], value: any) =>
+          old.filter((e: SimpleBillDto) => (e.title ? e.title.includes(value) : false)),
+        minPrice: (old: SimpleBillDto[], value: any) =>
+          old.filter((e: SimpleBillDto) => e.total ?? 0 >= value),
+        maxPrice: (old: SimpleBillDto[], value: any) =>
+          old.filter((e: SimpleBillDto) => e.total ?? 0 <= value)
       }}
     />
   );
