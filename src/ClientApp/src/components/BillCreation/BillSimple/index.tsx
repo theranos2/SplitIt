@@ -2,7 +2,10 @@ import React from 'react';
 
 import FormSteps from 'components/Core/FormSteps';
 import InputProps from './props';
-import { simple_create } from 'utility/api/billcreate';
+
+import { useAuthContext } from 'utility/hooks/useAuth';
+import { BillApi, UserInfoDto } from 'api';
+import { useToken } from 'utility/hooks';
 
 const BillSimple = () => {
   const [inputs, setInputs] = React.useState<InputProps>({
@@ -24,7 +27,16 @@ const BillSimple = () => {
     if (inputs.name === '' || inputs.users === [] || inputs.price === 0) {
       return console.error('Inputs cannot be empty.');
     } else {
-      return simple_create(inputs);
+      const res = await new BillApi({ apiKey: useToken() ?? '' }).apiBillSimplePost({
+        title: inputs.name,
+        userIds: inputs.users.map((user: UserInfoDto) => `${user.firstName} ${user.lastName}`),
+        total: inputs.price
+      });
+      if (res.status === 200) {
+        console.log('success');
+      } else {
+        console.log('failure');
+      }
     }
   };
 

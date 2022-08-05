@@ -1,6 +1,6 @@
 import React from 'react';
 import { LoginForm } from '../LoginForm';
-import { login } from 'utility/api/account';
+import { AccountApi } from 'api';
 
 const Login = () => {
   const [inputs, setInputs] = React.useState({ email: '', password: '' });
@@ -12,10 +12,10 @@ const Login = () => {
     event.preventDefault();
 
     if (inputs.email === '' || inputs.password === '') {
-      return console.log('Inputs cannot be empty.');
+      return { status: 400, statusText: 'Inputs cannot be empty.' };
+    } else {
+      return await new AccountApi().apiAccountLoginPost(inputs);
     }
-
-    return await login(inputs);
   };
 
   return (
