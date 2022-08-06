@@ -10,7 +10,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { LoadingButton } from '@mui/lab';
 import axios from 'axios';
-import { Container } from './common';
+import { Container } from '../common';
 
 /**
  * Modified from https://stackoverflow.com/a/23222600

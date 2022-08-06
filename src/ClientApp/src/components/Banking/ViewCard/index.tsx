@@ -1,7 +1,7 @@
 import { BankApi, CardDto } from 'api';
 import { useEffect, useState } from 'react';
 import { useAuthContext } from 'utility/hooks/useAuth';
-import { Container } from './common';
+import { Container } from '../common';
 import moment from 'moment';
 
 export function ViewCardPage() {
