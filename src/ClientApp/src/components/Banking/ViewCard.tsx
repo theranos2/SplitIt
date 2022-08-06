@@ -2,6 +2,7 @@ import { BankApi, CardDto } from 'api';
 import { useEffect, useState } from 'react';
 import { useAuthContext } from 'utility/hooks/useAuth';
 import { Container } from './common';
+import moment from 'moment';
 
 export function ViewCardPage() {
   const { token } = useAuthContext();
@@ -13,13 +14,20 @@ export function ViewCardPage() {
       setCard(res.data);
     })();
   }, []);
+
   return (
     <Container>
       <h1>Saved card details</h1>
-      <h2>Card number: {card?.number}</h2>
-      <h2>Expiry: {card?.expiry.toLocaleDateString()}</h2>
-      <h2>Name: {card?.name}</h2>
-      <h2>CVC: {card?.secret}</h2>
+      {card ? (
+        <>
+          <h2>Card number: {card.number}</h2>
+          <h2>Expiry: {moment(card.expiry.toString()).format('MM/YYYY')}</h2>
+          <h2>Name: {card.name}</h2>
+          <h2>CVC: {card.secret}</h2>
+        </>
+      ) : (
+        <h2>No card saved</h2>
+      )}
     </Container>
   );
 }
