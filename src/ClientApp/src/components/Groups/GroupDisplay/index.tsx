@@ -19,7 +19,7 @@ const GroupDisplay = (props: GroupDisplayProps) => {
       xs={12}
       sm={6}
       md={4}
-      onClick={() => navigate(`/group/view/:${group.id}`, { replace: true })}
+      onClick={() => navigate(`/groups/view/${group.id}`, { replace: true })}
     >
       <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
         <CardActionArea>
