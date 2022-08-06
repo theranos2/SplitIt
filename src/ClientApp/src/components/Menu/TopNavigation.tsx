@@ -6,8 +6,6 @@ import AddBusinessRoundedIcon from '@mui/icons-material/AddBusinessRounded';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import GroupsIcon from '@mui/icons-material/Groups';
-import MoreIcon from '@mui/icons-material/MoreVert';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
 import AppBar from '@mui/material/AppBar';
@@ -51,11 +49,6 @@ const TopNavigation = () => {
                 <IconLink key={`menu-link-${idx}`} href={link.href} icon={link.icon} />
               )
             )}
-          </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton size="large" color="inherit">
-              <MoreIcon />
-            </IconButton>
           </Box>
         </Toolbar>
       </AppBar>

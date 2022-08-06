@@ -1,9 +1,6 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-
 import ButtonGroup from '@mui/material/ButtonGroup';
-import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import ButtonLink from 'components/Menu/ButtonLink';
 
 const GroupIndex = () => {
   return (
@@ -17,15 +14,9 @@ const GroupIndex = () => {
     >
       <Grid item xs={3}>
         <ButtonGroup orientation="vertical" aria-label="vertical outlined button group">
-          <Button key="group-create-btn">
-            <Link to="/groups/create">Create a group</Link>
-          </Button>
-          <Button key="group-view-btn">
-            <Link to="/groups/view">View groups</Link>
-          </Button>
-          <Button key="group-back-btn">
-            <Link to="/">Back</Link>
-          </Button>
+          <ButtonLink href="/groups/create" name="Create a group" />
+          <ButtonLink href="/groups/view" name="View groups" />
+          <ButtonLink href="/" name="Back" />
         </ButtonGroup>
       </Grid>
     </Grid>
