@@ -1,0 +1,37 @@
+# week01
+- We introduced ourselves to the group and discussed ideas on languages and frameworks to use.
+- Discussed ideas for a custom project, ending up settling on Storify - a web app, social media platform to share music.
+- Worked with team on custom proposal and specifying functionality of app, and submitted to our tutor by the end of the week.
+# week02
+- Assigned roles to each member based on differing experience and competencies. e.g. front-end vs backend, proficiencies in certain frameworks.
+- Our project idea was not well received by Jingcheng, so we continued to brainstorm alterations and novel features to make the app more practical and appealing.
+# week03
+- Decided to change project to "Split-it", a personal finance application that helps you track your expenses, and simplify splitting bills with others.
+- Discussed the apps functionality, and how we would structure our code base and divide the work.
+- Worked on the project proposal with the team. I fleshed out the user stories with Xibo based on the features in our proposal.
+# week04
+- Set up working environment and familiarised myself with front end technologies - ReactJS and Typescript.
+# week05
+- Worked on a log in page for the first sprint, however did not manage to complete due to delays in starting our first sprint, deciding projects.
+- Attended Retrospective A meeting after our demo.
+# week06
+- Discussed with group members on items to include in Retrospective A report.
+- Familiarised myself with mui library to provide a more consistent and stylised design to the app.
+- Created a basic notification page with dummy data.
+# week07
+- Completed front end design for drop down notifications which link to notification page.
+- Worked with Razin and Ken to integrate the backend into notifications and drop down menu.
+- Worked with group members to complete the group creation functionality by linking it to the backend.
+# week08
+- Attended Retrospective B meeting after last week's demo.
+- Fixed bugs in notification page such as not displaying the notification age properly, and changed to display the number of notifications in the top nav menu.
+# week09
+- Discussed with group members on items to include in Retrospective B report.
+- Created front end for account recovery page.
+- Created structure and basic UI for Bill comments.
+# week10
+- Was helped by Ken to refurbish account recovery page using MVC and connecting the backend.
+- Updated notifications to match changes from API.
+- Worked on merging repositories into main as the working branch.
+- Demonstrated notifications and account recovery in final presentation.
+- Added user guide for notifications in final report.
