@@ -5,6 +5,7 @@ import CardMembershipRoundedIcon from '@mui/icons-material/CardMembershipRounded
 import AddBusinessRoundedIcon from '@mui/icons-material/AddBusinessRounded';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { AccountBalance } from '@mui/icons-material';
 import GroupsIcon from '@mui/icons-material/Groups';
 import Typography from '@mui/material/Typography';
 import Toolbar from '@mui/material/Toolbar';
@@ -23,6 +24,7 @@ const TopNavigation = () => {
           { href: '/bill/view', icon: <CardMembershipRoundedIcon /> },
           { href: '/groups', icon: <GroupsIcon /> },
           { href: '/notifications', icon: <NotificationsMenu /> },
+          { href: '/banking', icon: <AccountBalance /> },
           { href: '/logout', icon: <ExitToAppIcon /> }
         ]
       : [{ href: '/login', icon: <AccountCircle /> }];

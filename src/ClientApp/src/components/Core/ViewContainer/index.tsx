@@ -11,7 +11,8 @@ import { SimpleBillDto, SimpleGroupDto } from 'api';
 
 import ViewContainerProps from './props';
 
-const is_bill = (x: any): x is SimpleBillDto => true;
+const is_bill = (x: SimpleBillDto | SimpleGroupDto): x is SimpleBillDto =>
+  Object.prototype.hasOwnProperty.call(x, 'total');
 
 const ViewContainer = (props: ViewContainerProps) => {
   const { title, description, items } = props;
@@ -36,9 +37,9 @@ const ViewContainer = (props: ViewContainerProps) => {
           <Grid container spacing={4}>
             {items.map((item: SimpleBillDto | SimpleGroupDto) =>
               is_bill(item) ? (
-                <BillDisplay key={`item-${item.id}`} bill={item as SimpleBillDto} />
+                <BillDisplay key={`item-${item.id}`} bill={item} />
               ) : (
-                <GroupDisplay key={`item-${item.id}`} group={item as SimpleGroupDto} />
+                <GroupDisplay key={`item-${item.id}`} group={item} />
               )
             )}
           </Grid>
