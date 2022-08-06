@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 
 import FormSteps from 'components/Core/FormSteps';
 import InputProps from './props';
@@ -7,7 +7,7 @@ import { BillApi, UserInfoDto } from 'api';
 import { useToken } from 'utility/hooks';
 
 const BillSimple = () => {
-  const [inputs, setInputs] = React.useState<InputProps>({
+  const [inputs, setInputs] = useState<InputProps>({
     name: '',
     price: 0,
     users: [],

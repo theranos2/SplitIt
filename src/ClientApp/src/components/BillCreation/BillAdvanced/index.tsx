@@ -1,10 +1,13 @@
-import * as React from 'react';
+import { useState } from 'react';
 
 import FormSteps from 'components/Core/FormSteps';
 import InputProps from 'components/Core/InputProps';
 
+import { BillApi, UserInfoDto } from 'api';
+import { useToken } from 'utility/hooks';
+
 const BillAdvanced = () => {
-  const [inputs, setInputs] = React.useState<InputProps>({
+  const [inputs, setInputs] = useState<InputProps>({
     name: '',
     price: 0,
     users: [],
@@ -33,10 +36,14 @@ const BillAdvanced = () => {
   const submit = async (event: any) => {
     event.preventDefault();
 
-    if (inputs.name === '' || inputs.users === [] || inputs.price === 0 || inputs.items === []) {
-      return console.error('Inputs cannot be empty.');
+    if (inputs.name === '' || inputs.price === 0 || inputs.items === []) {
+      return { status: 400, statusText: 'Inputs cannot be empty.' };
     } else {
-      // send the new bill to the backend
+      return await new BillApi({ apiKey: useToken() ?? '' }).apiBillSimplePost({
+        title: inputs.name,
+        userIds: inputs.users.map((user: UserInfoDto) => user.id ?? ''),
+        total: inputs.price ?? 0
+      });
     }
   };
 
