@@ -1,0 +1,36 @@
+# week01 & week02
+- Brainstorming initial ideas.
+- - Idea was a social media platform based on sharing music.
+- - Stories, snippets, direct messaging, etc. all revolving around sharing one's music
+- Deciding on 'roles'; i.e. Backend, frontend
+- Worked with the group to prepare project specifications and proposal
+# week03
+- Following unsatsifactory proposal in previous week, came up with new idea to create a personal/group finance app
+- Brainstormed features of the app
+- Used already available apps to compare our proposed app with the current competition in to identify potential novel functionality
+- Worked alongside Adam to prepare the user stories of the proposed project
+- Worked with the group to prepare project specifications and proposal
+# week04
+- Began learning ReactJS and Typescript, familiarising myself with the framework
+# week05
+- Began preparing a bill creation page, using an MUI form. Was unable to complete it before end of sprint/demo
+- Participated in groups Retrospective after demo
+# week06
+- Worked with group members to contribute to Retrospective A report
+- Formatted the Retrospective A report to include all necessary components as listed in the marking rubric
+- Worked on group creation for the project. Completed the front-end functionality
+# week07
+- Worked with group members to complete the group creation functionality by linking it to the backend
+- Refactored the user selector compoenent of the program's frontend with group members so that it loads users from the backend and looks more aesthetically pleasing
+- Completed a proof-of-concept groups display page for the demonstration
+# week08
+- Participated in Retrospective B with other group members following previous week's demo
+- Updated groups display page from previous week to use an API call to load data from the database
+# week09
+- Worked with group members to contribute to Retrospective B's report
+- Attended tutorial and relayed information provided by tutor to the rest of the team
+- Updated groups display page to load a specific group from the database and display its information when its table row is clicked
+# week10
+- Completed tile representation of bills and added it to the analytics page
+- Worked with Razin to fix issues relating to session expiry in groups and analytics
+- Demonstrated group creation, group viewing (single and multiple), and analytics
