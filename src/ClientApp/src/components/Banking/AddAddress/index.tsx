@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useAuthContext } from 'utility/hooks/useAuth';
-import { Container } from './common';
+import { Container } from '../common';
 
 type AddressFormFields = {
   unit: string;

@@ -2,7 +2,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import Grid from '@mui/material/Grid';
 import ButtonLink from 'components/Menu/ButtonLink';
 
-const GroupIndex = () => {
+export function BankingIndex() {
   return (
     <Grid
       container
@@ -14,13 +14,12 @@ const GroupIndex = () => {
     >
       <Grid item xs={3}>
         <ButtonGroup orientation="vertical" aria-label="vertical outlined button group">
-          <ButtonLink href="/groups/create" name="Create a group" />
-          <ButtonLink href="/groups/view" name="View groups" />
+          <ButtonLink href="/banking/card/add" name="Add a bank card" />
+          <ButtonLink href="/banking/card" name="View card" />
+          <ButtonLink href="/banking/address/add" name="Add address" />
           <ButtonLink href="/" name="Back" />
         </ButtonGroup>
       </Grid>
     </Grid>
   );
-};
-
-export default GroupIndex;
+}
