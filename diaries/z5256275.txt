@@ -1,0 +1,99 @@
+# week01
+* had an initial meeting
+    * introduced ourselves to each other
+    * discussed ideas on languages and frameworks to use, some of us were pretty comfortable with JavaScript/React so we decided to go with that, Ken liked C# so we also decided on .NET.
+* decided on the roles for the group, and discussed what all of our strengths were
+    * Razin and Ken decided to focus on backend.
+    * Adam, Xibo and I decided to work on the frontend.
+
+
+# week02
+* worked together to decide which project we would do
+    * none of the normal projects interested us, so we wanted to do a custom project
+    * we discussed ideas for what we could do
+    * decided on Storify: a social media platform for sharing short snippets of songs.
+* worked on the proposal to determine the specifications for our app.
+    * what features we wanted, and what bonus features we'd potentially work towards
+    * what things each person would like to work on during the term
+
+
+# week03
+* Our tutor wasn't a fan of our project, so we went back to the drawing board.
+    * Xibo suggested a different kind of application due to issues he'd have with bill-paying
+    * We decided to pursue this idea with 'SplitIt' an application to help track, and organise your bill paying, and have systems 
+* worked on the proposal
+    * which features of the new application we'd like to work on, similar to last week
+    * tried to make the novel features more interesting, as that had arisen as a potential issue.
+    * wrote up the user stories and acceptance criteria onto Jira, so we could better monitor our progress.
+
+
+# week04
+* As a team we had a look at competiting applications that we could compare, and use to base some of our functionality off of.
+    * e.g. we had a look at BeemIt and SplitWise, and looked at how we could fill some niches in the market
+* Wrote up the proposal document and formatted it
+* began implementing the basic functionality for the site
+    * added the logging in, registering, and logging out for user accounts
+    * made the authentication page modular so that both logging in and registering would both use the same component, you'd just pass in which fields you'd want (username, password, password_confirmation, etc)
+    * worked on the advanced bill creation.
+    * added some frontend validation so that users couldn't submit bad data to the form.
+
+
+# week05
+* Had the first demonstration
+    * Adam and Xibo were unable to complete their parts of the project for the demo unfortunately, so those weren't demo'ed.
+    * it didn't seem they'd put much effort in as Adam came with nothing, and Xibo did a simple HTML form
+* most parts of the actual demo seemed to go alright, however quite a bit was missing.
+* Had some issues with integrating the backend in correctly for the parts I did, will need to improve on this for the next sprint
+* Held our groups retrospective during lunch immediately after the demonstration
+    * discussed what we'd need to improve for the next sprint
+    * delegated tasks to each member of the group
+    * Adam and Xibo said they'd complete their parts of the first sprint ASAP.
+
+
+# week06
+* Wrote up the proposal document, and did the formatting for it.
+* Adam and Xibo didn't do their parts of the first sprint, so I took them over
+    * I had to complete every part of the first sprint (for the frontend) unfortunately as they didn't seem willing.
+    * They said they'd continue working on the work for the second sprint
+* Completed all of the first sprint work for the frontend (literally all of it...)
+    * Creating a simple bill
+    * Viewing all of the bills for a user
+    * Getting a detailed view of a specific bill for a user
+
+
+# week07
+* Worked on the navigation for the website
+    * Had a navigation bar at the top of the screen with links to all sections
+    * Added functionality where the links would only show up if the user was logged in (or it would give them only a link to the login page)
+* Added private and restricted routing, so that certain pages would only be accessible if the user was logged in
+    * private routes would redirect to '/' if the user wasn't logged in
+    * restricted routes would redirect to '/' if they were logged in (e.g. login/register)
+
+
+# week08
+* modified the bill creation forms to use a stepping process
+    * (e.g. select name, then users) rather than one big page.
+    * similar to authentication page, made this page modular so that any other creation mechanisms (e.g. group creation, or bill editing) could use the same page without needing to rewrite it.
+* To me it seems that Adam hasn't even cloned the repository at this point, he hasn't made a branch at all.
+* added a modular method to:
+    * access the users for bills in a certain list, this could be used when creating a bill, or editing a bill, or selecting certain users to invite to a group (this was replaced by Razin's user selector which was better)
+    * access the groups in the database, this could be reused when creating a bill 
+* had our second demonstration, went a lot better than the first one as we had a lot more features to demonstrate, however we still had some issues with backend-frontend integrations.
+* similarly, had our second retrospective meeting with the team, where we had a discussion with Xibo and Adam as we felt they hadn't been putting in as much effort as was expected.
+
+
+# week09
+* added functionality for a user to:
+    * share a bill that they had created, or were invited to (this could be sent either as a link, or a QR code). 
+    * join a bill that they'd been invited to by accessing the join link above.
+* worked on the search bar functionality, tried again to use an approach that would allow it to be reused across both the group and bill view all page.
+
+
+# week10
+* added bill editing, which used the existing step process form that existed from the bill creation
+* replaced some other pages with the existing modular approaches to improve user experience
+    * replaced the group creation form with the existing step process, to make it easier for usability
+    * replaced the existing view all groups page with the same module as the bills display all page.
+* improved the bill sharing functionality by allowing users to select certain members to send an invitation to.
+* held the final demonstration, I completely messed up though, I spread myself too thin and my parts unfortuntately broke prior to the presentation.
+* added all of the integration work for calling the backend, using the auto-generated API stuff that razin worked on (really cool stuff), meaning that all of the backend-frontend functionality was finally working.
