@@ -1,14 +1,16 @@
 import React from 'react';
 import NotificationDisplay from './Notification';
 import { NotificationsApi, Notification } from 'api';
+import { useAuthContext } from 'utility/hooks/useAuth';
 
 const NotificationsPage = () => {
   const [notifications, setNotifications] = React.useState<Notification[]>([]);
   //   const [hideRead, setHideRead] = React.useState<boolean>(false);
+  const { token } = useAuthContext();
 
   React.useEffect(() => {
     (async () => {
-      const api = new NotificationsApi({ apiKey: window.localStorage.getItem('token') ?? '' });
+      const api = new NotificationsApi({ apiKey: token });
       const result = await api.apiNotificationsGet();
       const NewNotifications = result.data;
       NewNotifications && setNotifications([...notifications, ...NewNotifications]);
