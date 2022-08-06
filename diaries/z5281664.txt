@@ -1,0 +1,57 @@
+Week 1
+Formed a group and decided on tech stack to use. Which was dotnet for the
+backend with a React.js frontend. Decided to do a custom project, with initial
+idea of something along the lines of a spotify based social network. We ironed
+out the details of the proposal, so that we can present it next week.
+
+Week 2
+Tried our best to come out with a novelty for our custom project idea. We then
+decided later in the week to change to a new idea. The team then came up with
+the idea to make a product that is a combination of BeemIt and SplitWise.
+
+Week 3
+Start working on the backend. And setup some tools like prettier and eslint for
+the frontend. Did research on how to make them work together since some of the
+rules are conflicting. Also added github actions as a way to do sanity checks
+before merging in code.
+
+Week 4
+Worked on basic features like user account controls. Wrote some unit tests.
+Had to do research on how to do unit testing with database in dotnet. Settled
+for in-memory database for testing, since its simple and reliable.
+One of the drawback of this approach is we may have issues when we start using
+SQL implementation specific features; but we are not using any so its still fine.
+
+Week 5
+Setup swagger, and added more documentation so that frontend engineers can
+consume the API.
+
+Week 6
+Add more github action checks, this time to ensure backend follows the correct
+formatting and has no build and test issues. Tried adding dotnet format tool as
+a pre-commit hook, but was not successful. Probably due to the tool used to
+manage these hooks does not really work well in a monorepo setup.
+
+Week 7
+Implement a more secure user credential hashing. Used bcrypt to hash and
+compare hashes when user tries to log in. With bcrypt, I did not have to handle
+salting the hash myself since its done by the algorithm.
+Also helped out with the frontend, by doing some pair programming; and some
+solo work like creating context to control user logged in status.
+
+Week 8
+Add seeder module, which will inject database with pre-generated data. Then the
+people working with the frontend don't have to waste time creating data
+everytime they need to display something.
+Implemented notification service that can be injected into controllers.
+Include auto api generation for frontend to use, based on swagger. Allows
+faster prototyping with type safety.
+
+Week 9
+Wrote user selector when creating a group in the frontend. Add seed data for groups.
+Improved auth context functionalities, making it a hook that components can use
+to set or retrieve the token.
+
+Week 10
+Help fix some minor bugs, and started implementing stripe payment for the
+frontend. But it did not work out, luckily Ken jumped in and lend a hand.
