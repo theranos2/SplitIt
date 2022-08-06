@@ -28,7 +28,7 @@ import GroupCreate from 'components/Groups/GroupCreate';
 import GroupsView from 'components/Groups/GroupsView';
 import GroupDetailed from 'components/Groups/GroupDetailed';
 import Graph from 'components/Insights/Graph';
-import { AddCardPage, ViewCardPage } from 'components/Banking';
+import { AddCardPage, BankingIndex, ViewCardPage } from 'components/Banking';
 import { AddAddressPage } from 'components/Banking/AddAddress';
 
 const App = () => {
@@ -59,9 +59,10 @@ const App = () => {
             <Route path="/groups" element={<GroupIndex />} />
             <Route path="/groups/create" element={<GroupCreate />} />
             <Route path="/groups/view" element={<GroupsView />} />
+            <Route path="/groups/view/:group_id" element={<GroupDetailed />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/logout" element={<Logout />} />
-            <Route path="/groups/view/:group_id" element={<GroupDetailed />} />
+            <Route path="/banking" element={<BankingIndex />} />
             <Route path="/banking/card/add" element={<AddCardPage />} />
             <Route path="/banking/card" element={<ViewCardPage />} />
             <Route path="/banking/address/add" element={<AddAddressPage />} />
