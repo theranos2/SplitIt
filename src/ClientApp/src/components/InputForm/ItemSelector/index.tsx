@@ -17,17 +17,20 @@ import { ItemSelectorProps } from './props';
 export const ItemSelector = (props: ItemSelectorProps) => {
   const { name, label, items, setItems, users, err } = props;
 
+  console.log(props);
+
+  const [currentUser, setCurrentUser] = React.useState<UserInfoDto | undefined>(undefined);
   const [currentItem, setCurrentItem] = React.useState<DetailedItemDto>({
     name: '',
     price: 0
   });
-  const [currentUser, setCurrentUser] = React.useState<number>(0);
 
   const setItem = (name: string) => (event: any) =>
     setCurrentItem((old: DetailedItemDto) => ({ ...old, [name]: event.target.value }));
+
   const cancel = () => {
     setCurrentItem({ name: '', price: 0 });
-    setCurrentUser(0);
+    setCurrentUser(undefined);
   };
 
   const addItem = (event: any) => {
@@ -38,19 +41,6 @@ export const ItemSelector = (props: ItemSelectorProps) => {
 
   const removeItem = (iid: DetailedItemDto) =>
     setItems(items?.filter((item: DetailedItemDto) => item !== iid));
-
-  /* TODO: actually fetch the users from the backend, rather than hardcode them */
-  // React.useEffect(() => {
-  //     const getUsers = () => {
-  //         // users =
-  //         // await request('/api/users/')
-  //             // .then((res) => res.users)
-  //             // .then
-  //     }
-
-  //     getUsers();
-  //     // console.log(users);
-  // }, [currentItem]);
 
   return (
     <>
@@ -86,39 +76,15 @@ export const ItemSelector = (props: ItemSelectorProps) => {
             onChange={setItem('user')}
             input={<OutlinedInput label={label} />}
           >
-            {users.map((user: UserInfoDto, idx: number) => (
+            {users?.map((user: UserInfoDto, idx: number) => (
               <MenuItem key={`menuitem-user-${idx}`} value={user.id}>
                 {user.firstName} {user.lastName}
               </MenuItem>
             ))}
           </Select>
-          {/* <InputLabel id={`select-${name}-inputlabel`}>Add {label}</InputLabel> */}
         </FormControl>
       </Box>
       <Button onClick={addItem}>Add item</Button>
-      {/* <InputLabel id={`select-${name}-inputlabel`}>Add {label}</InputLabel>
-              <Select
-                labelId={`select-${name}-label`}
-                id={`select-${name}-id`}
-                value={inputs['users']}
-                label="Choose users"
-                onChange={setItem(name)}
-                input={<OutlinedInput label={label} />}
-              >
-                {inputs['users'].map((user: User, idx: number) => (
-                  <MenuItem key={`menuitem-user-${idx}`} value={user.id}>
-                    {user.firstName} {user.lastName}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={cancel}>Close</Button>
-          <Button onClick={submit}>Confirm</Button>
-        </DialogActions>
-      </Dialog> */}
       {err.cond ? <Alert severity="warning">{err.msg}</Alert> : <></>}
       <ItemDisplay items={items} removeItem={removeItem} />
     </>
